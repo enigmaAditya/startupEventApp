@@ -1,0 +1,50 @@
+# StartupEvents — Render Deployment Configuration
+# Syllabus: BE Unit VI — Deployment, CI/CD
+
+services:
+  # ============ BACKEND API ============
+  - type: web
+    name: startupevents-api
+    runtime: node
+    region: oregon
+    repo: https://github.com/enigmaAditya/startupEventApp
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        fromDatabase:
+          name: startupevents-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        value: https://startupevents.onrender.com
+      - key: OPENAI_API_KEY
+        sync: false   # Set manually in Render dashboard
+
+  # ============ FRONTEND (Static Site) ============
+  - type: web
+    name: startupevents-frontend
+    runtime: static
+    repo: https://github.com/enigmaAditya/startupEventApp
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+
+# ============ DATABASE ============
+databases:
+  - name: startupevents-db
+    plan: free
+    databaseName: startupevents

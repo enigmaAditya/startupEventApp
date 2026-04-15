@@ -40,6 +40,9 @@ const config = {
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100, // limit each IP to 100 requests per window
   },
+
+  // OpenAI (optional — AI features run in mock mode without a key)
+  openaiApiKey: process.env.OPENAI_API_KEY || null,
 };
 
 module.exports = config;
