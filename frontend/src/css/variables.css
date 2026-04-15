@@ -1,0 +1,187 @@
+/* ============================================
+   StartupEvents — Design Tokens
+   Premium dark-mode-first design system
+   ============================================ */
+
+:root {
+  /* ---- Color Palette ---- */
+  /* Primary — Electric Indigo */
+  --color-primary-50: hsl(252, 100%, 95%);
+  --color-primary-100: hsl(252, 100%, 90%);
+  --color-primary-200: hsl(252, 95%, 80%);
+  --color-primary-300: hsl(252, 90%, 70%);
+  --color-primary-400: hsl(252, 85%, 63%);
+  --color-primary-500: hsl(252, 80%, 55%);
+  --color-primary-600: hsl(252, 75%, 47%);
+  --color-primary-700: hsl(252, 70%, 38%);
+  --color-primary-800: hsl(252, 65%, 28%);
+  --color-primary-900: hsl(252, 60%, 18%);
+
+  /* Accent — Vivid Cyan */
+  --color-accent-50: hsl(175, 100%, 95%);
+  --color-accent-100: hsl(175, 95%, 85%);
+  --color-accent-200: hsl(175, 90%, 72%);
+  --color-accent-300: hsl(175, 85%, 58%);
+  --color-accent-400: hsl(175, 80%, 48%);
+  --color-accent-500: hsl(175, 75%, 38%);
+
+  /* Neutral — Cool Gray */
+  --color-neutral-50: hsl(220, 20%, 97%);
+  --color-neutral-100: hsl(220, 18%, 93%);
+  --color-neutral-200: hsl(220, 15%, 85%);
+  --color-neutral-300: hsl(220, 12%, 72%);
+  --color-neutral-400: hsl(220, 10%, 55%);
+  --color-neutral-500: hsl(220, 10%, 42%);
+  --color-neutral-600: hsl(220, 12%, 30%);
+  --color-neutral-700: hsl(220, 15%, 22%);
+  --color-neutral-800: hsl(220, 18%, 15%);
+  --color-neutral-900: hsl(220, 22%, 10%);
+  --color-neutral-950: hsl(220, 25%, 6%);
+
+  /* Semantic Colors */
+  --color-success: hsl(152, 70%, 45%);
+  --color-success-light: hsl(152, 70%, 92%);
+  --color-warning: hsl(38, 95%, 55%);
+  --color-warning-light: hsl(38, 95%, 92%);
+  --color-error: hsl(0, 75%, 55%);
+  --color-error-light: hsl(0, 75%, 92%);
+  --color-info: hsl(210, 80%, 55%);
+  --color-info-light: hsl(210, 80%, 92%);
+
+  /* ---- Dark Theme (Default) ---- */
+  --bg-primary: var(--color-neutral-950);
+  --bg-secondary: var(--color-neutral-900);
+  --bg-tertiary: var(--color-neutral-800);
+  --bg-card: hsl(220, 20%, 12%);
+  --bg-card-hover: hsl(220, 20%, 16%);
+  --bg-input: hsl(220, 18%, 13%);
+  --bg-overlay: hsla(220, 25%, 6%, 0.85);
+
+  --text-primary: hsl(220, 20%, 95%);
+  --text-secondary: hsl(220, 15%, 70%);
+  --text-tertiary: hsl(220, 10%, 50%);
+  --text-inverse: hsl(220, 25%, 6%);
+
+  --border-color: hsl(220, 15%, 20%);
+  --border-color-hover: hsl(220, 15%, 30%);
+  --border-color-focus: var(--color-primary-400);
+
+  /* ---- Gradients ---- */
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-400));
+  --gradient-hero: linear-gradient(160deg, var(--color-neutral-950) 0%, hsl(252, 40%, 12%) 50%, var(--color-neutral-950) 100%);
+  --gradient-card: linear-gradient(145deg, hsla(252, 50%, 30%, 0.1), hsla(175, 50%, 30%, 0.05));
+  --gradient-glow: radial-gradient(ellipse at 50% 0%, hsla(252, 80%, 55%, 0.15), transparent 70%);
+
+  /* ---- Typography ---- */
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Outfit', 'Inter', sans-serif;
+  --font-mono: 'Fira Code', 'Cascadia Code', monospace;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+  --font-light: 300;
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+
+  --tracking-tight: -0.025em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.025em;
+
+  /* ---- Spacing ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  /* ---- Border Radius ---- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ---- Shadows ---- */
+  --shadow-sm: 0 1px 2px hsla(0, 0%, 0%, 0.3);
+  --shadow-md: 0 4px 6px -1px hsla(0, 0%, 0%, 0.3), 0 2px 4px -2px hsla(0, 0%, 0%, 0.2);
+  --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.3), 0 4px 6px -4px hsla(0, 0%, 0%, 0.2);
+  --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.35), 0 8px 10px -6px hsla(0, 0%, 0%, 0.2);
+  --shadow-glow: 0 0 20px hsla(252, 80%, 55%, 0.25);
+  --shadow-glow-accent: 0 0 20px hsla(175, 80%, 48%, 0.2);
+
+  /* ---- Transitions ---- */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 350ms ease;
+  --transition-spring: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ---- Z-Index Scale ---- */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+
+  /* ---- Layout ---- */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1200px;
+  --container-2xl: 1400px;
+  --sidebar-width: 260px;
+  --navbar-height: 70px;
+}
+
+/* ---- Light Theme ---- */
+[data-theme="light"] {
+  --bg-primary: hsl(220, 20%, 98%);
+  --bg-secondary: hsl(220, 18%, 95%);
+  --bg-tertiary: hsl(220, 15%, 90%);
+  --bg-card: hsl(0, 0%, 100%);
+  --bg-card-hover: hsl(220, 20%, 97%);
+  --bg-input: hsl(0, 0%, 100%);
+  --bg-overlay: hsla(220, 20%, 98%, 0.9);
+
+  --text-primary: hsl(220, 25%, 10%);
+  --text-secondary: hsl(220, 15%, 40%);
+  --text-tertiary: hsl(220, 10%, 55%);
+  --text-inverse: hsl(220, 20%, 95%);
+
+  --border-color: hsl(220, 15%, 87%);
+  --border-color-hover: hsl(220, 15%, 75%);
+
+  --gradient-hero: linear-gradient(160deg, hsl(220, 20%, 98%) 0%, hsl(252, 40%, 95%) 50%, hsl(220, 20%, 98%) 100%);
+  --gradient-card: linear-gradient(145deg, hsla(252, 50%, 60%, 0.05), hsla(175, 50%, 60%, 0.03));
+
+  --shadow-sm: 0 1px 2px hsla(0, 0%, 0%, 0.06);
+  --shadow-md: 0 4px 6px -1px hsla(0, 0%, 0%, 0.08), 0 2px 4px -2px hsla(0, 0%, 0%, 0.05);
+  --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.08), 0 4px 6px -4px hsla(0, 0%, 0%, 0.05);
+  --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.1), 0 8px 10px -6px hsla(0, 0%, 0%, 0.05);
+  --shadow-glow: 0 0 20px hsla(252, 80%, 55%, 0.12);
+}

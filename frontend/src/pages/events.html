@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse and filter all startup events — hackathons, pitch nights, workshops, meetups, and conferences.">
+  <title>Browse Events — StartupEvents</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__brand-icon">🚀</span>
+        StartupEvents
+      </a>
+      <ul class="navbar__links" id="nav-links">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="events.html" class="navbar__link navbar__link--active">Events</a></li>
+        <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <a href="login.html" class="btn btn--secondary btn--sm">Log In</a>
+        <a href="register.html" class="btn btn--primary btn--sm">Sign Up</a>
+      </div>
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ PAGE HEADER ============ -->
+    <div class="container">
+      <div class="page-header">
+        <h1 class="page-header__title">Explore Events</h1>
+        <p class="page-header__subtitle">Discover upcoming startup events happening around you</p>
+      </div>
+
+      <!-- ============ FILTER BAR ============ -->
+      <div class="filter-bar" id="filter-bar">
+        <div class="filter-bar__search">
+          <input
+            type="search"
+            class="form-input"
+            id="search-input"
+            placeholder="🔍  Search events by name, tag, or location..."
+            aria-label="Search events"
+          >
+        </div>
+        <div class="filter-bar__group">
+          <select class="form-input form-select" id="filter-category" aria-label="Filter by category">
+            <option value="">All Categories</option>
+            <option value="hackathon">🏆 Hackathon</option>
+            <option value="pitch-night">🎤 Pitch Night</option>
+            <option value="workshop">🛠️ Workshop</option>
+            <option value="meetup">☕ Meetup</option>
+            <option value="conference">🎪 Conference</option>
+          </select>
+          <select class="form-input form-select" id="filter-sort" aria-label="Sort events">
+            <option value="date-asc">Date (Soonest)</option>
+            <option value="date-desc">Date (Latest)</option>
+            <option value="popular">Most Popular</option>
+            <option value="name-asc">Name (A-Z)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ============ ACTIVE FILTERS ============ -->
+      <div id="active-filters" style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-6);"></div>
+
+      <!-- ============ EVENTS GRID ============ -->
+      <section class="section section--sm" id="events-section">
+        <div class="events-grid" id="events-grid">
+          <!-- Event Cards will be rendered dynamically in later sprints -->
+
+          <!-- Card 1 -->
+          <article class="card" data-category="hackathon" data-date="2026-05-15" data-city="bangalore">
+            <div class="card__image-placeholder">🏆</div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="badge badge--hackathon">Hackathon</span>
+                <span class="card__info"><span class="card__info-icon">📅</span> May 15, 2026</span>
+              </div>
+              <h3 class="card__title"><a href="event-detail.html">Build for Tomorrow — 48hr Hackathon</a></h3>
+              <p class="card__description">A 48-hour hackathon bringing together developers, designers, and entrepreneurs to build solutions for tomorrow's challenges.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                <span class="tag">AI/ML</span><span class="tag">Web3</span><span class="tag">FinTech</span>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="card__info"><span class="card__info-icon">📍</span> Bangalore</span>
+              <span class="card__info"><span class="card__info-icon">👥</span> 234 / 500</span>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="card" data-category="pitch-night" data-date="2026-05-22" data-city="delhi">
+            <div class="card__image-placeholder">🎤</div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="badge badge--pitch-night">Pitch Night</span>
+                <span class="card__info"><span class="card__info-icon">📅</span> May 22, 2026</span>
+              </div>
+              <h3 class="card__title"><a href="event-detail.html">Startup Pitch Arena — Season 4</a></h3>
+              <p class="card__description">10 startups pitch to a panel of VCs and angel investors. Winner gets $50K seed funding and 3-month incubation.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                <span class="tag">SaaS</span><span class="tag">Funding</span>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="card__info"><span class="card__info-icon">📍</span> Delhi</span>
+              <span class="card__info"><span class="card__info-icon">👥</span> 156 / 200</span>
+            </div>
+          </article>
+
+          <!-- Card 3 -->
+          <article class="card" data-category="workshop" data-date="2026-06-03" data-city="mumbai">
+            <div class="card__image-placeholder">🛠️</div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="badge badge--workshop">Workshop</span>
+                <span class="card__info"><span class="card__info-icon">📅</span> Jun 3, 2026</span>
+              </div>
+              <h3 class="card__title"><a href="event-detail.html">Full-Stack Dev Bootcamp — MERN Stack</a></h3>
+              <p class="card__description">Intensive 2-day workshop covering MongoDB, Express, React, and Node.js. Build and deploy a complete startup MVP.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                <span class="tag">MERN</span><span class="tag">Beginner</span>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="card__info"><span class="card__info-icon">📍</span> Mumbai</span>
+              <span class="card__info"><span class="card__info-icon">👥</span> 89 / 120</span>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="card" data-category="meetup" data-date="2026-05-28" data-city="pune">
+            <div class="card__image-placeholder">☕</div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="badge badge--meetup">Meetup</span>
+                <span class="card__info"><span class="card__info-icon">📅</span> May 28, 2026</span>
+              </div>
+              <h3 class="card__title"><a href="event-detail.html">Founder's Coffee — Breakfast Networking</a></h3>
+              <p class="card__description">A casual breakfast meetup for startup founders to share stories, exchange ideas, and forge meaningful connections.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                <span class="tag">Networking</span><span class="tag">Free</span>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="card__info"><span class="card__info-icon">📍</span> Pune</span>
+              <span class="card__info"><span class="card__info-icon">👥</span> 42 / 50</span>
+            </div>
+          </article>
+
+          <!-- Card 5 -->
+          <article class="card" data-category="conference" data-date="2026-06-15" data-city="hyderabad">
+            <div class="card__image-placeholder">🎪</div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="badge badge--conference">Conference</span>
+                <span class="card__info"><span class="card__info-icon">📅</span> Jun 15-17, 2026</span>
+              </div>
+              <h3 class="card__title"><a href="event-detail.html">TechSummit India 2026</a></h3>
+              <p class="card__description">India's largest startup technology conference. 3 days, 100+ speakers, and 5000+ attendees. Keynotes, workshops, and expo.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                <span class="tag">Conference</span><span class="tag">Enterprise</span>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="card__info"><span class="card__info-icon">📍</span> Hyderabad</span>
+              <span class="card__info"><span class="card__info-icon">👥</span> 3420 / 5000</span>
+            </div>
+          </article>
+
+          <!-- Card 6 -->
+          <article class="card" data-category="hackathon" data-date="2026-06-20" data-city="chennai">
+            <div class="card__image-placeholder">💡</div>
+            <div class="card__body">
+              <div class="card__meta">
+                <span class="badge badge--hackathon">Hackathon</span>
+                <span class="card__info"><span class="card__info-icon">📅</span> Jun 20-21, 2026</span>
+              </div>
+              <h3 class="card__title"><a href="event-detail.html">GreenTech Hack — Sustainability Challenge</a></h3>
+              <p class="card__description">Build technology solutions for climate change and sustainability. Sponsored by leading ClimateTech VCs.</p>
+              <div style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-3);">
+                <span class="tag">ClimateTech</span><span class="tag">Sustainability</span>
+              </div>
+            </div>
+            <div class="card__footer">
+              <span class="card__info"><span class="card__info-icon">📍</span> Chennai</span>
+              <span class="card__info"><span class="card__info-icon">👥</span> 178 / 300</span>
+            </div>
+          </article>
+        </div>
+
+        <!-- ============ EMPTY STATE (hidden by default) ============ -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <div class="empty-state__icon">🔍</div>
+          <h3 class="empty-state__title">No events found</h3>
+          <p class="empty-state__message">Try adjusting your filters or search to find what you're looking for.</p>
+          <button class="btn btn--secondary" id="clear-filters-btn">Clear All Filters</button>
+        </div>
+
+        <!-- ============ LOAD MORE ============ -->
+        <div style="text-align: center; padding: var(--space-10) 0;" id="load-more-container">
+          <button class="btn btn--secondary btn--lg" id="load-more-btn">Load More Events</button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div>
+          <div class="footer__brand">🚀 StartupEvents</div>
+          <p class="footer__description">The premier platform for discovering and hosting startup-related events.</p>
+        </div>
+        <div>
+          <h4 class="footer__heading">Platform</h4>
+          <a href="events.html" class="footer__link">Browse Events</a>
+          <a href="register.html" class="footer__link">Create Event</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Company</h4>
+          <a href="#" class="footer__link">About Us</a>
+          <a href="#" class="footer__link">Contact</a>
+        </div>
+        <div>
+          <h4 class="footer__heading">Legal</h4>
+          <a href="#" class="footer__link">Privacy Policy</a>
+          <a href="#" class="footer__link">Terms of Service</a>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <span>&copy; 2026 StartupEvents. All rights reserved.</span>
+        <span>Made with ❤️ for the startup community</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../js/theme.js"></script>
+  <script src="../js/filters.js"></script>
+  <script src="../js/search.js"></script>
+  <script src="../js/utils.js"></script>
+</body>
+</html>

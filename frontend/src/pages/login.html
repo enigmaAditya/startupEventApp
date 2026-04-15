@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to StartupEvents to manage your events and RSVPs.">
+  <title>Log In — StartupEvents</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__brand-icon">🚀</span>
+        StartupEvents
+      </a>
+      <ul class="navbar__links" id="nav-links">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="events.html" class="navbar__link">Events</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+      </div>
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="auth-layout">
+      <div class="auth-card">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: var(--space-8);">
+          <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">👋</div>
+          <h1 style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">Welcome Back</h1>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm);">Log in to your StartupEvents account</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label form-label--required" for="login-email">Email Address</label>
+            <input
+              type="email"
+              class="form-input"
+              id="login-email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+            >
+            <span class="form-error" id="login-email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <label class="form-label form-label--required" for="login-password">Password</label>
+              <a href="#" style="font-size: var(--text-xs); color: var(--color-primary-400);">Forgot password?</a>
+            </div>
+            <input
+              type="password"
+              class="form-input"
+              id="login-password"
+              name="password"
+              placeholder="Enter your password"
+              required
+              autocomplete="current-password"
+            >
+            <span class="form-error" id="login-password-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-check">
+              <input type="checkbox" class="form-check__input" id="login-remember" name="remember">
+              <span class="form-check__label">Remember me for 30 days</span>
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg" id="login-submit-btn">
+            Log In
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider" style="margin: var(--space-8) 0;">
+          <span class="divider__text">or continue with</span>
+        </div>
+
+        <!-- Social Login -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-8);">
+          <button class="btn btn--secondary" id="login-google">
+            🔵 Google
+          </button>
+          <button class="btn btn--secondary" id="login-github">
+            ⚫ GitHub
+          </button>
+        </div>
+
+        <!-- Register link -->
+        <p style="text-align: center; font-size: var(--text-sm); color: var(--text-secondary);">
+          Don't have an account?
+          <a href="register.html" style="font-weight: var(--font-semibold);">Sign up free</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../js/theme.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/utils.js"></script>
+</body>
+</html>

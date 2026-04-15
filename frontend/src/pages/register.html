@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Create your StartupEvents account — discover, host, and RSVP to startup events.">
+  <title>Sign Up — StartupEvents</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__brand-icon">🚀</span>
+        StartupEvents
+      </a>
+      <ul class="navbar__links" id="nav-links">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="events.html" class="navbar__link">Events</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+      </div>
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <div class="auth-layout">
+      <div class="auth-card">
+        <!-- Header -->
+        <div style="text-align: center; margin-bottom: var(--space-8);">
+          <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">🚀</div>
+          <h1 style="font-size: var(--text-2xl); margin-bottom: var(--space-2);">Create Your Account</h1>
+          <p style="color: var(--text-secondary); font-size: var(--text-sm);">Join the startup community today</p>
+        </div>
+
+        <!-- Register Form -->
+        <form id="register-form" novalidate>
+          <!-- Name Row -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="form-group">
+              <label class="form-label form-label--required" for="register-firstname">First Name</label>
+              <input
+                type="text"
+                class="form-input"
+                id="register-firstname"
+                name="firstName"
+                placeholder="John"
+                required
+                autocomplete="given-name"
+              >
+              <span class="form-error" id="register-firstname-error"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label--required" for="register-lastname">Last Name</label>
+              <input
+                type="text"
+                class="form-input"
+                id="register-lastname"
+                name="lastName"
+                placeholder="Doe"
+                required
+                autocomplete="family-name"
+              >
+              <span class="form-error" id="register-lastname-error"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label form-label--required" for="register-email">Email Address</label>
+            <input
+              type="email"
+              class="form-input"
+              id="register-email"
+              name="email"
+              placeholder="you@example.com"
+              required
+              autocomplete="email"
+            >
+            <span class="form-error" id="register-email-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label form-label--required" for="register-password">Password</label>
+            <input
+              type="password"
+              class="form-input"
+              id="register-password"
+              name="password"
+              placeholder="Min. 8 characters"
+              required
+              autocomplete="new-password"
+            >
+            <span class="form-error" id="register-password-error"></span>
+            <span class="form-hint">Must be at least 8 characters with 1 uppercase letter and 1 number</span>
+            <!-- Password strength indicator -->
+            <div id="password-strength" style="margin-top: var(--space-2);">
+              <div style="display: flex; gap: var(--space-1); margin-bottom: var(--space-1);">
+                <div id="strength-bar-1" style="flex: 1; height: 3px; background: var(--bg-tertiary); border-radius: var(--radius-full); transition: background var(--transition-fast);"></div>
+                <div id="strength-bar-2" style="flex: 1; height: 3px; background: var(--bg-tertiary); border-radius: var(--radius-full); transition: background var(--transition-fast);"></div>
+                <div id="strength-bar-3" style="flex: 1; height: 3px; background: var(--bg-tertiary); border-radius: var(--radius-full); transition: background var(--transition-fast);"></div>
+                <div id="strength-bar-4" style="flex: 1; height: 3px; background: var(--bg-tertiary); border-radius: var(--radius-full); transition: background var(--transition-fast);"></div>
+              </div>
+              <span id="strength-text" style="font-size: var(--text-xs); color: var(--text-tertiary);"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label form-label--required" for="register-confirm-password">Confirm Password</label>
+            <input
+              type="password"
+              class="form-input"
+              id="register-confirm-password"
+              name="confirmPassword"
+              placeholder="Re-enter password"
+              required
+              autocomplete="new-password"
+            >
+            <span class="form-error" id="register-confirm-password-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="register-role">I am a…</label>
+            <select class="form-input form-select" id="register-role" name="role">
+              <option value="attendee">Attendee — I want to discover events</option>
+              <option value="organizer">Organizer — I want to host events</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-check">
+              <input type="checkbox" class="form-check__input" id="register-terms" name="terms" required>
+              <span class="form-check__label">I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a></span>
+            </label>
+            <span class="form-error" id="register-terms-error"></span>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--full btn--lg" id="register-submit-btn">
+            Create Account
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="divider" style="margin: var(--space-8) 0;">
+          <span class="divider__text">or sign up with</span>
+        </div>
+
+        <!-- Social Login -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-8);">
+          <button class="btn btn--secondary" id="register-google">🔵 Google</button>
+          <button class="btn btn--secondary" id="register-github">⚫ GitHub</button>
+        </div>
+
+        <!-- Login link -->
+        <p style="text-align: center; font-size: var(--text-sm); color: var(--text-secondary);">
+          Already have an account?
+          <a href="login.html" style="font-weight: var(--font-semibold);">Log in</a>
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../js/theme.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/utils.js"></script>
+</body>
+</html>

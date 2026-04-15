@@ -1,0 +1,234 @@
+/* ============================================
+   StartupEvents — Responsive Design
+   Mobile-first media queries
+   ============================================ */
+
+/* ---- Mobile: up to 640px ---- */
+@media (max-width: 640px) {
+  /* Navbar */
+  .navbar__links {
+    display: none;
+    position: fixed;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex-direction: column;
+    padding: var(--space-6);
+    background: var(--bg-primary);
+    border-top: 1px solid var(--border-color);
+    z-index: var(--z-overlay);
+    gap: var(--space-2);
+  }
+
+  .navbar__links--open {
+    display: flex;
+  }
+
+  .navbar__toggle {
+    display: flex;
+  }
+
+  .navbar__actions .btn--secondary {
+    display: none;
+  }
+
+  /* Hero */
+  .hero {
+    padding: var(--space-12) var(--space-4);
+    min-height: auto;
+  }
+
+  .hero__title {
+    font-size: var(--text-3xl);
+  }
+
+  .hero__subtitle {
+    font-size: var(--text-base);
+  }
+
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .hero__actions .btn {
+    width: 100%;
+  }
+
+  /* Grid */
+  .events-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  /* Stats */
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+
+  .stats__number {
+    font-size: var(--text-2xl);
+  }
+
+  /* Filter bar */
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar__search {
+    min-width: 100%;
+  }
+
+  .filter-bar__group {
+    flex-wrap: wrap;
+  }
+
+  /* Event detail */
+  .event-detail {
+    grid-template-columns: 1fr;
+  }
+
+  .event-detail__sidebar {
+    position: static;
+  }
+
+  /* Dashboard */
+  .dashboard {
+    flex-direction: column;
+  }
+
+  .dashboard__sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .dashboard__sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+
+  .dashboard__sidebar-link {
+    white-space: nowrap;
+  }
+
+  /* Footer */
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+
+  /* Auth */
+  .auth-card {
+    padding: var(--space-6);
+  }
+
+  /* Modal */
+  .modal {
+    max-height: 100vh;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    margin-top: auto;
+  }
+
+  /* Toast */
+  .toast-container {
+    left: var(--space-4);
+    right: var(--space-4);
+  }
+
+  .toast {
+    min-width: auto;
+    width: 100%;
+  }
+
+  /* Page header */
+  .page-header__title {
+    font-size: var(--text-2xl);
+  }
+
+  /* Container */
+  .container {
+    padding-inline: var(--space-4);
+  }
+
+  /* Section */
+  .section {
+    padding-block: var(--space-12);
+  }
+}
+
+/* ---- Tablet: 641px to 1024px ---- */
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Events grid */
+  .events-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Footer */
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+
+  /* Event detail */
+  .event-detail {
+    grid-template-columns: 1fr 280px;
+  }
+
+  /* Dashboard sidebar */
+  .dashboard__sidebar {
+    width: 220px;
+  }
+
+  /* Hero */
+  .hero__title {
+    font-size: var(--text-4xl);
+  }
+}
+
+/* ---- Desktop: above 1024px ---- */
+@media (min-width: 1025px) {
+  /* Hover effects only on desktop */
+  .card:hover {
+    transform: translateY(-4px);
+  }
+
+  .btn--primary:hover {
+    transform: translateY(-1px);
+  }
+}
+
+/* ---- Large screens: above 1400px ---- */
+@media (min-width: 1401px) {
+  .events-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---- Print styles ---- */
+@media print {
+  .navbar,
+  .footer,
+  .toast-container,
+  .modal-overlay {
+    display: none !important;
+  }
+
+  body {
+    color: black;
+    background: white;
+  }
+
+  .card {
+    break-inside: avoid;
+    border: 1px solid #ccc;
+    box-shadow: none;
+  }
+}
