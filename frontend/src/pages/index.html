@@ -234,8 +234,12 @@
 
       if (u) {
         if (btn) {
-          if (u.role === 'attendee') btn.style.display = 'none';
-          else btn.href = 'dashboard.html#create-event';
+          if (u.role === 'attendee') {
+            btn.textContent = '🚀 Host an Event';
+            btn.href = 'dashboard.html';
+          } else {
+            btn.href = 'dashboard.html#create-event';
+          }
         }
 
         var loginBtn = document.getElementById('landing-login-btn');
@@ -276,10 +280,15 @@
           navRight.appendChild(logoutBtn);
         }
 
-        /* Footer CTA Logic: Hide if already logged in */
-        var ctaSection = document.getElementById('cta-section');
-        if (ctaSection) {
-          ctaSection.style.display = 'none';
+        /* Footer CTA Logic: Adapt if already logged in */
+        var footerBtn = document.getElementById('footer-cta-btn');
+        var footerTitle = document.querySelector('#cta-section h2');
+        if (footerBtn) {
+          footerBtn.href = 'dashboard.html';
+          footerBtn.textContent = '🚀 Back to Dashboard';
+        }
+        if (footerTitle) {
+          footerTitle.textContent = 'Welcome back to the community';
         }
       }
     })();
