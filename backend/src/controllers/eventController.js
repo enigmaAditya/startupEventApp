@@ -8,6 +8,7 @@
 const { validationResult } = require('express-validator');
 const Event = require('../models/Event');
 const RSVP = require('../models/RSVP');
+const User = require('../models/User');
 const { ApiError } = require('../middlewares/errorHandler');
 const { paginatedResponse } = require('../middlewares/paginate');
 const appEvents = require('../utils/appEvents');
@@ -104,6 +105,9 @@ const createEvent = async (req, res, next) => {
 
     const event = await Event.create(req.body);
 
+    // Add this event to the organizer's eventsOrganized array
+    await User.findByIdAndUpdate(req.user._id, { $addToSet: { eventsOrganized: event._id } });
+
     // Emit event on the app event bus (EventEmitter)
     appEvents.emit('event:created', {
       title: event.title,
@@ -143,7 +147,7 @@ const updateEvent = async (req, res, next) => {
     }
 
     const allowedUpdates = ['title', 'description', 'category', 'date', 'endDate',
-      'time', 'location', 'capacity', 'tags', 'status', 'isVirtual', 'isFeatured', 'prizePool'];
+      'time', 'location', 'capacity', 'tags', 'status', 'isVirtual', 'isFeatured', 'prizePool', 'isFullyBooked'];
     const updates = {};
     for (const key of allowedUpdates) {
       if (req.body[key] !== undefined) updates[key] = req.body[key];
@@ -175,10 +179,26 @@ const deleteEvent = async (req, res, next) => {
       return next(ApiError.notFound('Event not found'));
     }
 
+    // Check ownership
+    if (event.organizer.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+      return next(ApiError.forbidden('Not authorized to delete this event'));
+    }
+
     await Event.findByIdAndDelete(req.params.id);
 
     // Also delete associated RSVPs
     await RSVP.deleteMany({ event: req.params.id });
+
+    // Remove from the organizer's listed events
+    await User.findByIdAndUpdate(event.organizer, {
+      $pull: { eventsOrganized: req.params.id }
+    });
+
+    // Remove from all attendees' listed events
+    await User.updateMany(
+      { eventsAttending: req.params.id },
+      { $pull: { eventsAttending: req.params.id } }
+    );
 
     logger.info(`Event deleted: "${event.title}" by admin ${req.user.email}`);
 
@@ -204,6 +224,10 @@ const rsvpToEvent = async (req, res, next) => {
       return next(ApiError.notFound('Event not found'));
     }
 
+    if (req.user.role === 'organizer') {
+      return next(ApiError.forbidden('Organizers cannot RSVP to events'));
+    }
+
     if (event.isFullyBooked) {
       return next(ApiError.badRequest('Event is fully booked'));
     }
@@ -218,6 +242,9 @@ const rsvpToEvent = async (req, res, next) => {
 
     // Add user to event attendees
     await event.addAttendee(req.user._id);
+
+    // Add event to user's attending list
+    await User.findByIdAndUpdate(req.user._id, { $addToSet: { eventsAttending: event._id } });
 
     // Emit RSVP event
     appEvents.emit('event:rsvp', {

@@ -21,7 +21,7 @@ import type {
   IRSVP,
 } from '../types';
 
-const BASE_URL = 'http://localhost:5000/api/v1';
+const BASE_URL = 'http://localhost:4000/api/v1';
 
 /**
  * Custom HTTP Error with typed data

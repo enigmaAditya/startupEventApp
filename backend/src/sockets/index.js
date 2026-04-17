@@ -6,6 +6,7 @@
 
 const { Server } = require('socket.io');
 const logger = require('../utils/logger');
+const Event = require('../models/Event');
 
 let io;
 
@@ -31,9 +32,18 @@ const initializeSocketIO = (server) => {
 
     // ---- Join event room (for per-event chat) ----
     // Demonstrates: Socket.IO rooms
-    socket.on('join:event', (eventId) => {
+    socket.on('join:event', async (eventId) => {
       socket.join(`event:${eventId}`);
       logger.debug(`Socket ${socket.id} joined room event:${eventId}`);
+      
+      try {
+        const event = await Event.findById(eventId).select('chatHistory');
+        if (event && event.chatHistory) {
+          socket.emit('chat:history', event.chatHistory);
+        }
+      } catch (err) {
+        logger.error(`Error fetching chat history for event ${eventId}: ${err.message}`);
+      }
 
       // Notify room that a new user joined
       socket.to(`event:${eventId}`).emit('user:joined', {
@@ -50,12 +60,28 @@ const initializeSocketIO = (server) => {
 
     // ---- Chat message in event room ----
     // Demonstrates: receiving messages and broadcasting
-    socket.on('chat:message', ({ eventId, message, user }) => {
+    socket.on('chat:message', async ({ eventId, message, user, userId }) => {
       const chatMessage = {
         user,
+        userId,
         message,
         timestamp: new Date().toISOString(),
       };
+
+      try {
+        await Event.findByIdAndUpdate(eventId, {
+          $push: {
+            chatHistory: {
+              userId: userId,
+              userName: user,
+              message: message,
+              timestamp: new Date(),
+            }
+          }
+        });
+      } catch (err) {
+        logger.error(`Error saving chat to DB: ${err.message}`);
+      }
 
       // Broadcast to everyone in the event room (except sender)
       socket.to(`event:${eventId}`).emit('chat:message', chatMessage);

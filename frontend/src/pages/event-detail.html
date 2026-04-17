@@ -137,7 +137,7 @@
         <!-- ============ SIDEBAR ============ -->
         <aside class="event-detail__sidebar">
           <!-- RSVP Card -->
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
+          <div id="rsvp-card-container" style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Registration</div>
             <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: var(--space-1);" id="sidebar-price">Free</div>
             <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6);" id="sidebar-spots">—</div>
@@ -180,7 +180,7 @@
           </div>
 
           <!-- Organizer Card -->
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
+          <div id="organizer-sidebar-wrapper" style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-4);">Organized By</div>
             <div style="display: flex; align-items: center; gap: var(--space-4);" id="organizer-card">
               <div class="avatar avatar--lg" id="organizer-initials">?</div>
@@ -332,10 +332,21 @@
 
         // Organizer
         if (evt.organizer) {
-          var orgName = (evt.organizer.firstName || '') + ' ' + (evt.organizer.lastName || '');
-          document.getElementById('organizer-name').textContent = orgName.trim() || 'Organizer';
-          document.getElementById('organizer-initials').textContent =
-            (evt.organizer.firstName?.[0] || '') + (evt.organizer.lastName?.[0] || '');
+          var user = JSON.parse(localStorage.getItem('user') || 'null');
+          var finalUserId = user ? (user._id || user.id) : null;
+          var isOwnEvent = finalUserId && (finalUserId === evt.organizer._id || finalUserId === evt.organizer);
+
+          if (isOwnEvent) {
+            var wrapper = document.getElementById('organizer-sidebar-wrapper');
+            if (wrapper) {
+              wrapper.innerHTML = '<div style="font-size: 2rem; margin-bottom: var(--space-2);">🌟</div><div style="font-size: var(--text-lg); font-weight: var(--font-bold); color: var(--brand-primary); margin-bottom: var(--space-2);">Your Event</div><p style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-4);">You are managing this event. Jump into the admin panel to edit details, roster, or lock RSVPs.</p><a href="manage-event.html?id=' + evt._id + '" class="btn btn--primary btn--full btn--sm">Manage Event</a>';
+            }
+          } else {
+            var orgName = (evt.organizer.firstName || '') + ' ' + (evt.organizer.lastName || '');
+            document.getElementById('organizer-name').textContent = orgName.trim() || 'Organizer';
+            document.getElementById('organizer-initials').textContent =
+              (evt.organizer.firstName?.[0] || '') + (evt.organizer.lastName?.[0] || '');
+          }
         }
 
         document.getElementById('event-loading').style.display = 'none';
@@ -347,6 +358,33 @@
         var form = document.getElementById('rsvp-form');
         var btn = document.getElementById('rsvp-submit-btn');
         var msgEl = document.getElementById('rsvp-msg');
+        
+        var user = JSON.parse(localStorage.getItem('user') || 'null');
+        var userId = user ? (user._id || user.id) : null;
+        var isOrganizer = user && (user.role === 'organizer' || user.role === 'admin');
+
+        var container = document.getElementById('rsvp-card-container');
+
+        if (isOrganizer) {
+          form.style.display = 'none';
+          msgEl.style.color = 'var(--text-tertiary)';
+          msgEl.textContent = 'Organizers cannot RSVP to events.';
+          return;
+        }
+
+        // Check if user is already in the attendees list
+        var hasRegistered = false;
+        if (userId && evt.attendees && Array.isArray(evt.attendees)) {
+            hasRegistered = evt.attendees.some(function(attendee) {
+                var attendeeId = attendee._id || attendee;
+                return attendeeId === userId;
+            });
+        }
+
+        if (hasRegistered) {
+            container.innerHTML = `<div style="text-align:center; padding:var(--space-2) 0;"><div style="font-size: 3rem; margin-bottom: var(--space-2);">🎉</div><h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2); color: var(--color-success);">You're In!</h3><p style="color: var(--text-secondary); font-size: var(--text-sm); line-height: 1.5;">Get ready for an amazing experience. We have successfully secured your spot on the guest list.</p></div>`;
+            return;
+        }
 
         form.addEventListener('submit', async function (e) {
           e.preventDefault();
@@ -404,18 +442,47 @@
 
         function addMessage(msg) {
           var div = document.createElement('div');
-          div.style.cssText = 'padding:var(--space-2) var(--space-3);background:var(--bg-tertiary);border-radius:var(--radius-md);';
+          
+          // Strict check: Is the sender the exact user who created this event?
+          var isOrgMsg = false;
+          if (msg.userId && evt.organizer) {
+             var orgId = evt.organizer._id || evt.organizer;
+             if (msg.userId === orgId) isOrgMsg = true;
+          }
+          
+          if (isOrgMsg) {
+             div.style.cssText = 'padding:var(--space-2) var(--space-3);background:rgba(88,101,242,0.1);border:1px solid rgba(88,101,242,0.3);border-radius:var(--radius-md);';
+          } else {
+             div.style.cssText = 'padding:var(--space-2) var(--space-3);background:var(--bg-tertiary);border-radius:var(--radius-md);';
+          }
+
+          if (isOrgMsg) {
+              var badge = document.createElement('span');
+              badge.textContent = 'ORGANIZER';
+              badge.style.cssText = 'background:var(--brand-primary);color:#fff;font-size:0.5rem;padding:2px 4px;border-radius:4px;margin-right:var(--space-2);vertical-align:middle;font-weight:bold;';
+              div.appendChild(badge);
+          }
+
           var strong = document.createElement('strong');
           strong.textContent = msg.user || 'Anonymous';
-          strong.style.cssText = 'color:var(--brand-primary);margin-right:var(--space-2);font-size:var(--text-sm);';
+          strong.style.cssText = isOrgMsg ? 'color:var(--brand-primary);margin-right:var(--space-2);font-size:var(--text-sm);' : 'color:var(--brand-primary);margin-right:var(--space-2);font-size:var(--text-sm);';
+          
           var span = document.createElement('span');
           span.textContent = msg.message;
-          span.style.cssText = 'color:var(--text-secondary);font-size:var(--text-sm);';
+          span.style.cssText = isOrgMsg ? 'color:var(--text-primary);font-size:var(--text-sm);' : 'color:var(--text-secondary);font-size:var(--text-sm);';
+          
           div.appendChild(strong);
           div.appendChild(span);
           messagesEl.appendChild(div);
           messagesEl.scrollTop = messagesEl.scrollHeight;
         }
+
+        socket.on('chat:history', function (history) {
+          messagesEl.innerHTML = '';
+          history.forEach(function (msg) {
+             addMessage({ user: msg.userName, message: msg.message, userId: msg.userId || '' });
+          });
+        });
 
         socket.on('chat:message', addMessage);
         socket.on('user:joined', function () {
@@ -442,8 +509,9 @@
           var text = chatInput.value.trim();
           if (!text) return;
           var userName = user ? user.firstName : 'Anonymous';
-          socket.emit('chat:message', { eventId: evt._id, message: text, user: userName });
-          addMessage({ user: userName, message: text });
+          var userId = user ? (user._id || user.id) : null;
+          socket.emit('chat:message', { eventId: evt._id, message: text, user: userName, userId: userId });
+          addMessage({ user: userName, message: text, userId: userId });
           chatInput.value = '';
         });
       }

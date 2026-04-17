@@ -81,6 +81,14 @@ const eventSchema = new mongoose.Schema(
     },
     prizePool: { type: String },
     isFeatured: { type: Boolean, default: false },
+    chatHistory: [
+      {
+        userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        userName: String,
+        message: String,
+        timestamp: { type: Date, default: Date.now },
+      }
+    ],
   },
   {
     // Adds createdAt and updatedAt automatically

@@ -24,11 +24,11 @@ export default defineConfig({
     open: '/pages/index.html',
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:4000',
         changeOrigin: true,
       },
       '/socket.io': {
-        target: 'http://localhost:5000',
+        target: 'http://localhost:4000',
         ws: true,
       },
     },

@@ -236,6 +236,21 @@
           avatarLink.className = 'landing-nav__avatar';
           avatarLink.innerHTML = '<span class="avatar avatar--sm">' + initials + '</span> ' + name;
           navRight.appendChild(avatarLink);
+
+          var logoutBtn = document.createElement('button');
+          logoutBtn.className = 'btn btn--ghost btn--sm';
+          logoutBtn.style.color = 'var(--color-error)';
+          logoutBtn.style.marginLeft = 'var(--space-2)';
+          logoutBtn.textContent = 'Logout';
+          logoutBtn.onclick = async function() {
+            try {
+              await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
+            } catch(e) {}
+            localStorage.removeItem('user');
+            localStorage.removeItem('accessToken');
+            window.location.reload();
+          };
+          navRight.appendChild(logoutBtn);
         }
       }
     })();

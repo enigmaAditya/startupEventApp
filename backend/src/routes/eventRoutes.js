@@ -44,7 +44,7 @@ router
   .route('/:id')
   .get(getEvent)
   .put(protect, authorize('organizer', 'admin'), updateEventRules, updateEvent)
-  .delete(protect, authorize('admin'), deleteEvent);
+  .delete(protect, authorize('organizer', 'admin'), deleteEvent);
 
 /**
  * POST /api/v1/events/:id/rsvp — RSVP to an event (authenticated)

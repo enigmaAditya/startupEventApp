@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Manage your events, and analytics from your StartupEvents organizer dashboard.">
+  <title>Organizer Dashboard — StartupEvents</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body>
+
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="navbar__brand">
+        <span class="navbar__brand-icon">🚀</span>
+        StartupEvents
+      </a>
+      <ul class="navbar__links" id="nav-links">
+        <li><a href="index.html" class="navbar__link">Home</a></li>
+        <li><a href="events.html" class="navbar__link">Events</a></li>
+        <li><a href="organizer-dashboard.html" class="navbar__link navbar__link--active">Dashboard</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+        <div class="dropdown" id="user-dropdown">
+          <button class="btn btn--ghost" style="display: flex; align-items: center; gap: var(--space-2);" id="user-dropdown-toggle">
+            <div class="avatar avatar--sm">JD</div>
+            <span style="font-size: var(--text-sm);">John Doe</span>
+          </button>
+          <div class="dropdown__menu" id="user-dropdown-menu">
+            <button class="dropdown__item">👤 Profile</button>
+            <button class="dropdown__item" style="color: var(--color-error);">🚪 Logout</button>
+          </div>
+        </div>
+      </div>
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- ============ DASHBOARD LAYOUT (Flexbox) ============ -->
+  <div class="dashboard">
+    <!-- Sidebar -->
+    <aside class="dashboard__sidebar">
+      <div style="margin-bottom: var(--space-8);">
+        <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);">
+          <div class="avatar avatar--lg">JD</div>
+          <div>
+            <div style="font-weight: var(--font-semibold);">John Doe</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Organizer</div>
+          </div>
+        </div>
+      </div>
+
+      <nav class="dashboard__sidebar-nav" aria-label="Dashboard navigation">
+        <a href="#overview" class="dashboard__sidebar-link dashboard__sidebar-link--active" data-tab="overview">
+          📊 Overview
+        </a>
+        <a href="#my-events" class="dashboard__sidebar-link" data-tab="my-events">
+          📅 My Events
+        </a>
+        <a href="#create-event" class="dashboard__sidebar-link" data-tab="create-event">
+          ✏️ Create Event
+        </a>
+        <a href="#analytics" class="dashboard__sidebar-link" data-tab="analytics">
+          📈 Analytics
+        </a>
+        <a href="#settings" class="dashboard__sidebar-link" data-tab="settings">
+          ⚙️ Settings
+        </a>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard__main">
+      <!-- ============ OVERVIEW TAB ============ -->
+      <section id="tab-overview">
+        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋</h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening with your events</p>
+
+        <!-- Stats Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
+          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Total Events Organized</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-org-events">0</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
+          </div>
+          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Total Platform Events</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-all-events">0</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Recent RSVPs Container (Hidden, awaiting backend RSVPs data in a future iteration) -->
+        <div id="recent-rsvps-section" style="display: none;">
+        </div>
+      </section>
+
+      <!-- ============ MY EVENTS TAB ============ -->
+      <section id="tab-my-events" style="display: none;">
+        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">My Events</h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you have organized</p>
+        <div id="my-events-list" style="display: flex; flex-direction: column; gap: var(--space-3);">
+          <div style="text-align: center; padding: var(--space-10); color: var(--text-tertiary);">Loading events...</div>
+        </div>
+      </section>
+
+      <!-- ============ CREATE EVENT TAB ============ -->
+      <section id="tab-create-event" style="display: none;">
+        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Create New Event</h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Fill in the details to create and publish your event</p>
+
+        <form id="create-event-form" style="max-width: 700px;" novalidate>
+          <div class="form-group">
+            <label class="form-label form-label--required" for="event-title">Event Title</label>
+            <input type="text" class="form-input" id="event-title" name="title" placeholder="e.g., Build for Tomorrow — 48hr Hackathon" required>
+            <span class="form-error" id="event-title-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label form-label--required" for="event-description">Description</label>
+            <textarea class="form-input" id="event-description" name="description" placeholder="Describe your event in detail..." required></textarea>
+            <span class="form-error" id="event-description-error"></span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="form-group">
+              <label class="form-label form-label--required" for="event-category">Category</label>
+              <select class="form-input form-select" id="event-category" name="category" required>
+                <option value="">Select category</option>
+                <option value="hackathon">🏆 Hackathon</option>
+                <option value="pitch-night">🎤 Pitch Night</option>
+                <option value="workshop">🛠️ Workshop</option>
+                <option value="meetup">☕ Meetup</option>
+                <option value="conference">🎪 Conference</option>
+              </select>
+              <span class="form-error" id="event-category-error"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label form-label--required" for="event-capacity">Capacity</label>
+              <input type="number" class="form-input" id="event-capacity" name="capacity" placeholder="e.g., 500" min="1" required>
+              <span class="form-error" id="event-capacity-error"></span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="form-group">
+              <label class="form-label form-label--required" for="event-date">Event Date</label>
+              <input type="date" class="form-input" id="event-date" name="date" required>
+              <span class="form-error" id="event-date-error"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="event-time">Start Time</label>
+              <input type="time" class="form-input" id="event-time" name="time">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label form-label--required" for="event-venue">Venue</label>
+            <input type="text" class="form-input" id="event-venue" name="venue" placeholder="e.g., TechHub Bangalore" required>
+            <span class="form-error" id="event-venue-error"></span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="form-group">
+              <label class="form-label form-label--required" for="event-city">City</label>
+              <input type="text" class="form-input" id="event-city" name="city" placeholder="e.g., Bangalore" required>
+              <span class="form-error" id="event-city-error"></span>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="event-virtual">
+                <span>Format</span>
+              </label>
+              <select class="form-input form-select" id="event-virtual" name="isVirtual">
+                <option value="false">🏢 In-person</option>
+                <option value="true">🌐 Virtual</option>
+                <option value="hybrid">🔄 Hybrid</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="event-tags">Tags</label>
+            <input type="text" class="form-input" id="event-tags" name="tags" placeholder="e.g., AI/ML, Web3, FinTech (comma separated)">
+            <span class="form-hint">Separate tags with commas</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="event-image">Event Image</label>
+            <input type="file" class="form-input" id="event-image" name="image" accept="image/*" style="padding: var(--space-3);">
+          </div>
+
+          <div style="display: flex; gap: var(--space-4); padding-top: var(--space-4);">
+            <button type="submit" class="btn btn--primary btn--lg" id="create-event-submit-btn">
+              🎉 Publish Event
+            </button>
+            <button type="button" class="btn btn--secondary btn--lg" id="create-event-draft-btn">
+              Save as Draft
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ============ ANALYTICS TAB ============ -->
+      <section id="tab-analytics" style="display: none;">
+        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Analytics</h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Track your event performance</p>
+        <div style="text-align: center; padding: var(--space-10); color: var(--text-tertiary);">
+          <div style="font-size: 3rem; margin-bottom: var(--space-4);">📈</div>
+          <p>Analytics data will appear here once your events receive views and RSVPs.</p>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS TAB ============ -->
+      <section id="tab-settings" style="display: none;">
+        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Settings</h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Manage your account preferences</p>
+        <div style="max-width: 500px;">
+          <div class="form-group">
+            <label class="form-label">First Name</label>
+            <input type="text" class="form-input" id="settings-firstname" placeholder="First name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Last Name</label>
+            <input type="text" class="form-input" id="settings-lastname" placeholder="Last name">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Bio</label>
+            <textarea class="form-input" id="settings-bio" placeholder="Tell us about yourself..."></textarea>
+          </div>
+          <button class="btn btn--primary" id="settings-save-btn">Save Changes</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="../js/theme.js"></script>
+  <script src="../js/auth.js"></script>
+  <script src="../js/services/eventBus.js"></script>
+  <script src="../js/validation.js"></script>
+  <script src="../js/utils.js"></script>
+  <script>
+    (async function () {
+      'use strict';
+
+      var user = JSON.parse(localStorage.getItem('user') || 'null');
+      var token = localStorage.getItem('accessToken');
+      if (!user || !token) { window.location.href = 'login.html'; return; }
+      
+      var isOrganizer = user.role === 'organizer' || user.role === 'admin';
+      
+      if (!isOrganizer) { 
+        window.location.href = 'dashboard.html'; 
+        return; 
+      }
+
+      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+
+      /* ---------- Populate sidebar & welcome ---------- */
+      var initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
+      var fullName = ((user.firstName || '') + ' ' + (user.lastName || '')).trim();
+
+      document.querySelector('#tab-overview h1').textContent = 'Welcome back, ' + (user.firstName || 'User') + ' 👋';
+
+      var sidebar = document.querySelector('.dashboard__sidebar');
+      var sideAvatar = sidebar.querySelector('.avatar');
+      if (sideAvatar) sideAvatar.textContent = initials;
+      sidebar.querySelectorAll('div').forEach(function (el) {
+        if (el.textContent.trim() === 'John Doe') el.textContent = fullName;
+        if (el.textContent.trim() === 'Organizer') el.textContent = (user.role || 'user').charAt(0).toUpperCase() + (user.role || 'user').slice(1);
+      });
+
+      async function authFetch(url) {
+        var res = await fetch(url, { headers: authHeaders, credentials: 'include' });
+        return res.json();
+      }
+
+      try {
+        var profileData = await authFetch('/api/v1/users/me');
+        var eventsData  = await fetch('/api/v1/events?limit=50').then(function (r) { return r.json(); });
+
+        if (profileData.success) {
+          var p = profileData.data;
+          var organized = p.eventsOrganized || [];
+
+          var orgEvents = document.getElementById('stat-org-events');
+          if (orgEvents) {
+            orgEvents.textContent = organized.length;
+            orgEvents.nextElementSibling.textContent = 'Published by you';
+          }
+          
+          var allEvents = document.getElementById('stat-all-events');
+          var totalEventsCount = eventsData.success ? eventsData.pagination?.total || eventsData.data?.length || 0 : 0;
+          if (allEvents) {
+            allEvents.textContent = totalEventsCount;
+            allEvents.nextElementSibling.textContent = 'Across platform';
+          }
+        }
+
+      } catch (e) {
+        console.error('Dashboard load error:', e);
+      }
+
+      /* ---------- My Events tab ---------- */
+      var myEventsList = document.getElementById('my-events-list');
+      if (myEventsList && profileData && profileData.success) {
+        var organized = profileData.data.eventsOrganized || [];
+        if (organized.length === 0) {
+          myEventsList.innerHTML = '<div style="text-align:center;padding:var(--space-10);color:var(--text-tertiary);"><div style="font-size:3rem;margin-bottom:var(--space-4);">📅</div><p>You haven\'t created any events yet.</p><a href="#create-event" class="btn btn--primary" style="margin-top:var(--space-4);" onclick="document.querySelector(\'[data-tab=create-event]\').click()">Create Event</a></div>';
+        } else {
+          myEventsList.innerHTML = '';
+          organized.forEach(function (evt) {
+            if (!evt) return; // Prevent crashes from dangling deleted references
+            var dateStr = evt.date ? new Date(evt.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'TBD';
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-xl);';
+            row.innerHTML =
+              '<div style="flex:1;"><div style="font-weight:var(--font-semibold);">' + evt.title + '</div>' +
+              '<div style="font-size:var(--text-sm);color:var(--text-secondary);">' + dateStr + '</div></div>' +
+              '<span class="badge">' + (evt.status || 'upcoming') + '</span>' +
+              '<a href="event-detail.html?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
+            myEventsList.appendChild(row);
+          });
+        }
+      }
+
+      /* ---------- Settings tab ---------- */
+      var settingsFirst = document.getElementById('settings-firstname');
+      var settingsLast = document.getElementById('settings-lastname');
+      var settingsBio = document.getElementById('settings-bio');
+      if (settingsFirst) settingsFirst.value = user.firstName || '';
+      if (settingsLast) settingsLast.value = user.lastName || '';
+
+      document.getElementById('settings-save-btn').addEventListener('click', async function () {
+        try {
+          var res = await fetch('/api/v1/users/me', {
+            method: 'PUT',
+            headers: authHeaders,
+            credentials: 'include',
+            body: JSON.stringify({
+              firstName: settingsFirst.value.trim(),
+              lastName: settingsLast.value.trim(),
+              bio: settingsBio?.value?.trim() || '',
+            }),
+          });
+          var data = await res.json();
+          if (res.ok && data.success) {
+            var updated = Object.assign({}, user, { firstName: settingsFirst.value.trim(), lastName: settingsLast.value.trim() });
+            localStorage.setItem('user', JSON.stringify(updated));
+            if (window.showToast) window.showToast({ type: 'success', title: 'Saved!', message: 'Profile updated' });
+          } else {
+            throw new Error(data.error?.message || 'Update failed');
+          }
+        } catch (e) {
+          if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: e.message });
+        }
+      });
+
+      /* ---------- Create Event form ---------- */
+      var createForm = document.getElementById('create-event-form');
+      if (createForm) {
+        createForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var btn = document.getElementById('create-event-submit-btn');
+          btn.disabled = true;
+          btn.textContent = 'Publishing...';
+          try {
+            var tags = (document.getElementById('event-tags').value || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean);
+            var body = {
+              title: document.getElementById('event-title').value.trim(),
+              description: document.getElementById('event-description').value.trim(),
+              category: document.getElementById('event-category').value,
+              capacity: parseInt(document.getElementById('event-capacity').value, 10),
+              date: document.getElementById('event-date').value,
+              location: {
+                venue: document.getElementById('event-venue').value.trim(),
+                city: document.getElementById('event-city').value.trim(),
+              },
+              isVirtual: document.getElementById('event-virtual').value !== 'false',
+              tags: tags,
+            };
+            var res = await fetch('/api/v1/events', {
+              method: 'POST',
+              headers: authHeaders,
+              credentials: 'include',
+              body: JSON.stringify(body),
+            });
+            var data = await res.json();
+            if (res.ok && data.success) {
+              if (window.showToast) window.showToast({ type: 'success', title: 'Published!', message: 'Event "' + body.title + '" is live' });
+              createForm.reset();
+              btn.textContent = '🎉 Publish Event';
+              btn.disabled = false;
+              if (window.__eventBus) window.__eventBus.emit('event:created', data.data);
+              
+              // Refresh page to show new event
+              setTimeout(() => window.location.reload(), 1500);
+            } else {
+              var msg = data.errors ? data.errors.map(function (e) { return e.msg; }).join(', ') : (data.error?.message || 'Failed');
+              throw new Error(msg);
+            }
+          } catch (err) {
+            if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: err.message });
+            btn.textContent = '🎉 Publish Event';
+            btn.disabled = false;
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

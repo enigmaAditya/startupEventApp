@@ -70,17 +70,8 @@
         <a href="#overview" class="dashboard__sidebar-link dashboard__sidebar-link--active" data-tab="overview">
           📊 Overview
         </a>
-        <a href="#my-events" class="dashboard__sidebar-link" data-tab="my-events">
-          📅 My Events
-        </a>
         <a href="#my-rsvps" class="dashboard__sidebar-link" data-tab="my-rsvps">
           🎟️ My RSVPs
-        </a>
-        <a href="#create-event" class="dashboard__sidebar-link" data-tab="create-event">
-          ✏️ Create Event
-        </a>
-        <a href="#analytics" class="dashboard__sidebar-link" data-tab="analytics">
-          📈 Analytics
         </a>
         <a href="#settings" class="dashboard__sidebar-link" data-tab="settings">
           ⚙️ Settings
@@ -99,23 +90,23 @@
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Total Events</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">8</div>
-            <div style="font-size: var(--text-xs); color: var(--color-success); margin-top: var(--space-1);">↑ 2 this month</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">0</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
           </div>
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Total RSVPs</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">342</div>
-            <div style="font-size: var(--text-xs); color: var(--color-success); margin-top: var(--space-1);">↑ 18% from last month</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">0</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
           </div>
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Event Views</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">2,841</div>
-            <div style="font-size: var(--text-xs); color: var(--color-success); margin-top: var(--space-1);">↑ 24% from last month</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">0</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
           </div>
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Avg. Attendance</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">76%</div>
-            <div style="font-size: var(--text-xs); color: var(--color-warning); margin-top: var(--space-1);">→ Same as last month</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);">—</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
           </div>
         </div>
 
@@ -128,7 +119,7 @@
         </div>
 
         <!-- Recent RSVPs -->
-        <div>
+        <div id="recent-rsvps-section">
           <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">Recent RSVPs</h2>
           <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); overflow: hidden;">
             <table style="width: 100%; text-align: left;">
@@ -141,51 +132,12 @@
                 </tr>
               </thead>
               <tbody id="rsvps-table-body">
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                  <td style="padding: var(--space-4) var(--space-5);">
-                    <div style="display: flex; align-items: center; gap: var(--space-3);">
-                      <div class="avatar avatar--sm">AS</div>
-                      <span style="font-size: var(--text-sm);">Amit Singh</span>
-                    </div>
-                  </td>
-                  <td style="padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--text-secondary);">Build for Tomorrow</td>
-                  <td style="padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--text-secondary);">2 hours ago</td>
-                  <td style="padding: var(--space-4) var(--space-5);"><span class="badge badge--success">Confirmed</span></td>
-                </tr>
-                <tr style="border-bottom: 1px solid var(--border-color);">
-                  <td style="padding: var(--space-4) var(--space-5);">
-                    <div style="display: flex; align-items: center; gap: var(--space-3);">
-                      <div class="avatar avatar--sm">NP</div>
-                      <span style="font-size: var(--text-sm);">Neha Patel</span>
-                    </div>
-                  </td>
-                  <td style="padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--text-secondary);">Startup Pitch Arena</td>
-                  <td style="padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--text-secondary);">5 hours ago</td>
-                  <td style="padding: var(--space-4) var(--space-5);"><span class="badge badge--success">Confirmed</span></td>
-                </tr>
                 <tr>
-                  <td style="padding: var(--space-4) var(--space-5);">
-                    <div style="display: flex; align-items: center; gap: var(--space-3);">
-                      <div class="avatar avatar--sm">RK</div>
-                      <span style="font-size: var(--text-sm);">Rohan Kumar</span>
-                    </div>
-                  </td>
-                  <td style="padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--text-secondary);">Full-Stack Bootcamp</td>
-                  <td style="padding: var(--space-4) var(--space-5); font-size: var(--text-sm); color: var(--text-secondary);">1 day ago</td>
-                  <td style="padding: var(--space-4) var(--space-5);"><span class="badge badge--warning">Pending</span></td>
+                  <td colspan="4" style="text-align:center;padding:var(--space-8);color:var(--text-tertiary);">No recent RSVPs to show.</td>
                 </tr>
               </tbody>
             </table>
           </div>
-        </div>
-      </section>
-
-      <!-- ============ MY EVENTS TAB ============ -->
-      <section id="tab-my-events" style="display: none;">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">My Events</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you have organized</p>
-        <div id="my-events-list" style="display: flex; flex-direction: column; gap: var(--space-3);">
-          <div style="text-align: center; padding: var(--space-10); color: var(--text-tertiary);">Loading events...</div>
         </div>
       </section>
 
@@ -197,112 +149,6 @@
           <div style="font-size: 3rem; margin-bottom: var(--space-4);">🎟️</div>
           <p>Your RSVPs will appear here after you register for events.</p>
           <a href="events.html" class="btn btn--primary" style="margin-top: var(--space-4);">Browse Events</a>
-        </div>
-      </section>
-
-      <!-- ============ CREATE EVENT TAB (hidden by default) ============ -->
-      <section id="tab-create-event" style="display: none;">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Create New Event</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Fill in the details to create and publish your event</p>
-
-        <form id="create-event-form" style="max-width: 700px;" novalidate>
-          <div class="form-group">
-            <label class="form-label form-label--required" for="event-title">Event Title</label>
-            <input type="text" class="form-input" id="event-title" name="title" placeholder="e.g., Build for Tomorrow — 48hr Hackathon" required>
-            <span class="form-error" id="event-title-error"></span>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label form-label--required" for="event-description">Description</label>
-            <textarea class="form-input" id="event-description" name="description" placeholder="Describe your event in detail..." required></textarea>
-            <span class="form-error" id="event-description-error"></span>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
-            <div class="form-group">
-              <label class="form-label form-label--required" for="event-category">Category</label>
-              <select class="form-input form-select" id="event-category" name="category" required>
-                <option value="">Select category</option>
-                <option value="hackathon">🏆 Hackathon</option>
-                <option value="pitch-night">🎤 Pitch Night</option>
-                <option value="workshop">🛠️ Workshop</option>
-                <option value="meetup">☕ Meetup</option>
-                <option value="conference">🎪 Conference</option>
-              </select>
-              <span class="form-error" id="event-category-error"></span>
-            </div>
-            <div class="form-group">
-              <label class="form-label form-label--required" for="event-capacity">Capacity</label>
-              <input type="number" class="form-input" id="event-capacity" name="capacity" placeholder="e.g., 500" min="1" required>
-              <span class="form-error" id="event-capacity-error"></span>
-            </div>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
-            <div class="form-group">
-              <label class="form-label form-label--required" for="event-date">Event Date</label>
-              <input type="date" class="form-input" id="event-date" name="date" required>
-              <span class="form-error" id="event-date-error"></span>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="event-time">Start Time</label>
-              <input type="time" class="form-input" id="event-time" name="time">
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label form-label--required" for="event-venue">Venue</label>
-            <input type="text" class="form-input" id="event-venue" name="venue" placeholder="e.g., TechHub Bangalore" required>
-            <span class="form-error" id="event-venue-error"></span>
-          </div>
-
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
-            <div class="form-group">
-              <label class="form-label form-label--required" for="event-city">City</label>
-              <input type="text" class="form-input" id="event-city" name="city" placeholder="e.g., Bangalore" required>
-              <span class="form-error" id="event-city-error"></span>
-            </div>
-            <div class="form-group">
-              <label class="form-label" for="event-virtual">
-                <span>Format</span>
-              </label>
-              <select class="form-input form-select" id="event-virtual" name="isVirtual">
-                <option value="false">🏢 In-person</option>
-                <option value="true">🌐 Virtual</option>
-                <option value="hybrid">🔄 Hybrid</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="event-tags">Tags</label>
-            <input type="text" class="form-input" id="event-tags" name="tags" placeholder="e.g., AI/ML, Web3, FinTech (comma separated)">
-            <span class="form-hint">Separate tags with commas</span>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="event-image">Event Image</label>
-            <input type="file" class="form-input" id="event-image" name="image" accept="image/*" style="padding: var(--space-3);">
-          </div>
-
-          <div style="display: flex; gap: var(--space-4); padding-top: var(--space-4);">
-            <button type="submit" class="btn btn--primary btn--lg" id="create-event-submit-btn">
-              🎉 Publish Event
-            </button>
-            <button type="button" class="btn btn--secondary btn--lg" id="create-event-draft-btn">
-              Save as Draft
-            </button>
-          </div>
-        </form>
-      </section>
-
-      <!-- ============ ANALYTICS TAB ============ -->
-      <section id="tab-analytics" style="display: none;">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Analytics</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Track your event performance</p>
-        <div style="text-align: center; padding: var(--space-10); color: var(--text-tertiary);">
-          <div style="font-size: 3rem; margin-bottom: var(--space-4);">📈</div>
-          <p>Analytics data will appear here once your events receive views and RSVPs.</p>
         </div>
       </section>
 
@@ -350,18 +196,15 @@
       var token = localStorage.getItem('accessToken');
       if (!user || !token) { window.location.href = 'login.html'; return; }
 
-      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
       var isOrganizer = user.role === 'organizer' || user.role === 'admin';
-
-      /* ---------- RBAC: hide organizer-only tabs for attendees ---------- */
-      if (!isOrganizer) {
-        ['create-event', 'my-events', 'analytics'].forEach(function (tab) {
-          var link = document.querySelector('[data-tab="' + tab + '"]');
-          if (link) link.style.display = 'none';
-          var section = document.getElementById('tab-' + tab);
-          if (section) section.remove();
-        });
+      
+      // Redirect organizers to their dedicated dashboard
+      if (isOrganizer) {
+        window.location.href = 'organizer-dashboard.html';
+        return;
       }
+
+      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
       /* ---------- Populate sidebar & welcome ---------- */
       var initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
@@ -394,21 +237,12 @@
           var attending = p.eventsAttending || [];
 
           var statCards = document.querySelectorAll('#tab-overview [style*="grid-template-columns"] > div');
-          if (isOrganizer) {
-            if (statCards[0]) statCards[0].querySelector('div:nth-child(2)').textContent = organized.length;
-            if (statCards[1]) statCards[1].querySelector('div:nth-child(2)').textContent = attending.length;
-            if (statCards[2]) {
-              var totalEvents = eventsData.success ? eventsData.pagination?.total || eventsData.data?.length || 0 : 0;
-              statCards[2].querySelector('div:nth-child(2)').textContent = totalEvents;
-            }
-          } else {
-            /* Attendee-centric stats */
-            var labelEls = document.querySelectorAll('#tab-overview [style*="grid-template-columns"] > div > div:first-child');
-            if (statCards[0]) { if (labelEls[0]) labelEls[0].textContent = 'Events Attending'; statCards[0].querySelector('div:nth-child(2)').textContent = attending.length; }
-            if (statCards[1]) { if (labelEls[1]) labelEls[1].textContent = 'My RSVPs'; statCards[1].querySelector('div:nth-child(2)').textContent = attending.length; }
-            if (statCards[2]) { if (labelEls[2]) labelEls[2].textContent = 'Total Events'; var te = eventsData.success ? eventsData.pagination?.total || eventsData.data?.length || 0 : 0; statCards[2].querySelector('div:nth-child(2)').textContent = te; }
-            if (statCards[3]) { if (labelEls[3]) labelEls[3].textContent = 'Upcoming'; statCards[3].querySelector('div:nth-child(2)').textContent = '—'; }
-          }
+          /* Attendee-centric stats */
+          var labelEls = document.querySelectorAll('#tab-overview [style*="grid-template-columns"] > div > div:first-child');
+          if (statCards[0]) { if (labelEls[0]) labelEls[0].textContent = 'Events Attending'; statCards[0].querySelector('div:nth-child(2)').textContent = attending.length; statCards[0].querySelector('div:nth-child(3)').textContent = 'Registrations'; }
+          if (statCards[1]) { if (labelEls[1]) labelEls[1].textContent = 'My RSVPs'; statCards[1].querySelector('div:nth-child(2)').textContent = attending.length; statCards[1].querySelector('div:nth-child(3)').textContent = 'Active tickets'; }
+          if (statCards[2]) { if (labelEls[2]) labelEls[2].textContent = 'Total Events'; var te = eventsData.success ? eventsData.pagination?.total || eventsData.data?.length || 0 : 0; statCards[2].querySelector('div:nth-child(2)').textContent = te; statCards[2].querySelector('div:nth-child(3)').textContent = 'Across platform'; }
+          if (statCards[3]) { if (labelEls[3]) labelEls[3].textContent = 'Upcoming'; statCards[3].querySelector('div:nth-child(2)').textContent = '—'; statCards[3].querySelector('div:nth-child(3)').textContent = 'In your area'; }
         }
 
         /* Upcoming events list */
@@ -436,24 +270,25 @@
         console.error('Dashboard load error:', e);
       }
 
-      /* ---------- My Events tab (organizer only — hidden for attendees via RBAC above) ---------- */
-      var myEventsList = document.getElementById('my-events-list');
-      if (myEventsList && isOrganizer && profileData && profileData.success) {
-        var organized = profileData.data.eventsOrganized || [];
-        if (organized.length === 0) {
-          myEventsList.innerHTML = '<div style="text-align:center;padding:var(--space-10);color:var(--text-tertiary);"><div style="font-size:3rem;margin-bottom:var(--space-4);">📅</div><p>You haven\'t created any events yet.</p><a href="#create-event" class="btn btn--primary" style="margin-top:var(--space-4);" onclick="document.querySelector(\'[data-tab=create-event]\').click()">Create Event</a></div>';
-        } else {
-          myEventsList.innerHTML = '';
-          organized.forEach(function (evt) {
+      /* ---------- My RSVPs tab ---------- */
+      var myRsvpsSection = document.getElementById('tab-my-rsvps');
+      if (myRsvpsSection && profileData && profileData.success) {
+        var attendingList = profileData.data.eventsAttending || [];
+        if (attendingList.length > 0) {
+          myRsvpsSection.innerHTML = '<h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">My RSVPs</h1><p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you\'ve registered for</p><div id="my-rsvps-list" style="display: flex; flex-direction: column; gap: var(--space-3);"></div>';
+          var listDiv = document.getElementById('my-rsvps-list');
+          
+          attendingList.forEach(function(evt) {
+            if (!evt) return; // Prevent crashes from dangling references
             var dateStr = evt.date ? new Date(evt.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'TBD';
             var row = document.createElement('div');
             row.style.cssText = 'display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-xl);';
             row.innerHTML =
               '<div style="flex:1;"><div style="font-weight:var(--font-semibold);">' + evt.title + '</div>' +
               '<div style="font-size:var(--text-sm);color:var(--text-secondary);">' + dateStr + '</div></div>' +
-              '<span class="badge">' + (evt.status || 'upcoming') + '</span>' +
+              '<span class="badge badge--success">Confirmed</span>' +
               '<a href="event-detail.html?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
-            myEventsList.appendChild(row);
+            listDiv.appendChild(row);
           });
         }
       }
@@ -489,54 +324,6 @@
           if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: e.message });
         }
       });
-
-      /* ---------- Create Event form (organizer/admin only) ---------- */
-      var createForm = document.getElementById('create-event-form');
-      if (createForm && isOrganizer) {
-        createForm.addEventListener('submit', async function (e) {
-          e.preventDefault();
-          var btn = document.getElementById('create-event-submit-btn');
-          btn.disabled = true;
-          btn.textContent = 'Publishing...';
-          try {
-            var tags = (document.getElementById('event-tags').value || '').split(',').map(function (t) { return t.trim(); }).filter(Boolean);
-            var body = {
-              title: document.getElementById('event-title').value.trim(),
-              description: document.getElementById('event-description').value.trim(),
-              category: document.getElementById('event-category').value,
-              capacity: parseInt(document.getElementById('event-capacity').value, 10),
-              date: document.getElementById('event-date').value,
-              location: {
-                venue: document.getElementById('event-venue').value.trim(),
-                city: document.getElementById('event-city').value.trim(),
-              },
-              isVirtual: document.getElementById('event-virtual').value !== 'false',
-              tags: tags,
-            };
-            var res = await fetch('/api/v1/events', {
-              method: 'POST',
-              headers: authHeaders,
-              credentials: 'include',
-              body: JSON.stringify(body),
-            });
-            var data = await res.json();
-            if (res.ok && data.success) {
-              if (window.showToast) window.showToast({ type: 'success', title: 'Published!', message: 'Event "' + body.title + '" is live' });
-              createForm.reset();
-              btn.textContent = '🎉 Publish Event';
-              btn.disabled = false;
-              if (window.__eventBus) window.__eventBus.emit('event:created', data.data);
-            } else {
-              var msg = data.errors ? data.errors.map(function (e) { return e.msg; }).join(', ') : (data.error?.message || 'Failed');
-              throw new Error(msg);
-            }
-          } catch (err) {
-            if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: err.message });
-            btn.textContent = '🎉 Publish Event';
-            btn.disabled = false;
-          }
-        });
-      }
     })();
   </script>
 </body>

@@ -198,7 +198,10 @@
             if (window.showToast) {
               window.showToast({ type: 'success', title: 'Welcome back!', message: `Logged in as ${data.data.user.firstName}` });
             }
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            const dashboardUrl = (data.data.user.role === 'organizer' || data.data.user.role === 'admin') 
+              ? 'organizer-dashboard.html' 
+              : 'dashboard.html';
+            setTimeout(() => { window.location.href = dashboardUrl; }, 800);
           } else {
             const msg = data.error?.message || data.errors?.[0]?.msg || 'Invalid email or password';
             showFieldStatus(emailInput, 'login-email-error', { isValid: false, message: msg });
@@ -336,7 +339,10 @@
             if (window.showToast) {
               window.showToast({ type: 'success', title: 'Account created!', message: `Welcome, ${data.data.user.firstName}!` });
             }
-            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+            const dashboardUrl = (data.data.user.role === 'organizer' || data.data.user.role === 'admin') 
+              ? 'organizer-dashboard.html' 
+              : 'dashboard.html';
+            setTimeout(() => { window.location.href = dashboardUrl; }, 800);
           } else {
             const msg = data.error?.message || data.errors?.[0]?.msg || 'Registration failed';
             showFieldStatus(fields.email, 'register-email-error', { isValid: false, message: msg });
