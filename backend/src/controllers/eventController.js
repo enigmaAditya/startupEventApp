@@ -23,7 +23,7 @@ const logger = require('../utils/logger');
  */
 const getEvents = async (req, res, next) => {
   try {
-    const { category, search, status, city } = req.query;
+    const { category, search, status, city, organizer } = req.query;
     const { page, limit, skip } = req.pagination;
 
     // Build filter object dynamically
@@ -31,6 +31,7 @@ const getEvents = async (req, res, next) => {
     const filter = {};
     if (category) filter.category = category;
     if (status) filter.status = status;
+    if (organizer) filter.organizer = organizer;
     if (city) filter['location.city'] = new RegExp(city, 'i');
 
     let query;

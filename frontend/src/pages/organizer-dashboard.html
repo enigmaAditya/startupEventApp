@@ -59,8 +59,9 @@
         <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6);">
           <div class="avatar avatar--lg">JD</div>
           <div>
-            <div style="font-weight: var(--font-semibold);">John Doe</div>
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary);">Organizer</div>
+            <div id="sidebar-user-name" style="font-weight: var(--font-semibold);">John Doe</div>
+            <div id="sidebar-user-role" style="font-size: var(--text-xs); color: var(--text-tertiary);">Organizer</div>
+            <div id="admin-badge" style="display: none; margin-top: 4px; font-size: 10px; padding: 2px 6px; background: var(--color-primary-600); color: white; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content;">🛡️ Admin Mode</div>
           </div>
         </div>
       </div>
@@ -69,7 +70,7 @@
         <a href="#overview" class="dashboard__sidebar-link dashboard__sidebar-link--active" data-tab="overview">
           📊 Overview
         </a>
-        <a href="#my-events" class="dashboard__sidebar-link" data-tab="my-events">
+        <a href="#my-events" class="dashboard__sidebar-link" data-tab="my-events" id="nav-events-label">
           📅 My Events
         </a>
         <a href="#create-event" class="dashboard__sidebar-link" data-tab="create-event">
@@ -93,20 +94,30 @@
     <main class="dashboard__main">
       <!-- ============ OVERVIEW TAB ============ -->
       <section id="tab-overview">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening with your events</p>
+        <h1 id="welcome-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋</h1>
+        <p id="welcome-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening with your events</p>
 
         <!-- Stats Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Total Events Organized</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-org-events">0</div>
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
+            <div id="stat-org-events-label" style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">My Total Events</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-org-events">—</div>
+            <div id="stat-org-events-sub" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Syncing...</div>
           </div>
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Total Platform Events</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-all-events">0</div>
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Loading...</div>
+            <div id="stat-reach-label" style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Member Reach</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-reach">—</div>
+            <div id="stat-reach-sub" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Total registrations</div>
+          </div>
+          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
+            <div id="stat-growth-label" style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">7-Day Growth</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-growth">—</div>
+            <div id="stat-growth-sub" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">New this week</div>
+          </div>
+          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);" id="stat-platform-card">
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Global Events</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-all-events">—</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Platform total</div>
           </div>
         </div>
 
@@ -117,8 +128,8 @@
 
       <!-- ============ MY EVENTS TAB ============ -->
       <section id="tab-my-events" style="display: none;">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">My Events</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you have organized</p>
+        <h1 id="my-events-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">My Events</h1>
+        <p id="my-events-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you have organized</p>
         <div id="my-events-list" style="display: flex; flex-direction: column; gap: var(--space-3);">
           <div class="skeleton" style="height: 70px; width: 100%; margin-bottom: var(--space-2);"></div>
           <div class="skeleton" style="height: 70px; width: 100%; margin-bottom: var(--space-2);"></div>
@@ -128,8 +139,8 @@
 
       <!-- ============ CREATE EVENT TAB ============ -->
       <section id="tab-create-event" style="display: none;">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Create New Event</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Fill in the details to create and publish your event</p>
+        <h1 id="create-event-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Create New Event</h1>
+        <p id="create-event-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Fill in the details to create and publish your event</p>
 
         <form id="create-event-form" style="max-width: 700px;" novalidate>
           <div class="form-group">
@@ -224,8 +235,8 @@
 
       <!-- ============ ANALYTICS TAB ============ -->
       <section id="tab-analytics" style="display: none;">
-        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Analytics Command Center</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Track your audience reach and event performance</p>
+        <h1 id="analytics-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Analytics Command Center</h1>
+        <p id="analytics-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Track your audience reach and event performance</p>
 
         <!-- Analytics Loading State -->
         <div id="analytics-loading" style="padding: var(--space-10); text-align: center;">
@@ -337,7 +348,46 @@
       var initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
       var fullName = ((user.firstName || '') + ' ' + (user.lastName || '')).trim();
 
-      document.querySelector('#tab-overview h1').textContent = 'Welcome back, ' + (user.firstName || 'User') + ' 👋';
+      document.getElementById('welcome-title').textContent = 'Welcome back, ' + (user.firstName || 'User') + ' 👋';
+
+      // Admin Role UI adjustments
+      if (user.role === 'admin') {
+        const welcomeMsg = document.getElementById('welcome-title');
+        const welcomeSub = document.getElementById('welcome-sub');
+        const roleEl = document.getElementById('sidebar-user-role');
+        const badgeEl = document.getElementById('admin-badge');
+        const navEvents = document.getElementById('nav-events-label');
+        const anaHeading = document.querySelector('#tab-analytics h1');
+
+        if (welcomeMsg) welcomeMsg.innerHTML = `System Command: ${user.firstName} 🛡️`;
+        if (welcomeSub) welcomeSub.textContent = 'Aggregated platform activity and metrics';
+        if (roleEl) roleEl.textContent = 'Platform Admin';
+        if (badgeEl) badgeEl.style.display = 'block';
+        if (navEvents) navEvents.innerHTML = '📅 Platform Events';
+
+        // Overview Stat Labels
+        const statLabel = document.getElementById('stat-org-events-label');
+        const statSub = document.getElementById('stat-org-events-sub');
+        if (statLabel) statLabel.textContent = 'System Events';
+        if (statSub) statSub.textContent = 'Total platform-wide listings';
+
+        // My Events (Platform Oversight) Labels
+        const myEventsTitle = document.getElementById('my-events-title');
+        const myEventsSub = document.getElementById('my-events-sub');
+        if (myEventsTitle) myEventsTitle.textContent = 'Platform Oversight';
+        if (myEventsSub) myEventsSub.textContent = 'Manage and oversee all platform events';
+
+        // Creation Labels
+        const createTitle = document.getElementById('create-event-title');
+        const createSub = document.getElementById('create-event-sub');
+        if (createTitle) createTitle.textContent = 'Broadcast System Event';
+
+        // Analytics Labels
+        const anaTitle = document.getElementById('analytics-title');
+        const anaSub = document.getElementById('analytics-sub');
+        if (anaTitle) anaTitle.textContent = 'Platform Intelligence Center';
+        if (anaSub) anaSub.textContent = 'Aggregated performance and reach of the entire ecosystem';
+      }
 
       var sidebar = document.querySelector('.dashboard__sidebar');
       var sideAvatar = sidebar.querySelector('.avatar');
@@ -352,48 +402,72 @@
         return res.json();
       }
 
+      var activeEventsData = null;
+
       try {
-        var profileData = await authFetch('/api/v1/users/me');
-        var eventsData  = await fetch('/api/v1/events?limit=50').then(function (r) { return r.json(); });
+        // Unified data fetching Strategy
+        // Call analytics API to get the source of truth for stats
+        const [profileData, analyticsData, globalEventsData] = await Promise.all([
+          authFetch('/api/v1/users/me'),
+          authFetch('/api/v1/analytics/organizer'),
+          fetch('/api/v1/events?limit=1').then(r => r.json()) // Only for platform total
+        ]);
 
-        if (profileData.success) {
-          var p = profileData.data;
-          var organized = p.eventsOrganized || [];
-
-          var orgEvents = document.getElementById('stat-org-events');
-          if (orgEvents) {
-            orgEvents.textContent = organized.length;
-            orgEvents.nextElementSibling.textContent = 'Published by you';
-          }
+        if (analyticsData.success) {
+          const stats = analyticsData.data;
           
-          var allEvents = document.getElementById('stat-all-events');
-          var totalEventsCount = eventsData.success ? eventsData.pagination?.total || eventsData.data?.length || 0 : 0;
-          if (allEvents) {
-            allEvents.textContent = totalEventsCount;
-            allEvents.nextElementSibling.textContent = 'Across platform';
-          }
+          const orgEvents = document.getElementById('stat-org-events');
+          if (orgEvents) orgEvents.textContent = stats.totalEvents || 0;
+          
+          const reachEl = document.getElementById('stat-reach');
+          if (reachEl) reachEl.textContent = (stats.totalReach || 0).toLocaleString();
+          
+          const growthEl = document.getElementById('stat-growth');
+          if (growthEl) growthEl.textContent = (stats.growthScore >= 0 ? '+' : '') + stats.growthScore;
+
+          // Replace placeholder "Syncing..."
+          const syncLabels = ['stat-org-events-sub'];
+          syncLabels.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = user.role === 'admin' ? 'Total system events' : 'Published by you';
+          });
         }
+
+        if (globalEventsData.success) {
+          const allEvents = document.getElementById('stat-all-events');
+          if (allEvents) allEvents.textContent = globalEventsData.pagination?.total || 0;
+        }
+
+        // Fetch My Events / Platform Oversight separately for the list
+        const listFilter = user.role === 'admin' ? '' : `?organizer=${user._id || user.id}`;
+        activeEventsData = await fetch(`/api/v1/events${listFilter}`, { headers: authHeaders, credentials: 'include' }).then(r => r.json());
 
       } catch (e) {
         console.error('Dashboard load error:', e);
       }
 
-      /* ---------- My Events tab ---------- */
+      /* ---------- My Events / Platform Oversight list ---------- */
       var myEventsList = document.getElementById('my-events-list');
-      if (myEventsList && profileData && profileData.success) {
-        var organized = profileData.data.eventsOrganized || [];
-        if (organized.length === 0) {
-          myEventsList.innerHTML = '<div style="text-align:center;padding:var(--space-10);color:var(--text-tertiary);"><div style="font-size:3rem;margin-bottom:var(--space-4);">📅</div><p>You haven\'t created any events yet.</p><a href="#create-event" class="btn btn--primary" style="margin-top:var(--space-4);" onclick="document.querySelector(\'[data-tab=create-event]\').click()">Create Event</a></div>';
+      if (myEventsList) {
+        var eventListToRender = [];
+        var isSystemView = user.role === 'admin';
+
+        if (activeEventsData && activeEventsData.success) {
+          eventListToRender = activeEventsData.data;
+        }
+
+        if (eventListToRender.length === 0) {
+          myEventsList.innerHTML = '<div style="text-align:center;padding:var(--space-10);color:var(--text-tertiary);"><div style="font-size:3rem;margin-bottom:var(--space-4);">📅</div><p>No events found in this view.</p></div>';
         } else {
           myEventsList.innerHTML = '';
-          organized.forEach(function (evt) {
-            if (!evt) return; // Prevent crashes from dangling deleted references
+          eventListToRender.forEach(function (evt) {
+            if (!evt) return;
             var dateStr = evt.date ? new Date(evt.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' }) : 'TBD';
             var row = document.createElement('div');
             row.style.cssText = 'display:flex;align-items:center;gap:var(--space-4);padding:var(--space-4) var(--space-5);background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius-xl);';
             row.innerHTML =
               '<div style="flex:1;"><div style="font-weight:var(--font-semibold);">' + evt.title + '</div>' +
-              '<div style="font-size:var(--text-sm);color:var(--text-secondary);">' + dateStr + '</div></div>' +
+              '<div style="font-size:var(--text-sm);color:var(--text-secondary);">' + dateStr + (isSystemView ? ' • By ' + (evt.organizer?.firstName || 'System') : '') + '</div></div>' +
               '<span class="badge">' + (evt.status || 'upcoming') + '</span>' +
               '<a href="event-detail.html?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
             myEventsList.appendChild(row);
@@ -473,8 +547,14 @@
         // Update stat totals
         var reachEl = document.getElementById('ana-reach');
         var growthEl = document.getElementById('ana-growth');
+        var reachLabel = document.getElementById('ana-reach-label');
+        
         if (reachEl) reachEl.textContent = (data.totalReach || 0).toLocaleString();
         if (growthEl) growthEl.textContent = (data.growthScore >= 0 ? '+' : '') + data.growthScore;
+        
+        if (data.isAdminView && reachLabel) {
+          reachLabel.textContent = 'Platform-wide Reach';
+        }
 
         // Update Top Event
         if (data.topEvent) {

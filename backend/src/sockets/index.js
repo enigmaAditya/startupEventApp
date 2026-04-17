@@ -79,6 +79,11 @@ const initializeSocketIO = (server) => {
     // ---- Chat message in event room ----
     // Demonstrates: receiving messages and broadcasting
     socket.on('chat:message', async ({ eventId, message, user, userId }) => {
+      // SECURITY: Reject messages from guests (no userId)
+      if (!userId) {
+        return socket.emit('chat:error', { message: 'Guests cannot send messages. Please log in.' });
+      }
+
       const chatMessage = {
         user,
         userId,

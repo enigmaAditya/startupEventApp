@@ -530,10 +530,20 @@
         var typingTimeout;
 
         chatInput.addEventListener('input', function () {
+          if (!user) return; // Guests can't trigger typing indicators
           clearTimeout(typingTimeout);
           socket.emit('chat:typing', { eventId: evt._id, user: user?.firstName || 'Anonymous' });
           typingTimeout = setTimeout(function () {}, 2000);
         });
+
+        if (!user) {
+          chatForm.style.display = 'none';
+          var loginPrompt = document.createElement('div');
+          loginPrompt.style.cssText = 'padding:var(--space-4); background:var(--bg-tertiary); border-radius:var(--radius-lg); text-align:center; font-size:var(--text-sm); color:var(--text-secondary); border:1px dashed var(--border-color);';
+          loginPrompt.innerHTML = '👋 <a href="login.html" style="color:var(--brand-primary); font-weight:bold;">Log in</a> to join the live conversation.';
+          chatForm.parentNode.appendChild(loginPrompt);
+          return;
+        }
 
         chatForm.addEventListener('submit', function (e) {
           e.preventDefault();

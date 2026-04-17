@@ -11,9 +11,11 @@ const logger = require('../utils/logger');
 const getOrganizerAnalytics = async (req, res, next) => {
   try {
     const organizerId = req.user._id;
+    const isAdmin = req.user.role === 'admin';
 
-    // 1. Fetch all events owned by this organizer
-    const events = await Event.find({ organizer: organizerId }).select('title category attendees status createdAt');
+    // 1. Fetch events (filter by organizer unless admin)
+    const filter = isAdmin ? {} : { organizer: organizerId };
+    const events = await Event.find(filter).select('title category attendees status createdAt');
     
     if (events.length === 0) {
       return res.status(200).json({
@@ -24,7 +26,8 @@ const getOrganizerAnalytics = async (req, res, next) => {
           growthScore: 0,
           categoryBreakdown: {},
           topEvent: null,
-          recentActivity: []
+          recentActivity: [],
+          isAdminView: isAdmin
         }
       });
     }
@@ -76,7 +79,8 @@ const getOrganizerAnalytics = async (req, res, next) => {
           userName: r.user ? `${r.user.firstName} ${r.user.lastName}` : 'Someone',
           eventTitle: r.event?.title || 'an event',
           timestamp: r.createdAt
-        }))
+        })),
+        isAdminView: isAdmin
       }
     });
   } catch (error) {
