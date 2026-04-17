@@ -55,9 +55,15 @@ const getEvents = async (req, res, next) => {
       .limit(limit)
       .populate('organizer', 'firstName lastName');
 
+    // Harden attendeeCount: explicitly calculate from array length to ignore physical shadows
+    const hardenedEvents = events.map(evt => {
+      const e = evt.toObject({ virtuals: true });
+      e.attendeeCount = evt.attendees ? evt.attendees.length : 0;
+      return e;
+    });
+
     // Send paginated response
-    // Demonstrates: res.status(), res.json()
-    res.status(200).json(paginatedResponse(events, total, { page, limit }));
+    res.status(200).json(paginatedResponse(hardenedEvents, total, { page, limit }));
   } catch (error) {
     next(error);
   }
@@ -80,7 +86,11 @@ const getEvent = async (req, res, next) => {
       return next(ApiError.notFound('Event not found'));
     }
 
-    res.status(200).json({ success: true, data: event });
+    // Harden attendeeCount for singleton response
+    const hardenedEvent = event.toObject({ virtuals: true });
+    hardenedEvent.attendeeCount = event.attendees ? event.attendees.length : 0;
+
+    res.status(200).json({ success: true, data: hardenedEvent });
   } catch (error) {
     next(error);
   }

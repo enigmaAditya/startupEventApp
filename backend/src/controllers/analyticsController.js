@@ -36,6 +36,7 @@ const getOrganizerAnalytics = async (req, res, next) => {
 
     // 2. Aggregate metrics
     const totalEvents = events.length;
+    // ensure we only count actual attendees in the array
     const totalReach = events.reduce((acc, curr) => acc + (curr.attendees?.length || 0), 0);
     
     // 3. Category Breakdown
@@ -48,20 +49,28 @@ const getOrganizerAnalytics = async (req, res, next) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    const recentRSVPs = await RSVP.countDocuments({
+    // Only count RSVPs where the user is actually still in the attendees array
+    const rsvpDocs = await RSVP.find({
       event: { $in: eventIds },
       createdAt: { $gte: sevenDaysAgo }
-    });
+    }).populate('event', 'attendees');
+
+    const recentRSVPs = rsvpDocs.filter(r => 
+      r.event && r.event.attendees && r.event.attendees.map(a => a.toString()).includes(r.user.toString())
+    ).length;
 
     // 5. Find Top Performing Event
     const topEvent = [...events].sort((a, b) => (b.attendees?.length || 0) - (a.attendees?.length || 0))[0];
 
-    // 6. Recent Activity (Latest 5 RSVPs)
-    const recentActivity = await RSVP.find({ event: { $in: eventIds } })
+    // 6. Recent Activity (Latest 5 RSVPs) - and ensure they are still attendees
+    const activityDocs = await RSVP.find({ event: { $in: eventIds } })
       .sort({ createdAt: -1 })
-      .limit(5)
       .populate('user', 'firstName lastName')
-      .populate('event', 'title');
+      .populate('event', 'title attendees');
+    
+    const recentActivity = activityDocs
+      .filter(r => r.event && r.event.attendees && r.event.attendees.map(a => a.toString()).includes(r.user.toString()))
+      .slice(0, 5);
 
     res.status(200).json({
       success: true,

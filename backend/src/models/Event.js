@@ -191,6 +191,21 @@ eventSchema.methods.removeAttendee = function (userId) {
   return this.save();
 };
 
+/**
+ * Sync status based on current date/time
+ * Transition events to 'completed' if endDate is in the past
+ */
+eventSchema.methods.syncStatus = function () {
+  const now = new Date();
+  const targetDate = this.endDate || this.date;
+
+  if (targetDate < now && this.status !== 'completed' && this.status !== 'cancelled') {
+    this.status = 'completed';
+    return this.save();
+  }
+  return Promise.resolve(this);
+};
+
 // Create and export the model
 const Event = mongoose.model('Event', eventSchema);
 

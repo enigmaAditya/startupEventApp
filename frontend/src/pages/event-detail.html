@@ -132,6 +132,41 @@
               <button type="submit" class="btn btn--primary">Send</button>
             </form>
           </section>
+
+          <!-- ============ REVIEWS & RATINGS ============ -->
+          <section id="reviews-section" style="margin-bottom: var(--space-10);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+              <h2 style="font-size: var(--text-2xl);">Community Reviews</h2>
+              <div id="avg-rating-pill" class="badge badge--primary" style="display: none;">— ★</div>
+            </div>
+
+            <!-- Add Review Form (Visible only to attendees after event ends) -->
+            <div id="review-form-container" style="display: none; padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--brand-primary); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-4);">Rate this experience</h3>
+              <form id="review-form">
+                <div class="form-group">
+                  <label class="form-label">Rating</label>
+                  <div style="display: flex; gap: var(--space-2); font-size: 1.5rem; color: var(--text-tertiary);" id="star-rating">
+                    <span style="cursor: pointer;" data-value="1">☆</span>
+                    <span style="cursor: pointer;" data-value="2">☆</span>
+                    <span style="cursor: pointer;" data-value="3">☆</span>
+                    <span style="cursor: pointer;" data-value="4">☆</span>
+                    <span style="cursor: pointer;" data-value="5">☆</span>
+                  </div>
+                  <input type="hidden" name="rating" id="review-rating-value" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="review-comment">Your Feedback (Optional)</label>
+                  <textarea class="form-input" id="review-comment" name="comment" rows="3" placeholder="What did you think of the event?"></textarea>
+                </div>
+                <button type="submit" class="btn btn--primary" id="review-submit-btn">Submit Review</button>
+              </form>
+            </div>
+
+            <div id="reviews-list" style="display: flex; flex-direction: column; gap: var(--space-4);">
+              <p style="color: var(--text-tertiary);" id="no-reviews-msg">No reviews yet. Be the first to share your thoughts!</p>
+            </div>
+          </section>
         </div>
 
         <!-- ============ SIDEBAR ============ -->
@@ -177,6 +212,14 @@
               </button>
               <div id="rsvp-msg" style="margin-top:var(--space-3);font-size:var(--text-sm);"></div>
             </form>
+
+            <!-- Calendar Sync -->
+            <div id="calendar-sync-container" style="margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border-color); display: none;">
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">Sync to Calendar</div>
+              <a href="#" id="google-calendar-link" target="_blank" class="btn btn--ghost btn--full btn--sm" style="justify-content: center; gap: var(--space-2);">
+                📅 Add to Google Calendar
+              </a>
+            </div>
           </div>
 
           <!-- Organizer Card -->
@@ -260,6 +303,8 @@
         initRSVP(evt);
         initChat(evt);
         initShare(evt);
+        initCalendar(evt);
+        initReviews(evt);
       } catch (err) {
         document.getElementById('event-loading').innerHTML =
           '<div style="font-size:3rem;margin-bottom:var(--space-4);">😕</div>' +
@@ -293,12 +338,13 @@
         document.getElementById('detail-venue').textContent = evt.location?.venue || 'Online';
         document.getElementById('detail-city').textContent = [evt.location?.city, evt.location?.state].filter(Boolean).join(', ') || '';
 
-        var attending = evt.attendeeCount || evt.attendees?.length || 0;
+        // Prioritize actual attendees array for the UI count
+        var attending = Array.isArray(evt.attendees) ? evt.attendees.length : (evt.attendeeCount || 0);
         var cap = evt.capacity || '∞';
         document.getElementById('detail-capacity').textContent = attending + ' / ' + cap + ' Registered';
         var remaining = typeof evt.capacity === 'number' ? (evt.capacity - attending) : '∞';
-        document.getElementById('detail-spots').textContent = remaining + ' spots remaining';
-        document.getElementById('sidebar-spots').textContent = remaining + ' spots remaining';
+        document.getElementById('detail-spots').textContent = (remaining < 0 ? 0 : remaining) + ' spots remaining';
+        document.getElementById('sidebar-spots').textContent = (remaining < 0 ? 0 : remaining) + ' spots remaining';
 
         if (evt.price && evt.price > 0) {
           document.getElementById('detail-price').textContent = '₹' + evt.price;
@@ -372,13 +418,26 @@
           return;
         }
 
-        // Check if user is already in the attendees list
+        // Check if user is already in the attendees list (Source of Truth)
         var hasRegistered = false;
         if (userId && evt.attendees && Array.isArray(evt.attendees)) {
             hasRegistered = evt.attendees.some(function(attendee) {
                 var attendeeId = attendee._id || attendee;
                 return attendeeId === userId;
             });
+        }
+
+        // SYNC: If server says not registered but localStorage says we are, fix localStorage
+        var cachedUser = JSON.parse(localStorage.getItem('user') || 'null');
+        if (cachedUser && Array.isArray(cachedUser.eventsAttending)) {
+          var localIndex = cachedUser.eventsAttending.indexOf(evt._id);
+          if (!hasRegistered && localIndex !== -1) {
+            cachedUser.eventsAttending.splice(localIndex, 1);
+            localStorage.setItem('user', JSON.stringify(cachedUser));
+          } else if (hasRegistered && localIndex === -1) {
+            cachedUser.eventsAttending.push(evt._id);
+            localStorage.setItem('user', JSON.stringify(cachedUser));
+          }
         }
 
         if (hasRegistered) {
@@ -573,6 +632,138 @@
             if (window.showToast) window.showToast({ type: 'success', title: 'Link copied!', message: 'Event URL copied to clipboard' });
           });
         });
+      }
+
+      /* ---------- Calendar Sync ---------- */
+      function initCalendar(evt) {
+        var container = document.getElementById('calendar-sync-container');
+        var link = document.getElementById('google-calendar-link');
+        if (!container || !link) return;
+
+        // Only show if the event is upcoming or ongoing
+        if (evt.status === 'completed' || evt.status === 'cancelled') return;
+
+        container.style.display = 'block';
+
+        // Format dates for Google (YYYYMMDDTHHMMSSZ)
+        function formatGoogleDate(dateStr) {
+          if (!dateStr) return '';
+          return new Date(dateStr).toISOString().replace(/-|:|\.\d\d\d/g, '');
+        }
+
+        var start = formatGoogleDate(evt.date);
+        var end = formatGoogleDate(evt.endDate || new Date(new Date(evt.date).getTime() + 2 * 60 * 60 * 1000));
+        
+        var gUrl = 'https://www.google.com/calendar/render?action=TEMPLATE' +
+          '&text=' + encodeURIComponent(evt.title) +
+          '&details=' + encodeURIComponent(evt.description || '') +
+          '&location=' + encodeURIComponent(evt.location?.venue + ', ' + evt.location?.city || '') +
+          '&dates=' + start + '/' + end;
+
+        link.href = gUrl;
+      }
+
+      /* ---------- Event Reviews ---------- */
+      async function initReviews(evt) {
+        var section = document.getElementById('reviews-section');
+        var formContainer = document.getElementById('review-form-container');
+        var listContainer = document.getElementById('reviews-list');
+        var noMsg = document.getElementById('no-reviews-msg');
+        var avgPill = document.getElementById('avg-rating-pill');
+
+        var user = JSON.parse(localStorage.getItem('user') || 'null');
+        var userId = user ? (user._id || user.id) : null;
+
+        // 1. Fetch existing reviews
+        try {
+          var r = await fetch('/api/v1/events/' + evt._id + '/reviews');
+          var data = await r.json();
+          if (data.success && data.data.length > 0) {
+            noMsg.style.display = 'none';
+            listContainer.innerHTML = '';
+            var totalRating = 0;
+
+            data.data.forEach(function (rev) {
+              totalRating += rev.rating;
+              var div = document.createElement('div');
+              div.style.cssText = 'padding:var(--space-4); background:var(--bg-tertiary); border-radius:var(--radius-lg);';
+              div.innerHTML = `
+                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
+                  <span style="font-weight:var(--font-semibold); font-size:var(--text-sm);">${rev.user?.firstName || 'Community Member'}</span>
+                  <span style="color:var(--brand-primary); font-size:var(--text-xs);">${'★'.repeat(rev.rating)}${'☆'.repeat(5-rev.rating)}</span>
+                </div>
+                <p style="font-size:var(--text-sm); line-height:1.5; color:var(--text-secondary);">${rev.comment || 'No comment provided.'}</p>
+              `;
+              listContainer.appendChild(div);
+            });
+
+            if (avgPill) {
+              avgPill.textContent = (totalRating / data.data.length).toFixed(1) + ' ★';
+              avgPill.style.display = 'inline-block';
+            }
+          }
+        } catch (e) { console.error('Reviews load error:', e); }
+
+        // 2. Show form if criteria met: event is completed AND user attended AND hasn't reviewed
+        var hasAttended = userId && evt.attendees && evt.attendees.some(id => (id._id || id) === userId);
+        var isCompleted = evt.status === 'completed' || (new Date(evt.endDate || evt.date) < new Date());
+
+        if (hasAttended && isCompleted) {
+          formContainer.style.display = 'block';
+          
+          // Handle Star Raters
+          var stars = document.querySelectorAll('#star-rating span');
+          var ratingInput = document.getElementById('review-rating-value');
+          stars.forEach(s => {
+            s.addEventListener('click', function() {
+              var val = this.getAttribute('data-value');
+              ratingInput.value = val;
+              stars.forEach(st => {
+                st.textContent = st.getAttribute('data-value') <= val ? '★' : '☆';
+                st.style.color = st.getAttribute('data-value') <= val ? 'var(--brand-primary)' : 'var(--text-tertiary)';
+              });
+            });
+          });
+
+          // Handle Submit
+          document.getElementById('review-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            var btn = document.getElementById('review-submit-btn');
+            var token = localStorage.getItem('accessToken');
+            
+            if (!ratingInput.value) {
+              if (window.showToast) window.showToast({ type: 'warning', title: 'Rating Required', message: 'Please select a star rating.' });
+              return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = 'Submitting...';
+
+            try {
+              var res = await fetch('/api/v1/events/' + evt._id + '/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+                credentials: 'include',
+                body: JSON.stringify({
+                  rating: parseInt(ratingInput.value),
+                  comment: document.getElementById('review-comment').value.trim()
+                })
+              });
+              var resData = await res.json();
+              if (res.ok && resData.success) {
+                if (window.showToast) window.showToast({ type: 'success', title: 'Thank You!', message: 'Your review has been shared.' });
+                formContainer.style.display = 'none';
+                initReviews(evt); // Refresh
+              } else {
+                throw new Error(resData.error?.message || 'Submission failed');
+              }
+            } catch (err) {
+              if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: err.message });
+              btn.disabled = false;
+              btn.textContent = 'Submit Review';
+            }
+          });
+        }
       }
     })();
   </script>

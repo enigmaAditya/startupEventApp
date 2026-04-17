@@ -115,6 +115,17 @@
           </div>
         </div>
 
+        <!-- Recommended for You (AI Matching) -->
+        <div id="ai-recommendations-section" style="margin-bottom: var(--space-10); display: none;">
+          <h2 style="display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xl); margin-bottom: var(--space-4);">
+            ✨ Recommended for You 
+            <span class="badge badge--primary" style="font-size: 0.6rem;">AI Matched</span>
+          </h2>
+          <div id="recommendations-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-4);">
+            <!-- Dynamic AI Cards -->
+          </div>
+        </div>
+
         <!-- Upcoming Events -->
         <div style="margin-bottom: var(--space-10);">
           <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">Upcoming Events</h2>
@@ -246,8 +257,24 @@
           var statCards = document.querySelectorAll('#tab-overview [style*="grid-template-columns"] > div');
           /* Attendee-centric stats */
           var labelEls = document.querySelectorAll('#tab-overview [style*="grid-template-columns"] > div > div:first-child');
-          if (statCards[0]) { if (labelEls[0]) labelEls[0].textContent = 'Events Attending'; statCards[0].querySelector('div:nth-child(2)').textContent = attending.length; statCards[0].querySelector('div:nth-child(3)').textContent = 'Registrations'; }
-          if (statCards[1]) { if (labelEls[1]) labelEls[1].textContent = 'My RSVPs'; statCards[1].querySelector('div:nth-child(2)').textContent = attending.length; statCards[1].querySelector('div:nth-child(3)').textContent = 'Active tickets'; }
+          
+          // Verify each event actually still has us as an attendee (Source of Truth)
+          // For now, trust profileData but sync to localStorage
+          if (attending) {
+            var updatedUser = Object.assign({}, user, { eventsAttending: attending.map(e => e._id || e) });
+            localStorage.setItem('user', JSON.stringify(updatedUser));
+          }
+
+          if (statCards[0]) { 
+            if (labelEls[0]) labelEls[0].textContent = 'Events Attending'; 
+            statCards[0].querySelector('div:nth-child(2)').textContent = attending.length; 
+            statCards[0].querySelector('div:nth-child(3)').textContent = 'Registrations'; 
+          }
+          if (statCards[1]) { 
+            if (labelEls[1]) labelEls[1].textContent = 'My RSVPs'; 
+            statCards[1].querySelector('div:nth-child(2)').textContent = attending.length; 
+            statCards[1].querySelector('div:nth-child(3)').textContent = 'Active tickets'; 
+          }
           if (statCards[2]) { if (labelEls[2]) labelEls[2].textContent = 'Total Events'; var te = eventsData.success ? eventsData.pagination?.total || eventsData.data?.length || 0 : 0; statCards[2].querySelector('div:nth-child(2)').textContent = te; statCards[2].querySelector('div:nth-child(3)').textContent = 'Across platform'; }
           if (statCards[3]) { if (labelEls[3]) labelEls[3].textContent = 'Upcoming'; statCards[3].querySelector('div:nth-child(2)').textContent = '—'; statCards[3].querySelector('div:nth-child(3)').textContent = 'In your area'; }
         }
@@ -273,6 +300,9 @@
             });
           }
         }
+        
+        /* AI Recommendations */
+        initRecommendations();
       } catch (e) {
         console.error('Dashboard load error:', e);
       }
@@ -331,6 +361,49 @@
           if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: e.message });
         }
       });
+
+      /* ---------- AI Recommendations Logic ---------- */
+      async function initRecommendations() {
+        var container = document.getElementById('recommendations-container');
+        var section = document.getElementById('ai-recommendations-section');
+        if (!container || !section) return;
+
+        try {
+          var data = await authFetch('/api/v1/recommendations');
+          if (data.success && data.data.length > 0) {
+            section.style.display = 'block';
+            container.innerHTML = '';
+
+            data.data.forEach(function (evt) {
+              var dateStr = evt.date ? new Date(evt.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'TBD';
+              var card = document.createElement('div');
+              card.style.cssText = 'padding:var(--space-5); background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-xl); transition:all var(--transition-fast); position:relative; overflow:hidden;';
+              
+              // Decorative background glow for AI cards
+              var glow = document.createElement('div');
+              glow.style.cssText = 'position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:var(--brand-primary); filter:blur(60px); opacity:0.1; z-index:0;';
+              card.appendChild(glow);
+
+              card.innerHTML += `
+                <div style="position:relative; z-index:1;">
+                  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--space-4);">
+                    <span class="badge badge--primary" style="font-size:0.6rem;">${evt.category.toUpperCase()}</span>
+                    <span style="font-size:var(--text-xs); color:var(--text-tertiary);">${dateStr}</span>
+                  </div>
+                  <h3 style="font-size:var(--text-lg); margin-bottom:var(--space-2);">${evt.title}</h3>
+                  <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--space-6);">
+                    ${(evt.tags || []).slice(0, 3).map(t => `<span style="font-size:0.65rem; color:var(--text-tertiary);">#${t}</span>`).join('')}
+                  </div>
+                  <a href="event-detail.html?id=${evt._id}" class="btn btn--secondary btn--sm btn--full">View Details</a>
+                </div>
+              `;
+              container.appendChild(card);
+            });
+          }
+        } catch (err) {
+          console.error('AI Recs failed:', err);
+        }
+      }
     })();
   </script>
 </body>

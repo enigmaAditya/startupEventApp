@@ -23,6 +23,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
 const aiRoutes = require('./routes/aiRoutes');
+const recommendationRoutes = require('./routes/recommendationRoutes');
 
 // Create Express app
 const app = express();
@@ -82,6 +83,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/analytics', analyticsRoutes);
 app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/recommendations', recommendationRoutes);
 
 // ============ HEALTH CHECK ============
 app.get('/api/health', (req, res) => {

@@ -49,6 +49,20 @@ router
 /**
  * POST /api/v1/events/:id/rsvp — RSVP to an event (authenticated)
  */
+const { addReview, getEventReviews } = require('../controllers/reviewController');
+
+// ... (rest of imports)
+
+// Existing RSVP route
 router.post('/:id/rsvp', protect, rsvpToEvent);
+
+/**
+ * Reviews
+ * POST /api/v1/events/:id/reviews — Submit a review (attendees only)
+ * GET  /api/v1/events/:id/reviews — Get all reviews for an event
+ */
+router.route('/:id/reviews')
+  .get(getEventReviews)
+  .post(protect, addReview);
 
 module.exports = router;

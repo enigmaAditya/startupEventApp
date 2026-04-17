@@ -59,6 +59,21 @@
         </div>
         <h3 class="card__title">${escapeHTML(event.title || 'Untitled Event')}</h3>
         <p class="card__description">${escapeHTML(truncate(event.description || '', 120))}</p>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+          <span style="font-size: var(--text-xs); color: var(--text-tertiary);">
+            👥 ${(Array.isArray(event.attendees) ? event.attendees.length : (event.attendeeCount || 0))} RSVPs
+          </span>
+          ${(function() {
+            const user = JSON.parse(localStorage.getItem('user') || 'null');
+            const userId = user ? (user._id || user.id) : null;
+            const isRegistered = (userId && event.attendees && event.attendees.some(a => (a._id || a) === userId)) || 
+                               (user && user.eventsAttending && user.eventsAttending.includes(event._id || event.id));
+            
+            return isRegistered ? '<span class="badge badge--success" style="font-size: 0.6rem;">✓ Registered</span>' : '';
+          })()}
+        </div>
+
         ${event.tags && event.tags.length > 0 ? `
           <div class="card__tags">
             ${event.tags.slice(0, 3).map((tag) => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
