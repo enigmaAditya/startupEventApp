@@ -48,6 +48,10 @@
   --color-info: hsl(210, 80%, 55%);
   --color-info-light: hsl(210, 80%, 92%);
 
+  /* ---- Aliases ---- */
+  --brand-primary: var(--color-primary-500);
+  --brand-accent: var(--color-accent-400);
+
   /* ---- Dark Theme (Default) ---- */
   --bg-primary: var(--color-neutral-950);
   --bg-secondary: var(--color-neutral-900);

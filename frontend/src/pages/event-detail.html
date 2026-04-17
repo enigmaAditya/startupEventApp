@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Build for Tomorrow — 48hr Hackathon. RSVP now and join 500+ developers, designers, and entrepreneurs.">
-  <title>Build for Tomorrow — Hackathon — StartupEvents</title>
+  <meta name="description" content="Event details — RSVP now and join the startup community.">
+  <title>Event Details — StartupEvents</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,136 +50,87 @@
         <span style="font-size: var(--text-sm); color: var(--text-tertiary);">
           <a href="events.html" style="color: var(--text-tertiary);">Events</a>
           <span style="margin: 0 var(--space-2);">›</span>
-          <span style="color: var(--text-secondary);">Build for Tomorrow — 48hr Hackathon</span>
+          <span style="color: var(--text-secondary);" id="breadcrumb-title">Loading...</span>
         </span>
       </nav>
 
+      <!-- Loading state -->
+      <div id="event-loading" style="text-align: center; padding: var(--space-16);">
+        <div style="font-size: 3rem; margin-bottom: var(--space-4);">⏳</div>
+        <p style="color: var(--text-secondary);">Loading event details...</p>
+      </div>
+
       <!-- ============ EVENT DETAIL GRID ============ -->
-      <div class="event-detail" id="event-detail">
+      <div class="event-detail" id="event-detail" style="display: none;">
         <!-- Main Content -->
         <div class="event-detail__main">
-          <!-- Hero Image / Video -->
+
+          <!-- Multimedia: <video> element (FE Unit I — HTML5 Multimedia) -->
           <div style="border-radius: var(--radius-xl); overflow: hidden; margin-bottom: var(--space-8); background: var(--gradient-card); border: 1px solid var(--border-color);">
-            <!-- Multimedia element: <video> -->
-            <video
-              id="event-promo-video"
-              width="100%"
-              height="400"
-              controls
-              poster=""
-              style="display: block; background: var(--bg-tertiary);"
-            >
+            <video controls preload="metadata" poster="" id="event-video"
+                   style="width: 100%; display: block; max-height: 400px; object-fit: cover;">
               <source src="" type="video/mp4">
-              <!-- Fallback for browsers that don't support video -->
-              <div style="display: flex; align-items: center; justify-content: center; height: 400px; font-size: 4rem;">
-                🏆
-              </div>
-              Your browser does not support the video element.
+              Your browser does not support the HTML5 video element.
             </video>
+            <div id="event-hero-fallback" style="display: none; align-items: center; justify-content: center; height: 260px;">
+              <div style="font-size: 6rem;" id="hero-emoji">📅</div>
+            </div>
           </div>
 
           <!-- Event Title & Meta -->
           <div style="margin-bottom: var(--space-8);">
             <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-              <span class="badge badge--hackathon">Hackathon</span>
-              <span class="badge badge--success">Upcoming</span>
+              <span class="badge" id="detail-category">Event</span>
+              <span class="badge badge--success" id="detail-status">Upcoming</span>
             </div>
-            <h1 style="font-size: var(--text-4xl); margin-bottom: var(--space-4);">Build for Tomorrow — 48hr Hackathon</h1>
-            <p style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed);">
-              A 48-hour hackathon bringing together 500+ developers, designers, and entrepreneurs
-              to build innovative solutions for tomorrow's challenges. $10,000 in prizes across 5 categories.
-            </p>
+            <h1 style="font-size: var(--text-4xl); margin-bottom: var(--space-4);" id="detail-title">—</h1>
+            <p style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed);" id="detail-description">—</p>
           </div>
 
           <!-- Event Details Grid -->
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10); padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
             <div>
               <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">📅 Date & Time</div>
-              <div style="font-weight: var(--font-semibold);">May 15–17, 2026</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);">9:00 AM — 6:00 PM IST</div>
+              <div style="font-weight: var(--font-semibold);" id="detail-date">—</div>
+              <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="detail-time">—</div>
             </div>
             <div>
               <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">📍 Location</div>
-              <div style="font-weight: var(--font-semibold);">TechHub Bangalore</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);">Koramangala, Bangalore, India</div>
+              <div style="font-weight: var(--font-semibold);" id="detail-venue">—</div>
+              <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="detail-city">—</div>
             </div>
             <div>
               <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">👥 Capacity</div>
-              <div style="font-weight: var(--font-semibold);">234 / 500 Registered</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);">266 spots remaining</div>
+              <div style="font-weight: var(--font-semibold);" id="detail-capacity">—</div>
+              <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="detail-spots">—</div>
             </div>
             <div>
-              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">💰 Prize Pool</div>
-              <div style="font-weight: var(--font-semibold);">$10,000</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);">Across 5 categories</div>
+              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">💰 Price</div>
+              <div style="font-weight: var(--font-semibold);" id="detail-price">Free</div>
             </div>
           </div>
 
-          <!-- Description -->
+          <!-- About Section -->
           <section style="margin-bottom: var(--space-10);">
             <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">About This Event</h2>
-            <div style="color: var(--text-secondary); line-height: var(--leading-relaxed); font-size: var(--text-base);">
-              <p style="margin-bottom: var(--space-4);">
-                Build for Tomorrow is a 48-hour hackathon where developers, designers, and entrepreneurs come together
-                to build innovative solutions that address real-world challenges. Whether you're a seasoned hacker or a
-                first-time participant, this event has something for everyone.
-              </p>
-              <p style="margin-bottom: var(--space-4);">
-                <strong style="color: var(--text-primary);">What to expect:</strong>
-              </p>
-              <ul style="list-style: disc; padding-left: var(--space-6); margin-bottom: var(--space-4);">
-                <li style="margin-bottom: var(--space-2);">48 hours of non-stop building and collaboration</li>
-                <li style="margin-bottom: var(--space-2);">Mentorship from industry experts and successful founders</li>
-                <li style="margin-bottom: var(--space-2);">Workshops on AI/ML, Web3, and FinTech</li>
-                <li style="margin-bottom: var(--space-2);">Free meals, snacks, and beverages throughout the event</li>
-                <li style="margin-bottom: var(--space-2);">$10,000 in prizes across 5 categories</li>
-              </ul>
-              <p>
-                Teams of 2-5 members can participate. Solo participants will be matched with teams during the event.
-              </p>
-            </div>
-          </section>
-
-          <!-- Speakers -->
-          <section style="margin-bottom: var(--space-10);">
-            <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-6);">Speakers & Mentors</h2>
-            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-4);">
-              <div style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-                <div class="avatar avatar--lg">RS</div>
-                <div>
-                  <div style="font-weight: var(--font-semibold);">Ravi Sharma</div>
-                  <div style="font-size: var(--text-sm); color: var(--text-secondary);">CTO, TechStartup Inc.</div>
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-                <div class="avatar avatar--lg">PA</div>
-                <div>
-                  <div style="font-weight: var(--font-semibold);">Priya Agarwal</div>
-                  <div style="font-size: var(--text-sm); color: var(--text-secondary);">Founder, GreenFuture AI</div>
-                </div>
-              </div>
-              <div style="display: flex; align-items: center; gap: var(--space-4); padding: var(--space-4); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-                <div class="avatar avatar--lg">AK</div>
-                <div>
-                  <div style="font-weight: var(--font-semibold);">Arjun Kumar</div>
-                  <div style="font-size: var(--text-sm); color: var(--text-secondary);">Partner, Surge Ventures</div>
-                </div>
-              </div>
-            </div>
+            <div style="color: var(--text-secondary); line-height: var(--leading-relaxed);" id="detail-about">—</div>
           </section>
 
           <!-- Tags -->
-          <section>
+          <section style="margin-bottom: var(--space-10);">
             <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-4);">Tags</h3>
-            <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;">
-              <span class="tag">AI/ML</span>
-              <span class="tag">Web3</span>
-              <span class="tag">FinTech</span>
-              <span class="tag">Hackathon</span>
-              <span class="tag">Beginner Friendly</span>
-              <span class="tag">Prizes</span>
-              <span class="tag">Networking</span>
-            </div>
+            <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;" id="detail-tags"></div>
+          </section>
+
+          <!-- ============ LIVE CHAT (Socket.IO — BE Unit III) ============ -->
+          <section style="margin-bottom: var(--space-10); padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);" id="live-chat-section">
+            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">💬 Live Chat <span id="online-count" style="font-size:var(--text-sm);color:var(--text-tertiary);"></span></h2>
+            <div id="chat-messages" style="max-height: 300px; overflow-y: auto; margin-bottom: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2);"></div>
+            <div id="chat-typing" style="font-size:var(--text-sm);color:var(--text-tertiary);min-height:1.2em;margin-bottom:var(--space-2);"></div>
+            <form id="chat-form" style="display: flex; gap: var(--space-2);">
+              <input type="text" class="form-input" id="chat-input" placeholder="Type a message..." autocomplete="off" style="flex:1;">
+              <button type="submit" class="btn btn--primary">Send</button>
+            </form>
           </section>
         </div>
 
@@ -188,21 +139,11 @@
           <!-- RSVP Card -->
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Registration</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: var(--space-1);">Free</div>
-            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6);">266 spots remaining</div>
+            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: var(--space-1);" id="sidebar-price">Free</div>
+            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6);" id="sidebar-spots">—</div>
 
-            <!-- RSVP Form -->
+            <!-- RSVP Form (FE Unit I — forms, input types, <select>, <datalist>) -->
             <form id="rsvp-form">
-              <div class="form-group">
-                <label class="form-label form-label--required" for="rsvp-name">Full Name</label>
-                <input type="text" class="form-input" id="rsvp-name" name="name" placeholder="Your full name" required>
-                <span class="form-error" id="rsvp-name-error"></span>
-              </div>
-              <div class="form-group">
-                <label class="form-label form-label--required" for="rsvp-email">Email</label>
-                <input type="email" class="form-input" id="rsvp-email" name="email" placeholder="you@example.com" required>
-                <span class="form-error" id="rsvp-email-error"></span>
-              </div>
               <div class="form-group">
                 <label class="form-label" for="rsvp-role">Your Role</label>
                 <select class="form-input form-select" id="rsvp-role" name="role">
@@ -234,17 +175,17 @@
               <button type="submit" class="btn btn--primary btn--full btn--lg" id="rsvp-submit-btn">
                 🎟️ RSVP Now
               </button>
+              <div id="rsvp-msg" style="margin-top:var(--space-3);font-size:var(--text-sm);"></div>
             </form>
           </div>
 
           <!-- Organizer Card -->
           <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
             <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-4);">Organized By</div>
-            <div style="display: flex; align-items: center; gap: var(--space-4);">
-              <div class="avatar avatar--lg">TH</div>
+            <div style="display: flex; align-items: center; gap: var(--space-4);" id="organizer-card">
+              <div class="avatar avatar--lg" id="organizer-initials">?</div>
               <div>
-                <div style="font-weight: var(--font-semibold);">TechHub Bangalore</div>
-                <div style="font-size: var(--text-sm); color: var(--text-secondary);">12 events hosted</div>
+                <div style="font-weight: var(--font-semibold);" id="organizer-name">—</div>
               </div>
             </div>
           </div>
@@ -276,7 +217,255 @@
   <div class="toast-container" id="toast-container"></div>
 
   <script src="../js/theme.js"></script>
-  <script src="../js/validation.js"></script>
+  <script src="../js/auth.js"></script>
   <script src="../js/utils.js"></script>
+  <!-- Socket.IO client (BE Unit III — WebSockets) -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    /* ============================================
+       Event Detail — Dynamic API Loading
+       FE Unit III: async/await, fetch, Promises
+       FE Unit IV: DOM manipulation, dynamic styling
+       BE Unit III: Socket.IO live chat
+       ============================================ */
+    (async function () {
+      'use strict';
+
+      var params = new URLSearchParams(window.location.search);
+      var eventId = params.get('id');
+
+      if (!eventId) {
+        document.getElementById('event-loading').innerHTML =
+          '<div style="font-size:3rem;margin-bottom:var(--space-4);">⚠️</div><p style="color:var(--text-secondary);">No event ID provided. <a href="events.html">Browse events</a></p>';
+        return;
+      }
+
+      var categoryConfig = {
+        hackathon:      { emoji: '🏆', label: 'Hackathon' },
+        'pitch-night':  { emoji: '🎤', label: 'Pitch Night' },
+        workshop:       { emoji: '🛠️', label: 'Workshop' },
+        meetup:         { emoji: '☕', label: 'Meetup' },
+        conference:     { emoji: '🎪', label: 'Conference' },
+      };
+
+      /* ---------- Fetch Event ---------- */
+      try {
+        var res = await fetch('/api/v1/events/' + eventId);
+        var json = await res.json();
+
+        if (!res.ok || !json.success) throw new Error(json.error?.message || 'Event not found');
+
+        var evt = json.data;
+        populate(evt);
+        initRSVP(evt);
+        initChat(evt);
+        initShare(evt);
+      } catch (err) {
+        document.getElementById('event-loading').innerHTML =
+          '<div style="font-size:3rem;margin-bottom:var(--space-4);">😕</div>' +
+          '<p style="color:var(--text-secondary);">' + err.message + '. <a href="events.html">Browse events</a></p>';
+      }
+
+      /* ---------- Populate page ---------- */
+      function populate(evt) {
+        var cfg = categoryConfig[evt.category] || { emoji: '📅', label: 'Event' };
+
+        document.title = evt.title + ' — StartupEvents';
+        document.getElementById('breadcrumb-title').textContent = evt.title;
+        document.getElementById('detail-title').textContent = evt.title;
+        document.getElementById('detail-description').textContent = evt.description || '';
+        var aboutEl = document.getElementById('detail-about');
+        var aboutP = document.createElement('p');
+        aboutP.textContent = evt.description || 'No description available.';
+        aboutEl.innerHTML = '';
+        aboutEl.appendChild(aboutP);
+        document.getElementById('detail-category').textContent = cfg.label;
+        document.getElementById('detail-status').textContent = evt.status || 'upcoming';
+
+        var dateObj = evt.date ? new Date(evt.date) : null;
+        document.getElementById('detail-date').textContent = dateObj
+          ? dateObj.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+          : 'TBD';
+        document.getElementById('detail-time').textContent = dateObj
+          ? dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
+          : '';
+
+        document.getElementById('detail-venue').textContent = evt.location?.venue || 'Online';
+        document.getElementById('detail-city').textContent = [evt.location?.city, evt.location?.state].filter(Boolean).join(', ') || '';
+
+        var attending = evt.attendeeCount || evt.attendees?.length || 0;
+        var cap = evt.capacity || '∞';
+        document.getElementById('detail-capacity').textContent = attending + ' / ' + cap + ' Registered';
+        var remaining = typeof evt.capacity === 'number' ? (evt.capacity - attending) : '∞';
+        document.getElementById('detail-spots').textContent = remaining + ' spots remaining';
+        document.getElementById('sidebar-spots').textContent = remaining + ' spots remaining';
+
+        if (evt.price && evt.price > 0) {
+          document.getElementById('detail-price').textContent = '₹' + evt.price;
+          document.getElementById('sidebar-price').textContent = '₹' + evt.price;
+        }
+
+        // Video / hero fallback
+        var videoEl = document.getElementById('event-video');
+        var fallback = document.getElementById('event-hero-fallback');
+        if (evt.videoUrl) {
+          videoEl.querySelector('source').src = evt.videoUrl;
+          videoEl.poster = evt.imageUrl || '';
+          videoEl.load();
+          videoEl.style.display = 'block';
+          fallback.style.display = 'none';
+        } else {
+          videoEl.style.display = 'none';
+          fallback.style.display = 'flex';
+          document.getElementById('hero-emoji').textContent = cfg.emoji;
+        }
+
+        // Tags
+        var tagsEl = document.getElementById('detail-tags');
+        tagsEl.innerHTML = '';
+        (evt.tags || []).forEach(function (t) {
+          var span = document.createElement('span');
+          span.className = 'tag';
+          span.textContent = t;
+          tagsEl.appendChild(span);
+        });
+
+        // Organizer
+        if (evt.organizer) {
+          var orgName = (evt.organizer.firstName || '') + ' ' + (evt.organizer.lastName || '');
+          document.getElementById('organizer-name').textContent = orgName.trim() || 'Organizer';
+          document.getElementById('organizer-initials').textContent =
+            (evt.organizer.firstName?.[0] || '') + (evt.organizer.lastName?.[0] || '');
+        }
+
+        document.getElementById('event-loading').style.display = 'none';
+        document.getElementById('event-detail').style.display = '';
+      }
+
+      /* ---------- RSVP form (async/await + fetch) ---------- */
+      function initRSVP(evt) {
+        var form = document.getElementById('rsvp-form');
+        var btn = document.getElementById('rsvp-submit-btn');
+        var msgEl = document.getElementById('rsvp-msg');
+
+        form.addEventListener('submit', async function (e) {
+          e.preventDefault();
+          var token = localStorage.getItem('accessToken');
+          if (!token) {
+            msgEl.style.color = 'var(--color-warning)';
+            msgEl.textContent = 'Please log in to RSVP.';
+            return;
+          }
+          btn.disabled = true;
+          btn.textContent = 'Submitting...';
+          try {
+            var r = await fetch('/api/v1/events/' + evt._id + '/rsvp', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              credentials: 'include',
+              body: JSON.stringify({
+                role: document.getElementById('rsvp-role').value,
+                teamSize: parseInt(document.getElementById('rsvp-team').value, 10) || 1,
+              }),
+            });
+            var data = await r.json();
+            if (r.ok && data.success) {
+              msgEl.style.color = 'var(--color-success)';
+              msgEl.textContent = 'RSVP confirmed! See you there 🎉';
+              btn.textContent = '✅ Registered';
+              if (window.__eventBus) window.__eventBus.emit('event:rsvped', { title: evt.title });
+            } else {
+              throw new Error(data.error?.message || 'RSVP failed');
+            }
+          } catch (err) {
+            msgEl.style.color = 'var(--color-error)';
+            msgEl.textContent = err.message;
+            btn.disabled = false;
+            btn.textContent = '🎟️ RSVP Now';
+          }
+        });
+      }
+
+      /* ---------- Live Chat via Socket.IO ---------- */
+      function initChat(evt) {
+        var chatSection = document.getElementById('live-chat-section');
+        var user = JSON.parse(localStorage.getItem('user') || 'null');
+
+        if (typeof io === 'undefined') {
+          chatSection.style.display = 'none';
+          return;
+        }
+
+        var socket = io({ transports: ['websocket', 'polling'] });
+        socket.emit('join:event', evt._id);
+
+        var messagesEl = document.getElementById('chat-messages');
+        var typingEl = document.getElementById('chat-typing');
+
+        function addMessage(msg) {
+          var div = document.createElement('div');
+          div.style.cssText = 'padding:var(--space-2) var(--space-3);background:var(--bg-tertiary);border-radius:var(--radius-md);';
+          var strong = document.createElement('strong');
+          strong.textContent = msg.user || 'Anonymous';
+          strong.style.cssText = 'color:var(--brand-primary);margin-right:var(--space-2);font-size:var(--text-sm);';
+          var span = document.createElement('span');
+          span.textContent = msg.message;
+          span.style.cssText = 'color:var(--text-secondary);font-size:var(--text-sm);';
+          div.appendChild(strong);
+          div.appendChild(span);
+          messagesEl.appendChild(div);
+          messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        socket.on('chat:message', addMessage);
+        socket.on('user:joined', function () {
+          addMessage({ user: '🟢 System', message: 'Someone joined the event chat' });
+        });
+        socket.on('chat:typing', function (data) {
+          typingEl.textContent = (data.user || 'Someone') + ' is typing...';
+          clearTimeout(typingEl._t);
+          typingEl._t = setTimeout(function () { typingEl.textContent = ''; }, 2000);
+        });
+
+        var chatForm = document.getElementById('chat-form');
+        var chatInput = document.getElementById('chat-input');
+        var typingTimeout;
+
+        chatInput.addEventListener('input', function () {
+          clearTimeout(typingTimeout);
+          socket.emit('chat:typing', { eventId: evt._id, user: user?.firstName || 'Anonymous' });
+          typingTimeout = setTimeout(function () {}, 2000);
+        });
+
+        chatForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var text = chatInput.value.trim();
+          if (!text) return;
+          var userName = user ? user.firstName : 'Anonymous';
+          socket.emit('chat:message', { eventId: evt._id, message: text, user: userName });
+          addMessage({ user: userName, message: text });
+          chatInput.value = '';
+        });
+      }
+
+      /* ---------- Share buttons ---------- */
+      function initShare(evt) {
+        var url = window.location.href;
+        var title = evt.title;
+
+        document.getElementById('share-twitter').addEventListener('click', function () {
+          window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodeURIComponent(url), '_blank');
+        });
+        document.getElementById('share-linkedin').addEventListener('click', function () {
+          window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
+        });
+        document.getElementById('share-copy').addEventListener('click', function () {
+          navigator.clipboard.writeText(url).then(function () {
+            if (window.showToast) window.showToast({ type: 'success', title: 'Link copied!', message: 'Event URL copied to clipboard' });
+          });
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

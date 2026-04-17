@@ -162,18 +162,15 @@
       });
     }
 
-    // Form submission
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      // Validate all fields
       const emailResult = validateField('email', emailInput?.value || '');
       const passwordResult = validateField('required', passwordInput?.value || '');
 
       showFieldStatus(emailInput, 'login-email-error', emailResult);
       showFieldStatus(passwordInput, 'login-password-error', passwordResult);
 
-      // Check if all valid using Array.every()
       const allValid = [emailResult, passwordResult].every((r) => r.isValid);
 
       if (allValid) {
@@ -183,14 +180,34 @@
           submitBtn.disabled = true;
         }
 
-        // Simulate API call with setTimeout
-        setTimeout(() => {
-          alert('Login successful! (Demo mode — no backend yet)');
-          if (submitBtn) {
-            submitBtn.textContent = 'Log In';
-            submitBtn.disabled = false;
+        try {
+          const res = await fetch('/api/v1/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              email: emailInput.value,
+              password: passwordInput.value,
+            }),
+          });
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+            localStorage.setItem('accessToken', data.data.accessToken);
+            if (window.showToast) {
+              window.showToast({ type: 'success', title: 'Welcome back!', message: `Logged in as ${data.data.user.firstName}` });
+            }
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+          } else {
+            const msg = data.error?.message || data.errors?.[0]?.msg || 'Invalid email or password';
+            showFieldStatus(emailInput, 'login-email-error', { isValid: false, message: msg });
+            if (submitBtn) { submitBtn.textContent = 'Log In'; submitBtn.disabled = false; }
           }
-        }, 1500);
+        } catch {
+          showFieldStatus(emailInput, 'login-email-error', { isValid: false, message: 'Network error — is the server running?' });
+          if (submitBtn) { submitBtn.textContent = 'Log In'; submitBtn.disabled = false; }
+        }
       }
     });
   };
@@ -257,11 +274,9 @@
       });
     }
 
-    // Form submission
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
 
-      // Validate all fields
       const results = [
         { input: fields.firstName, errorId: 'register-firstname-error', result: validateField('name', fields.firstName?.value || '') },
         { input: fields.lastName, errorId: 'register-lastname-error', result: validateField('name', fields.lastName?.value || '') },
@@ -277,12 +292,10 @@
         },
       ];
 
-      // Show all errors
       results.forEach(({ input, errorId, result }) => {
         if (input) showFieldStatus(input, errorId, result);
       });
 
-      // Check terms
       const termsChecked = fields.terms?.checked;
       const termsError = document.getElementById('register-terms-error');
       if (!termsChecked && termsError) {
@@ -300,114 +313,53 @@
           submitBtn.disabled = true;
         }
 
-        setTimeout(() => {
-          alert('Account created! (Demo mode — no backend yet)');
-          if (submitBtn) {
-            submitBtn.textContent = 'Create Account';
-            submitBtn.disabled = false;
+        const roleSelect = document.getElementById('register-role');
+
+        try {
+          const res = await fetch('/api/v1/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({
+              firstName: fields.firstName.value.trim(),
+              lastName: fields.lastName.value.trim(),
+              email: fields.email.value.trim(),
+              password: fields.password.value,
+              role: roleSelect?.value || 'attendee',
+            }),
+          });
+          const data = await res.json();
+
+          if (res.ok && data.success) {
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+            localStorage.setItem('accessToken', data.data.accessToken);
+            if (window.showToast) {
+              window.showToast({ type: 'success', title: 'Account created!', message: `Welcome, ${data.data.user.firstName}!` });
+            }
+            setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+          } else {
+            const msg = data.error?.message || data.errors?.[0]?.msg || 'Registration failed';
+            showFieldStatus(fields.email, 'register-email-error', { isValid: false, message: msg });
+            if (submitBtn) { submitBtn.textContent = 'Create Account'; submitBtn.disabled = false; }
           }
-        }, 1500);
-      }
-    });
-  };
-
-  /**
-   * Setup RSVP Form Validation
-   */
-  const setupRSVPForm = () => {
-    const form = document.getElementById('rsvp-form');
-    if (!form) return;
-
-    const nameInput = document.getElementById('rsvp-name');
-    const emailInput = document.getElementById('rsvp-email');
-
-    if (nameInput) {
-      nameInput.addEventListener('blur', () => {
-        showFieldStatus(nameInput, 'rsvp-name-error', validateField('name', nameInput.value));
-      });
-    }
-
-    if (emailInput) {
-      emailInput.addEventListener('blur', () => {
-        showFieldStatus(emailInput, 'rsvp-email-error', validateField('email', emailInput.value));
-      });
-    }
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      const nameResult = validateField('name', nameInput?.value || '');
-      const emailResult = validateField('email', emailInput?.value || '');
-
-      showFieldStatus(nameInput, 'rsvp-name-error', nameResult);
-      showFieldStatus(emailInput, 'rsvp-email-error', emailResult);
-
-      if (nameResult.isValid && emailResult.isValid) {
-        const submitBtn = document.getElementById('rsvp-submit-btn');
-        if (submitBtn) {
-          submitBtn.textContent = '✅ RSVP Confirmed!';
-          submitBtn.disabled = true;
-          submitBtn.style.background = 'var(--color-success)';
+        } catch {
+          showFieldStatus(fields.email, 'register-email-error', { isValid: false, message: 'Network error — is the server running?' });
+          if (submitBtn) { submitBtn.textContent = 'Create Account'; submitBtn.disabled = false; }
         }
       }
     });
   };
 
   /**
-   * Setup Create Event Form Validation
+   * Setup RSVP Form Validation (event-detail handles its own RSVP inline)
    */
-  const setupCreateEventForm = () => {
-    const form = document.getElementById('create-event-form');
-    if (!form) return;
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-
-      // Collect all required fields
-      const requiredFields = [
-        { id: 'event-title', errorId: 'event-title-error', type: 'required' },
-        { id: 'event-description', errorId: 'event-description-error', type: 'required' },
-        { id: 'event-category', errorId: 'event-category-error', type: 'required' },
-        { id: 'event-capacity', errorId: 'event-capacity-error', type: 'required' },
-        { id: 'event-date', errorId: 'event-date-error', type: 'required' },
-        { id: 'event-venue', errorId: 'event-venue-error', type: 'required' },
-        { id: 'event-city', errorId: 'event-city-error', type: 'required' },
-      ];
-
-      let allValid = true;
-
-      // Using for...of loop - demonstrates control flow
-      for (const field of requiredFields) {
-        const input = document.getElementById(field.id);
-        const result = validateField(field.type, input?.value || '');
-        if (input) showFieldStatus(input, field.errorId, result);
-        if (!result.isValid) allValid = false;
-      }
-
-      if (allValid) {
-        const submitBtn = document.getElementById('create-event-submit-btn');
-        if (submitBtn) {
-          submitBtn.textContent = 'Publishing...';
-          submitBtn.disabled = true;
-        }
-
-        setTimeout(() => {
-          alert('Event published! (Demo mode — no backend yet)');
-          if (submitBtn) {
-            submitBtn.textContent = '🎉 Publish Event';
-            submitBtn.disabled = false;
-          }
-        }, 1500);
-      }
-    });
-  };
+  const setupRSVPForm = () => {};
 
   // ============ Initialize All Forms ============
   const init = () => {
     setupLoginForm();
     setupRegisterForm();
     setupRSVPForm();
-    setupCreateEventForm();
   };
 
   if (document.readyState === 'loading') {

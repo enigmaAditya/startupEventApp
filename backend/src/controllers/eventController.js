@@ -33,19 +33,19 @@ const getEvents = async (req, res, next) => {
     if (city) filter['location.city'] = new RegExp(city, 'i');
 
     let query;
+    let countFilter = filter;
 
-    // Text search if search param provided
     if (search) {
+      countFilter = { ...filter, $text: { $search: search } };
       query = Event.find(
-        { ...filter, $text: { $search: search } },
+        countFilter,
         { score: { $meta: 'textScore' } }
       ).sort({ score: { $meta: 'textScore' } });
     } else {
       query = Event.find(filter).sort({ date: 1 });
     }
 
-    // Count total matching documents
-    const total = await Event.countDocuments(filter);
+    const total = await Event.countDocuments(countFilter);
 
     // Execute query with pagination
     const events = await query
@@ -142,8 +142,15 @@ const updateEvent = async (req, res, next) => {
       return next(ApiError.forbidden('Not authorized to update this event'));
     }
 
-    event = await Event.findByIdAndUpdate(req.params.id, req.body, {
-      new: true, // Return updated document
+    const allowedUpdates = ['title', 'description', 'category', 'date', 'endDate',
+      'time', 'location', 'capacity', 'tags', 'status', 'isVirtual', 'isFeatured', 'prizePool'];
+    const updates = {};
+    for (const key of allowedUpdates) {
+      if (req.body[key] !== undefined) updates[key] = req.body[key];
+    }
+
+    event = await Event.findByIdAndUpdate(req.params.id, updates, {
+      new: true,
       runValidators: true,
     });
 

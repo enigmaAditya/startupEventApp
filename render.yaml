@@ -1,40 +1,38 @@
 # StartupEvents — Render Deployment Configuration
 # Syllabus: BE Unit VI — Deployment, CI/CD
+#
+# This deploys as a SINGLE web service:
+#   - Builds the frontend (vite build)
+#   - Serves built files + API from one Express server
+#   - No CORS issues, Socket.IO works out of the box
+#
+# MongoDB: Use MongoDB Atlas (free tier) — Render does not offer MongoDB.
+# Set MONGODB_URI in the Render dashboard Environment tab.
 
 services:
-  # ============ BACKEND API ============
   - type: web
-    name: startupevents-api
+    name: startupevents
     runtime: node
     region: oregon
     repo: https://github.com/enigmaAditya/startupEventApp
-    rootDir: backend
-    buildCommand: npm install
-    startCommand: node src/server.js
+    buildCommand: |
+      cd frontend && npm install && npm run build:prod && cd ../backend && npm install
+    startCommand: node backend/src/server.js
     envVars:
       - key: NODE_ENV
         value: production
-      - key: MONGO_URI
-        fromDatabase:
-          name: startupevents-db
-          property: connectionString
+      - key: MONGODB_URI
+        sync: false   # Set in Render dashboard (MongoDB Atlas connection string)
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
         generateValue: true
-      - key: CORS_ORIGIN
-        value: https://startupevents.onrender.com
+      - key: JWT_EXPIRE
+        value: 7d
+      - key: JWT_REFRESH_EXPIRE
+        value: 30d
       - key: OPENAI_API_KEY
-        sync: false   # Set manually in Render dashboard
-
-  # ============ FRONTEND (Static Site) ============
-  - type: web
-    name: startupevents-frontend
-    runtime: static
-    repo: https://github.com/enigmaAditya/startupEventApp
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist
+        sync: false   # Optional — set manually if you want AI features
     headers:
       - path: /*
         name: X-Frame-Options
@@ -42,9 +40,3 @@ services:
       - path: /*
         name: X-Content-Type-Options
         value: nosniff
-
-# ============ DATABASE ============
-databases:
-  - name: startupevents-db
-    plan: free
-    databaseName: startupevents

@@ -34,7 +34,7 @@
   justify-content: space-between;
   height: var(--navbar-height);
   padding-inline: var(--space-6);
-  background: hsla(220, 25%, 6%, 0.8);
+  background: var(--bg-overlay);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid var(--border-color);
@@ -118,6 +118,49 @@
   background: var(--text-primary);
   border-radius: var(--radius-full);
   transition: transform var(--transition-base), opacity var(--transition-base);
+}
+
+/* ---- Landing Page Nav (transparent, inside hero) ---- */
+.landing-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-8);
+}
+
+.landing-nav__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.landing-nav__link {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+}
+
+.landing-nav__link:hover {
+  color: var(--text-primary);
+}
+
+.landing-nav__avatar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-primary);
+}
+
+.hero--landing {
+  min-height: 100vh;
 }
 
 /* ---- Hero Section ---- */

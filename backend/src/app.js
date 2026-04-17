@@ -63,10 +63,16 @@ app.use(morgan('short', {
 }));
 
 // 7. Serve static frontend files
-app.use(express.static(path.join(__dirname, '../../frontend/src/pages')));
-app.use('/css', express.static(path.join(__dirname, '../../frontend/src/css')));
-app.use('/js', express.static(path.join(__dirname, '../../frontend/src/js')));
-app.use('/assets', express.static(path.join(__dirname, '../../frontend/src/assets')));
+// In production: serve Vite-built dist folder
+// In development: serve source files directly (Vite dev server handles most requests)
+if (config.nodeEnv === 'production') {
+  app.use(express.static(path.join(__dirname, '../../frontend/dist')));
+} else {
+  app.use(express.static(path.join(__dirname, '../../frontend/src/pages')));
+  app.use('/css', express.static(path.join(__dirname, '../../frontend/src/css')));
+  app.use('/js', express.static(path.join(__dirname, '../../frontend/src/js')));
+  app.use('/assets', express.static(path.join(__dirname, '../../frontend/src/assets')));
+}
 
 // ============ API ROUTES ============
 // Demonstrates: express.Router(), route prefixing, API versioning
@@ -87,9 +93,23 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ============ FRONTEND CATCH-ALL (production) ============
+// Serve built frontend for non-API routes so direct URL access works
+if (config.nodeEnv === 'production') {
+  app.get('{*path}', (req, res, next) => {
+    if (req.path.startsWith('/api/')) return next();
+    const filePath = path.join(__dirname, '../../frontend/dist', req.path);
+    res.sendFile(filePath, (err) => {
+      if (err) {
+        res.sendFile(path.join(__dirname, '../../frontend/dist/pages/index.html'));
+      }
+    });
+  });
+}
+
 // ============ 404 HANDLER ============
 // Demonstrates: app.all() — catches all HTTP methods
-app.all('*', notFoundHandler);
+app.all('{*path}', notFoundHandler);
 
 // ============ ERROR HANDLER ============
 // Demonstrates: error-handling middleware (4 params)

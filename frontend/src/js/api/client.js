@@ -8,7 +8,7 @@
  * Base URL for the API
  * In production, this would be set by env vars via Vite
  */
-const BASE_URL = 'http://localhost:5000/api/v1';
+const BASE_URL = '/api/v1';
 
 /**
  * Custom HTTP Error class

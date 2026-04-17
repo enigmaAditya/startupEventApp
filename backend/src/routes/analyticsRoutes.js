@@ -7,7 +7,7 @@
 const express = require('express');
 const router = express.Router();
 const analyticsController = require('../controllers/analyticsController');
-const { protect } = require('../middlewares/auth');
+const protect = require('../middlewares/auth');
 const authorize = require('../middlewares/authorize');
 
 // Public route — track views (no auth required)

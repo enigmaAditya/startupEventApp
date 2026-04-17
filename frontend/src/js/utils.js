@@ -50,24 +50,28 @@
 
     if (sidebarLinks.length === 0) return;
 
+    const switchToTab = (tabName) => {
+      const target = document.querySelector(`[data-tab="${tabName}"]`);
+      if (!target || target.style.display === 'none') return;
+      sidebarLinks.forEach((l) => l.classList.remove('dashboard__sidebar-link--active'));
+      target.classList.add('dashboard__sidebar-link--active');
+      const allTabs = document.querySelectorAll('[id^="tab-"]');
+      allTabs.forEach((tab) => {
+        tab.style.display = tab.id === `tab-${tabName}` ? '' : 'none';
+      });
+    };
+
     sidebarLinks.forEach((link) => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
-
         const tabName = link.dataset.tab;
-        if (!tabName) return;
-
-        // Update active link
-        sidebarLinks.forEach((l) => l.classList.remove('dashboard__sidebar-link--active'));
-        link.classList.add('dashboard__sidebar-link--active');
-
-        // Show corresponding tab, hide others
-        const allTabs = document.querySelectorAll('[id^="tab-"]');
-        allTabs.forEach((tab) => {
-          tab.style.display = tab.id === `tab-${tabName}` ? '' : 'none';
-        });
+        if (tabName) switchToTab(tabName);
       });
     });
+
+    // Activate tab from URL hash (e.g. dashboard.html#create-event)
+    const hash = window.location.hash.replace('#', '');
+    if (hash) switchToTab(hash);
   };
 
   // ============ TOAST NOTIFICATIONS ============

@@ -17,9 +17,10 @@ let io;
  * @param {import('http').Server} server
  */
 const initializeSocketIO = (server) => {
+  const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
   io = new Server(server, {
     cors: {
-      origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+      origin: process.env.NODE_ENV === 'production' ? false : corsOrigin,
       methods: ['GET', 'POST'],
     },
   });
