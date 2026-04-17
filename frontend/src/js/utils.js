@@ -52,13 +52,20 @@
 
     const switchToTab = (tabName) => {
       const target = document.querySelector(`[data-tab="${tabName}"]`);
-      if (!target || target.style.display === 'none') return;
+      if (!target) return;
+      
       sidebarLinks.forEach((l) => l.classList.remove('dashboard__sidebar-link--active'));
       target.classList.add('dashboard__sidebar-link--active');
+      
       const allTabs = document.querySelectorAll('[id^="tab-"]');
       allTabs.forEach((tab) => {
         tab.style.display = tab.id === `tab-${tabName}` ? '' : 'none';
       });
+
+      // Notify the page that a tab was switched (useful for lazy-loading analytics)
+      if (typeof window.__onTabSwitch === 'function') {
+        window.__onTabSwitch(tabName);
+      }
     };
 
     sidebarLinks.forEach((link) => {

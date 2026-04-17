@@ -31,6 +31,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     lastName: user.lastName,
     email: user.email,
     role: user.role,
+    eventsAttending: user.eventsAttending || [],
   };
 
   res

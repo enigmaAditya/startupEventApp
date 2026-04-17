@@ -70,6 +70,11 @@
   --border-color-hover: hsl(220, 15%, 30%);
   --border-color-focus: var(--color-primary-400);
 
+  /* Glassmorphism Tokens */
+  --bg-glass: hsla(195, 45%, 6%, 0.75);
+  --border-glass: hsla(160, 100%, 49% , 0.1);
+  --bg-glass-sidebar: hsla(195, 45%, 6%, 0.4);
+
   /* ---- Gradients ---- */
   --gradient-primary: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-400));
   --gradient-hero: linear-gradient(160deg, var(--color-neutral-950) 0%, hsl(252, 40%, 12%) 50%, var(--color-neutral-950) 100%);
@@ -77,9 +82,9 @@
   --gradient-glow: radial-gradient(ellipse at 50% 0%, hsla(252, 80%, 55%, 0.15), transparent 70%);
 
   /* ---- Typography ---- */
-  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  --font-heading: 'Outfit', 'Inter', sans-serif;
-  --font-mono: 'Fira Code', 'Cascadia Code', monospace;
+  --font-sans: 'Roboto Flex', sans-serif;
+  --font-heading: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -139,6 +144,13 @@
   --shadow-glow: 0 0 20px hsla(252, 80%, 55%, 0.25);
   --shadow-glow-accent: 0 0 20px hsla(175, 80%, 48%, 0.2);
 
+  /* ---- Animations ---- */
+  @keyframes gradient-move {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   /* ---- Transitions ---- */
   --transition-fast: 150ms ease;
   --transition-base: 250ms ease;
@@ -180,6 +192,11 @@
   --border-color: hsl(220, 15%, 87%);
   --border-color-hover: hsl(220, 15%, 75%);
 
+  /* Light Theme Glass */
+  --bg-glass: hsla(0, 0%, 100%, 0.7);
+  --border-glass: hsla(220, 15%, 10%, 0.08);
+  --bg-glass-sidebar: hsla(220, 15%, 90%, 0.45);
+
   --gradient-hero: linear-gradient(160deg, hsl(220, 20%, 98%) 0%, hsl(252, 40%, 95%) 50%, hsl(220, 20%, 98%) 100%);
   --gradient-card: linear-gradient(145deg, hsla(252, 50%, 60%, 0.05), hsla(175, 50%, 60%, 0.03));
 
@@ -188,4 +205,35 @@
   --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.08), 0 4px 6px -4px hsla(0, 0%, 0%, 0.05);
   --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.1), 0 8px 10px -6px hsla(0, 0%, 0%, 0.05);
   --shadow-glow: 0 0 20px hsla(252, 80%, 55%, 0.12);
+}
+
+/* ---- Midnight Forest Theme ---- */
+[data-theme="midnight-forest"] {
+  --bg-primary: hsl(195, 45%, 6%);
+  --bg-secondary: hsl(195, 30%, 10%);
+  --bg-tertiary: hsl(195, 25%, 15%);
+  --bg-card: hsl(195, 28%, 11%);
+  --bg-card-hover: hsl(195, 28%, 15%);
+  --bg-input: hsl(195, 25%, 12%);
+  --bg-overlay: hsla(195, 45%, 6%, 0.85);
+
+  --text-primary: hsl(160, 20%, 95%);
+  --text-secondary: hsl(160, 15%, 75%);
+  --text-tertiary: hsl(160, 10%, 55%);
+  --text-inverse: hsl(195, 45%, 6%);
+
+  --border-color: hsl(195, 20%, 20%);
+  --border-color-hover: hsl(195, 20%, 30%);
+  --border-color-focus: hsl(160, 100%, 49%);
+
+  --brand-primary: hsl(160, 100%, 49%);
+  --brand-accent: hsl(175, 100%, 50%);
+
+  --gradient-primary: linear-gradient(135deg, hsl(160, 100%, 49%), hsl(175, 100%, 50%));
+  --gradient-hero: linear-gradient(160deg, hsl(195, 45%, 6%) 0%, hsl(160, 40%, 12%) 50%, hsl(195, 45%, 6%) 100%);
+  --gradient-card: linear-gradient(145deg, hsla(160, 50%, 30%, 0.1), hsla(175, 50%, 30%, 0.05));
+  --gradient-glow: radial-gradient(ellipse at 50% 0%, hsla(160, 80%, 55%, 0.15), transparent 70%);
+
+  --shadow-glow: 0 0 20px hsla(160, 80%, 55%, 0.25);
+  --shadow-glow-accent: 0 0 20px hsla(175, 80%, 48%, 0.2);
 }

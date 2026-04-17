@@ -101,6 +101,7 @@
           category: card.dataset.category,
           date: card.dataset.date,
           location: { city: card.dataset.city },
+          organizer: card.dataset.organizerId,
         };
         window.__eventDetailModal(eventData);
       }
@@ -151,6 +152,7 @@
         category: card.dataset.category,
         date: card.dataset.date,
         location: { city: card.dataset.city },
+        organizer: card.dataset.organizerId,
       };
       window.__eventDetailModal(eventData);
     }

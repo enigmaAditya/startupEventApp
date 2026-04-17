@@ -1,31 +1,17 @@
-/* ============================================
-   StartupEvents — Analytics Routes
-   Syllabus: BE Unit V — Express Router,
-             route organization, middleware chaining
-   ============================================ */
-
 const express = require('express');
 const router = express.Router();
-const analyticsController = require('../controllers/analyticsController');
+const { getOrganizerAnalytics } = require('../controllers/analyticsController');
 const protect = require('../middlewares/auth');
 const authorize = require('../middlewares/authorize');
 
-// Public route — track views (no auth required)
-router.post('/track/view', analyticsController.trackView);
-
-// Protected routes — require authentication
+// All routes are protected and restricted to organizers/admins
 router.use(protect);
+router.use(authorize('organizer', 'admin'));
 
-// Any authenticated user can view their own activity
-router.get('/activity', analyticsController.getUserActivity);
-
-// Organizer & Admin routes
-router.get('/dashboard', authorize('organizer', 'admin'), analyticsController.getDashboard);
-router.get('/events/:id', authorize('organizer', 'admin'), analyticsController.getEventAnalytics);
-
-// Admin-only routes
-router.get('/top-events', authorize('admin'), analyticsController.getTopEvents);
-router.get('/active-users', authorize('admin'), analyticsController.getMostActiveUsers);
-router.get('/platform', authorize('admin'), analyticsController.getPlatformActivity);
+/**
+ * @route   GET /api/v1/analytics/organizer
+ * @desc    Get aggregated analytics for the logged-in organizer
+ */
+router.get('/organizer', getOrganizerAnalytics);
 
 module.exports = router;

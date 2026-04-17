@@ -34,11 +34,11 @@
   justify-content: space-between;
   height: var(--navbar-height);
   padding-inline: var(--space-6);
-  background: var(--bg-overlay);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid var(--border-color);
-  transition: background var(--transition-base);
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid var(--border-glass);
+  transition: all var(--transition-base);
 }
 
 .navbar__brand {
@@ -218,10 +218,12 @@
 }
 
 .hero__title-gradient {
-  background: var(--gradient-primary);
+  background: linear-gradient(135deg, var(--color-primary-400), var(--color-accent-400), var(--color-primary-600));
+  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+  animation: gradient-move 5s ease infinite;
 }
 
 .hero__subtitle {
@@ -328,8 +330,10 @@
   width: var(--sidebar-width);
   height: calc(100vh - var(--navbar-height));
   padding: var(--space-6);
-  background: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
+  background: var(--bg-glass-sidebar);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-right: 1px solid var(--border-glass);
   overflow-y: auto;
   flex-shrink: 0;
 }

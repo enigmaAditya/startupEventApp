@@ -23,6 +23,7 @@
     card.dataset.date = event.date || '';
     card.dataset.city = event.location?.city || '';
     card.dataset.eventId = event._id || event.id || '';
+    card.dataset.organizerId = event.organizer?._id || event.organizer || '';
 
     // Category emoji mapping
     const categoryConfig = {

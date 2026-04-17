@@ -32,17 +32,35 @@ const initializeSocketIO = (server) => {
 
     // ---- Join event room (for per-event chat) ----
     // Demonstrates: Socket.IO rooms
-    socket.on('join:event', async (eventId) => {
-      socket.join(`event:${eventId}`);
-      logger.debug(`Socket ${socket.id} joined room event:${eventId}`);
-      
+    socket.on('join:event', async (data) => {
+      // Support both legacy (string) and new (object) formats for robustness
+      const eventId = typeof data === 'string' ? data : data.eventId;
+      const { userId, role } = typeof data === 'object' ? data : {};
+
+      if (!eventId) return;
+
       try {
-        const event = await Event.findById(eventId).select('chatHistory');
-        if (event && event.chatHistory) {
+        const event = await Event.findById(eventId);
+        if (!event) return;
+
+        // AUTH CHECK: If organizer, must be the owner
+        if (role === 'organizer' && userId) {
+          const orgId = event.organizer._id || event.organizer;
+          if (orgId.toString() !== userId.toString()) {
+            logger.warn(`Unauthorized organizer ${userId} tried to join chat for event ${eventId}`);
+            socket.emit('chat:error', { message: 'Chat access restricted to event host and attendees.' });
+            return;
+          }
+        }
+
+        socket.join(`event:${eventId}`);
+        logger.debug(`Socket ${socket.id} joined room event:${eventId}`);
+        
+        if (event.chatHistory) {
           socket.emit('chat:history', event.chatHistory);
         }
       } catch (err) {
-        logger.error(`Error fetching chat history for event ${eventId}: ${err.message}`);
+        logger.error(`Error joining event ${eventId}: ${err.message}`);
       }
 
       // Notify room that a new user joined

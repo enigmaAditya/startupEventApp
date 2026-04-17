@@ -183,9 +183,37 @@
    * @param {Object} event - Event data
    */
   const eventDetailModal = (event) => {
+    const currentUser = JSON.parse(localStorage.getItem('user') || 'null');
+    
+    // Robust ID comparison (handling both id and _id formats)
+    const getUserId = (obj) => obj?._id || obj?.id || obj;
+    const currentUserId = getUserId(currentUser);
+    const eventOrganizerId = getUserId(event.organizer);
+    
+    const isOwner = currentUser && currentUserId && eventOrganizerId && (currentUserId.toString() === eventOrganizerId.toString());
+    const isOtherOrganizer = currentUser && currentUser.role === 'organizer' && !isOwner;
+    
+    // Robust attendance check
+    const attendingList = Array.isArray(currentUser?.eventsAttending) ? currentUser.eventsAttending.map(id => id.toString()) : [];
+    const isAttending = currentUser && attendingList.includes(getUserId(event).toString());
+
     const dateStr = event.date
       ? new Date(event.date).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
       : 'TBD';
+
+    let actionLabel = '🎫 RSVP Now';
+    let actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
+
+    if (isOwner) {
+      actionLabel = '🛠️ Manage Event';
+      actionTarget = `manage-event.html?id=${event._id || event.id || ''}`;
+    } else if (isOtherOrganizer) {
+      actionLabel = 'View Details →';
+      actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
+    } else if (isAttending) {
+      actionLabel = '🚀 Already In';
+      actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
+    }
 
     return openModal({
       title: event.title || 'Event Details',
@@ -214,10 +242,10 @@
       actions: [
         { label: 'Close', className: 'btn btn--outline', onClick: (close) => close() },
         {
-          label: '🎫 RSVP Now',
+          label: actionLabel,
           className: 'btn btn--primary',
           onClick: (close) => {
-            window.location.href = `event-detail.html?id=${event._id || event.id || ''}`;
+            window.location.href = actionTarget;
             close();
           },
         },

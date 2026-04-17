@@ -98,6 +98,9 @@ app.get('/api/health', (req, res) => {
 if (config.nodeEnv === 'production') {
   app.get('{*path}', (req, res, next) => {
     if (req.path.startsWith('/api/')) return next();
+    
+    // For our MPA: if someone hits /pages/... directly, try to serve it.
+    // If not found, fallback to index.html
     const filePath = path.join(__dirname, '../../frontend/dist', req.path);
     res.sendFile(filePath, (err) => {
       if (err) {

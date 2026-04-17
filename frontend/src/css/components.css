@@ -109,10 +109,10 @@
 }
 
 .card:hover {
-  border-color: var(--border-color-hover);
+  border-color: hsla(160, 100%, 49%, 0.3);
   background: var(--bg-card-hover);
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-4px);
+  box-shadow: 0 10px 40px -10px hsla(160, 100%, 49%, 0.15), 0 0 15px hsla(160, 100%, 49%, 0.1);
+  transform: translateY(-6px);
 }
 
 .card__image {
@@ -623,6 +623,41 @@ textarea.form-input {
   font-size: var(--text-sm);
   color: var(--text-tertiary);
   white-space: nowrap;
+}
+
+/* ============ SPECIAL EFFECTS ============ */
+
+.animated-gradient-text {
+  background: linear-gradient(
+    -45deg, 
+    var(--color-primary-400), 
+    var(--color-accent-300), 
+    var(--color-primary-500), 
+    var(--color-accent-400)
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-move 8s ease infinite;
+}
+
+.animated-gradient-box {
+  background: linear-gradient(
+    -45deg, 
+    hsla(160, 100%, 49%, 0.1), 
+    hsla(175, 100%, 50%, 0.05), 
+    hsla(160, 100%, 49%, 0.08), 
+    hsla(175, 100%, 50%, 0.1)
+  );
+  background-size: 400% 400%;
+  animation: gradient-move 15s ease infinite;
+}
+
+@keyframes gradient-move {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 /* ============ SKELETON LOADER ============ */

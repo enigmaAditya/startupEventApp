@@ -42,13 +42,18 @@
     });
     document.addEventListener('click', () => dropdown.classList.remove('dropdown--open'));
 
-    dropdown.querySelector('#logout-btn').addEventListener('click', async () => {
+    const logoutBtn = dropdown.querySelector('#logout-btn');
+    
+    // Expose global logout function
+    window.__logout = async () => {
       try {
         await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
       } catch { /* ignore */ }
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
       window.location.href = 'index.html';
-    });
+    };
+
+    logoutBtn.addEventListener('click', window.__logout);
   }
 })();
