@@ -51,6 +51,15 @@ const userSchema = new mongoose.Schema(
     interests: [{ type: String }],
     eventsOrganized: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
     eventsAttending: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Event' }],
+    isActive: { type: Boolean, default: true },
+    organizerStatus: {
+      type: String,
+      enum: ['none', 'pending', 'verified', 'rejected'],
+      default: 'none'
+    },
+    organizerRejectionDate: {
+      type: Date
+    },
     refreshToken: { type: String, select: false },
   },
   {

@@ -30,7 +30,12 @@ const getEvents = async (req, res, next) => {
     // Demonstrates: computed property names, optional chaining
     const filter = {};
     if (category) filter.category = category;
-    if (status) filter.status = status;
+    if (status) {
+      filter.status = status;
+    } else {
+      // Default: Public listing excludes pending-approval events
+      filter.status = { $ne: 'pending-approval' };
+    }
     if (organizer) filter.organizer = organizer;
     if (city) filter['location.city'] = new RegExp(city, 'i');
 
@@ -113,6 +118,11 @@ const createEvent = async (req, res, next) => {
 
     // Set organizer to the authenticated user
     req.body.organizer = req.user._id;
+
+    // Enforcement: Unverified organizers are locked to 'pending-approval' status
+    if (req.user.role === 'organizer' && req.user.organizerStatus !== 'verified') {
+      req.body.status = 'pending-approval';
+    }
 
     const event = await Event.create(req.body);
 

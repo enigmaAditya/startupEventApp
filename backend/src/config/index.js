@@ -38,7 +38,7 @@ const config = {
   // Rate limiting
   rateLimit: {
     windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per window
+    max: process.env.NODE_ENV === 'production' ? 100 : 10000, // Significantly higher limit for development
   },
 
   // OpenAI (optional — AI features run in mock mode without a key)

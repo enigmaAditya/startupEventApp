@@ -76,6 +76,14 @@
         <a href="#settings" class="dashboard__sidebar-link" data-tab="settings">
           ⚙️ Settings
         </a>
+
+        <!-- Organizer Application Button -->
+        <div id="apply-organizer-container" style="margin-top: var(--space-4); display: none;">
+          <button class="btn btn--secondary btn--full btn--sm" id="apply-organizer-btn">
+            🚀 Host an Event
+          </button>
+        </div>
+
         <div style="margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-color);">
           <a href="#" class="dashboard__sidebar-link" style="color: var(--color-error);" onclick="event.preventDefault(); window.__logout();">
             🚪 Logout
@@ -193,6 +201,26 @@
     </main>
   </div>
 
+  <!-- ============ ORGANIZER WARNING MODAL ============ -->
+  <div class="modal-overlay" id="organizer-warning-overlay">
+    <div class="modal" id="organizer-warning-modal">
+      <div class="modal__content" style="max-width: 450px; text-align: center; padding: var(--space-8);">
+        <div style="font-size: 3rem; margin-bottom: var(--space-4);">⚠️</div>
+        <h2 style="margin-bottom: var(--space-3);">Role Transition Warning</h2>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-6); line-height: 1.6;">
+          Becoming an organizer means shifting from a member to a leader. 
+          <strong>Once approved, you will no longer be able to RSVP to other events</strong> as an attendee.
+          <br><br>
+          Do you wish to proceed with your application?
+        </p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3);">
+          <button class="btn btn--secondary" id="warning-modal-cancel">Maybe Later</button>
+          <button class="btn btn--primary" id="warning-modal-confirm">Apply Anyway</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toast-container"></div>
 
   <script src="../js/theme.js"></script>
@@ -214,15 +242,25 @@
       var token = localStorage.getItem('accessToken');
       if (!user || !token) { window.location.href = 'login.html'; return; }
 
+      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+
+      /* ---------- Mandatory State Sync (The "Truth" Check) ---------- */
+      try {
+        var profileRes = await fetch('/api/v1/users/me', { headers: authHeaders, credentials: 'include' });
+        var profileData = await profileRes.json();
+        if (profileRes.ok && profileData.success) {
+          user = profileData.data; // Sync with newest server data
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+      } catch (e) { console.error('Role sync failed', e); }
+
       var isOrganizer = user.role === 'organizer' || user.role === 'admin';
       
-      // Redirect organizers to their dedicated dashboard
+      // Redirect based on current synced role
       if (isOrganizer) {
         window.location.href = 'organizer-dashboard.html';
         return;
       }
-
-      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
       /* ---------- Populate sidebar & welcome ---------- */
       var initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
@@ -238,6 +276,90 @@
         if (el.textContent.trim() === 'Organizer') el.textContent = (user.role || 'user').charAt(0).toUpperCase() + (user.role || 'user').slice(1);
       });
 
+      /* ---------- Organizer Verification UI ---------- */
+      const status = user.organizerStatus || 'none';
+      const applyContainer = document.getElementById('apply-organizer-container');
+      const overviewTab = document.getElementById('tab-overview');
+
+      if (status === 'none') {
+        if (applyContainer) applyContainer.style.display = 'block';
+      } else if (status === 'rejected') {
+        // Cooldown logic
+        const waitDays = 20;
+        const msPerDay = 24 * 60 * 60 * 1000;
+        const rejectionDate = user.organizerRejectionDate ? new Date(user.organizerRejectionDate) : null;
+        
+        if (rejectionDate) {
+          const daysPassed = (new Date() - rejectionDate) / msPerDay;
+          if (daysPassed < waitDays) {
+            const remaining = Math.ceil(waitDays - daysPassed);
+            const banner = document.createElement('div');
+            banner.style.cssText = 'padding: var(--space-4) var(--space-6); background: rgba(239, 68, 68, 0.1); border: 1px solid var(--color-error); border-radius: var(--radius-xl); margin-bottom: var(--space-8);';
+            banner.innerHTML = `
+              <div style="font-weight: var(--font-bold); color: var(--color-error); margin-bottom: 4px;">⛔ Application Not Approved</div>
+              <div style="font-size: var(--text-sm); color: var(--text-secondary);">You can re-apply to become an organizer in <strong>${remaining} day(s)</strong>. Use this time to attend more events and build your community profile!</div>
+            `;
+            overviewTab.prepend(banner);
+          } else {
+            // Cooldown finished, show apply button
+            if (applyContainer) applyContainer.style.display = 'block';
+          }
+        } else {
+          // No date found, fallback to showing button
+          if (applyContainer) applyContainer.style.display = 'block';
+        }
+      } else if (status === 'pending') {
+        // Show Pending Banner
+        const banner = document.createElement('div');
+        banner.style.cssText = 'padding: var(--space-4) var(--space-6); background: rgba(88, 101, 242, 0.1); border: 1px solid var(--brand-primary); border-radius: var(--radius-xl); margin-bottom: var(--space-8); display: flex; justify-content: space-between; align-items: center;';
+        banner.innerHTML = `
+          <div>
+            <div style="font-weight: var(--font-bold); color: var(--brand-primary);">🕒 Application Pending</div>
+            <div style="font-size: var(--text-sm); color: var(--text-secondary);">Your organizer request is being reviewed. Dashboards will unlock upon approval.</div>
+          </div>
+          <button class="btn btn--ghost btn--sm" id="revoke-app-btn" style="color: var(--color-error);">Revoke Request</button>
+        `;
+        overviewTab.prepend(banner);
+
+        document.getElementById('revoke-app-btn')?.addEventListener('click', revokeApplication);
+      }
+
+      // Application Logic
+      document.getElementById('apply-organizer-btn')?.addEventListener('click', () => {
+        document.getElementById('organizer-warning-overlay').classList.add('modal-overlay--active');
+      });
+
+      document.getElementById('warning-modal-cancel')?.addEventListener('click', () => {
+        document.getElementById('organizer-warning-overlay').classList.remove('modal-overlay--active');
+      });
+
+      document.getElementById('warning-modal-confirm')?.addEventListener('click', async () => {
+        try {
+          const res = await fetch('/api/v1/users/request-organizer', { method: 'POST', headers: authHeaders, credentials: 'include' });
+          const data = await res.json();
+          if (res.ok) {
+            document.getElementById('organizer-warning-overlay').classList.remove('modal-overlay--active');
+            user.organizerStatus = 'pending';
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.reload();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+
+      async function revokeApplication() {
+        if (!confirm('Are you sure you want to cancel your application?')) return;
+        try {
+          const res = await fetch('/api/v1/users/revoke-application', { method: 'POST', headers: authHeaders, credentials: 'include' });
+          if (res.ok) {
+            user.organizerStatus = 'none';
+            localStorage.setItem('user', JSON.stringify(user));
+            window.location.reload();
+          }
+        } catch (e) { console.error(e); }
+      }
+
       /* ---------- Helper: fetch with auth ---------- */
       async function authFetch(url) {
         var res = await fetch(url, { headers: authHeaders, credentials: 'include' });
@@ -246,7 +368,6 @@
 
       /* ---------- Load Overview stats + upcoming events ---------- */
       try {
-        var profileData = await authFetch('/api/v1/users/me');
         var eventsData  = await fetch('/api/v1/events?limit=50').then(function (r) { return r.json(); });
 
         if (profileData.success) {

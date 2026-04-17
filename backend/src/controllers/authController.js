@@ -31,6 +31,7 @@ const sendTokenResponse = (user, statusCode, res) => {
     lastName: user.lastName,
     email: user.email,
     role: user.role,
+    organizerStatus: user.organizerStatus || 'none',
     eventsAttending: user.eventsAttending || [],
   };
 
@@ -77,6 +78,7 @@ const register = async (req, res, next) => {
       email,
       password,
       role: role || 'attendee',
+      organizerStatus: role === 'organizer' ? 'pending' : 'none',
     });
 
     // Emit registration event

@@ -82,6 +82,10 @@
         <a href="#settings" class="dashboard__sidebar-link" data-tab="settings">
           ⚙️ Settings
         </a>
+        <!-- Admin-only Link -->
+        <a href="#users" class="dashboard__sidebar-link" id="nav-users-link" data-tab="users" style="display: none;">
+          👥 Users
+        </a>
         <div style="margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-color);">
           <a href="#" class="dashboard__sidebar-link" style="color: var(--color-error);" onclick="event.preventDefault(); window.__logout();">
             🚪 Logout
@@ -96,6 +100,17 @@
       <section id="tab-overview">
         <h1 id="welcome-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋</h1>
         <p id="welcome-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening with your events</p>
+
+        <!-- Organizer Verification HUD -->
+        <div id="verification-banner" style="display: none; padding: var(--space-6); background: rgba(88, 101, 242, 0.1); border: 1px solid var(--brand-primary); border-radius: var(--radius-2xl); margin-bottom: var(--space-8);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h2 style="font-size: var(--text-lg); color: var(--brand-primary); margin-bottom: 4px;">🛡️ Verification Pending</h2>
+              <p style="font-size: var(--text-sm); color: var(--text-secondary);">Your application is being reviewed. You can create drafts, but they will go live only after approval.</p>
+            </div>
+            <button class="btn btn--secondary btn--sm" id="dashboard-revoke-btn">Revoke Application</button>
+          </div>
+        </div>
 
         <!-- Stats Cards -->
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
@@ -297,6 +312,48 @@
         </div>
       </section>
 
+      <!-- ============ USERS TAB (Admin only) ============ -->
+      <section id="tab-users" style="display: none;">
+        <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Community Directory</h1>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Manage platform stakeholders and moderate accounts</p>
+
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl); overflow: hidden;">
+          <div style="padding: var(--space-6); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+            <div style="position: relative; flex: 1; min-width: 300px;">
+              <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary);">🔍</span>
+              <input type="text" id="user-search" class="form-input" placeholder="Search by name or email..." style="padding-left: 44px; margin-bottom: 0;">
+            </div>
+            <select id="user-role-filter" class="form-input form-select" style="width: auto; margin-bottom: 0;">
+              <option value="">All Roles</option>
+              <option value="attendee">Attendees</option>
+              <option value="organizer">Organizers</option>
+              <option value="admin">Admins</option>
+            </select>
+          </div>
+          
+          <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
+              <thead>
+                <tr style="background: var(--bg-tertiary); color: var(--text-tertiary); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">
+                  <th style="padding: var(--space-4) var(--space-6);">User</th>
+                  <th style="padding: var(--space-4) var(--space-6);">Role</th>
+                  <th style="padding: var(--space-4) var(--space-6);">Verification</th>
+                  <th style="padding: var(--space-4) var(--space-6);">Status</th>
+                  <th style="padding: var(--space-4) var(--space-6); text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="user-table-body">
+                <!-- User rows injected here -->
+              </tbody>
+            </table>
+          </div>
+          <div id="users-empty-state" style="display: none; padding: var(--space-10); text-align: center; color: var(--text-tertiary);">
+            <div style="font-size: 3rem; margin-bottom: var(--space-4);">👥</div>
+            <p>No users found matching your search.</p>
+          </div>
+        </div>
+      </section>
+
       <!-- ============ SETTINGS TAB ============ -->
       <section id="tab-settings" style="display: none;">
         <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Settings</h1>
@@ -335,14 +392,24 @@
       var token = localStorage.getItem('accessToken');
       if (!user || !token) { window.location.href = 'login.html'; return; }
       
+      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
+
+      /* ---------- Mandatory State Sync (The "Truth" Check) ---------- */
+      try {
+        var profileRes = await fetch('/api/v1/users/me', { headers: authHeaders, credentials: 'include' });
+        var profileData = await profileRes.json();
+        if (profileRes.ok && profileData.success) {
+          user = profileData.data; // Sync with newest server data
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+      } catch (e) { console.error('Role sync failed', e); }
+
       var isOrganizer = user.role === 'organizer' || user.role === 'admin';
       
       if (!isOrganizer) { 
         window.location.href = 'dashboard.html'; 
         return; 
       }
-
-      var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
       /* ---------- Populate sidebar & welcome ---------- */
       var initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
@@ -387,6 +454,36 @@
         const anaSub = document.getElementById('analytics-sub');
         if (anaTitle) anaTitle.textContent = 'Platform Intelligence Center';
         if (anaSub) anaSub.textContent = 'Aggregated performance and reach of the entire ecosystem';
+
+        // Show Admin Links
+        const usersLink = document.getElementById('nav-users-link');
+        if (usersLink) usersLink.style.display = 'block';
+      }
+
+      // Organizer Status HUD Logic
+      if (user.role === 'organizer' && user.organizerStatus === 'pending') {
+        const banner = document.getElementById('verification-banner');
+        if (banner) banner.style.display = 'block';
+        
+        const publishBtn = document.getElementById('create-event-submit-btn');
+        if (publishBtn) {
+          publishBtn.innerHTML = '🕒 Awaiting Verification';
+          publishBtn.disabled = true;
+          publishBtn.style.opacity = '0.5';
+          publishBtn.style.cursor = 'not-allowed';
+        }
+
+        document.getElementById('dashboard-revoke-btn')?.addEventListener('click', async () => {
+          if (!confirm('Cancel your application? You will return to attendee status.')) return;
+          try {
+            const res = await fetch('/api/v1/users/revoke-application', { method: 'POST', headers: authHeaders, credentials: 'include' });
+            if (res.ok) {
+              const updated = Object.assign({}, user, { role: 'attendee', organizerStatus: 'none' });
+              localStorage.setItem('user', JSON.stringify(updated));
+              window.location.href = 'dashboard.html';
+            }
+          } catch (e) { console.error(e); }
+        });
       }
 
       var sidebar = document.querySelector('.dashboard__sidebar');
@@ -511,8 +608,165 @@
       window.__onTabSwitch = function (tabName) {
         if (tabName === 'analytics') {
           fetchAnalytics();
+        } else if (tabName === 'users') {
+          fetchUsers();
         }
       };
+
+      /* ---------- Users Management Logic ---------- */
+      async function fetchUsers() {
+        const tableBody = document.getElementById('user-table-body');
+        const emptyState = document.getElementById('users-empty-state');
+        const search = document.getElementById('user-search').value;
+        const role = document.getElementById('user-role-filter').value;
+
+        if (!tableBody) return;
+        tableBody.innerHTML = '<tr><td colspan="5" style="padding: 40px; text-align:center;"><div class="skeleton" style="height: 20px; width: 60%; margin: 0 auto;"></div></td></tr>';
+
+        try {
+          const query = new URLSearchParams({ search, role }).toString();
+          const res = await fetch(`/api/v1/users?${query}`, { headers: authHeaders, credentials: 'include' });
+          const data = await res.json();
+          
+          if (res.ok && data.success) {
+            renderUsersTable(data.data);
+          } else {
+            throw new Error(data.error?.message || 'Failed to fetch users');
+          }
+        } catch (err) {
+          if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: err.message });
+        }
+      }
+
+      function renderUsersTable(users) {
+        const tableBody = document.getElementById('user-table-body');
+        const emptyState = document.getElementById('users-empty-state');
+        if (!tableBody) return;
+
+        if (users.length === 0) {
+          tableBody.innerHTML = '';
+          emptyState.style.display = 'block';
+          return;
+        }
+
+        emptyState.style.display = 'none';
+        tableBody.innerHTML = users.map(user => {
+          const initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
+          const joinDate = new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+          
+          const roleColors = {
+            admin: { bg: 'rgba(147, 51, 234, 0.1)', text: '#9333EA' },
+            organizer: { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6' },
+            attendee: { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981' }
+          };
+          const colors = roleColors[user.role] || { bg: 'var(--bg-tertiary)', text: 'var(--text-secondary)' };
+          
+          const statusMap = {
+            verified: { label: '✅ Verified', color: 'var(--color-success)' },
+            pending: { label: '🕒 Pending', color: 'var(--color-primary)' },
+            rejected: { label: '❌ Rejected', color: 'var(--color-error)' },
+            none: { label: '—', color: 'var(--text-tertiary)' }
+          };
+          const verif = statusMap[user.organizerStatus || 'none'];
+
+          return `
+            <tr style="border-bottom: 1px solid var(--border-color);">
+              <td style="padding: var(--space-4) var(--space-6);">
+                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                  <div class="avatar avatar--sm">${initials}</div>
+                  <div>
+                    <div style="font-weight: var(--font-semibold);">${user.firstName} ${user.lastName}</div>
+                    <div style="font-size: var(--text-xs); color: var(--text-tertiary);">${user.email}</div>
+                  </div>
+                </div>
+              </td>
+              <td style="padding: var(--space-4) var(--space-6);">
+                <span style="padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: var(--font-bold); background: ${colors.bg}; color: ${colors.text}; text-transform: uppercase;">
+                  ${user.role}
+                </span>
+              </td>
+              <td style="padding: var(--space-4) var(--space-6); font-size: var(--text-sm); color: ${verif.color}; font-weight: var(--font-medium);">
+                ${verif.label}
+              </td>
+              <td style="padding: var(--space-4) var(--space-6);">
+                <span style="display: inline-flex; align-items: center; gap: 4px; font-size: var(--text-sm); color: ${user.isActive !== false ? 'var(--color-success)' : 'var(--color-error)'};">
+                  ${user.isActive !== false ? '● Active' : '○ Inactive'}
+                </span>
+              </td>
+              <td style="padding: var(--space-4) var(--space-6); text-align: right;">
+                <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+                  ${user.organizerStatus === 'pending' ? `
+                    <button class="btn btn--primary btn--sm" onclick="window.__verifyUser('${user._id}', 'verified')" style="padding: 4px 12px; font-size: 11px;">Approve</button>
+                    <button class="btn btn--secondary btn--sm" onclick="window.__verifyUser('${user._id}', 'rejected')" style="padding: 4px 12px; font-size: 11px;">Reject</button>
+                  ` : `
+                    <button class="btn btn--ghost btn--sm" onclick="window.__toggleUserStatus('${user._id}')" title="Toggle Status" style="font-size: 11px;">
+                      ${user.isActive !== false ? '🚫 Suspend' : '✅ Activate'}
+                    </button>
+                  `}
+                  <select class="form-input form-select" style="width: auto; padding: 4px 8px; font-size: 10px; margin-bottom: 0;" 
+                    onchange="window.__changeUserRole('${user._id}', this.value)">
+                    <option value="attendee" ${user.role === 'attendee' ? 'selected' : ''}>Attendee</option>
+                    <option value="organizer" ${user.role === 'organizer' ? 'selected' : ''}>Organizer</option>
+                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                  </select>
+                </div>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      window.__verifyUser = async function(id, status) {
+        try {
+          const res = await fetch(`/api/v1/users/${id}/verify`, { 
+            method: 'PATCH', 
+            headers: authHeaders, 
+            credentials: 'include',
+            body: JSON.stringify({ status })
+          });
+          if (res.ok) {
+            if (window.showToast) window.showToast({ type: 'success', title: 'Action Taken', message: 'User verification status updated' });
+            fetchUsers();
+          }
+        } catch (e) { console.error(e); }
+      };
+
+      window.__toggleUserStatus = async function(id) {
+        try {
+          const res = await fetch(`/api/v1/users/${id}/status`, { method: 'PATCH', headers: authHeaders, credentials: 'include' });
+          if (res.ok) {
+            if (window.showToast) window.showToast({ type: 'success', title: 'Updated', message: 'User status changed' });
+            fetchUsers();
+          }
+        } catch (e) { console.error(e); }
+      };
+
+      window.__changeUserRole = async function(id, role) {
+        try {
+          const res = await fetch(`/api/v1/users/${id}/role`, { 
+            method: 'PATCH', 
+            headers: authHeaders, 
+            credentials: 'include',
+            body: JSON.stringify({ role })
+          });
+          if (res.ok) {
+            if (window.showToast) window.showToast({ type: 'success', title: 'Success', message: 'User promoted to ' + role });
+            fetchUsers();
+          }
+        } catch (e) { console.error(e); }
+      };
+
+      // Search & Filter listeners
+      document.getElementById('user-search')?.addEventListener('input', debounce(fetchUsers, 500));
+      document.getElementById('user-role-filter')?.addEventListener('change', fetchUsers);
+
+      function debounce(func, wait) {
+        let timeout;
+        return function(...args) {
+          clearTimeout(timeout);
+          timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+      }
 
       async function fetchAnalytics() {
         var loading = document.getElementById('analytics-loading');

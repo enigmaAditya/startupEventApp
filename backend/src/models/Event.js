@@ -76,7 +76,7 @@ const eventSchema = new mongoose.Schema(
     image: { type: String },
     status: {
       type: String,
-      enum: ['upcoming', 'ongoing', 'completed', 'cancelled'],
+      enum: ['upcoming', 'ongoing', 'completed', 'cancelled', 'pending-approval'],
       default: 'upcoming',
     },
     prizePool: { type: String },
