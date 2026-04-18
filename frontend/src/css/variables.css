@@ -75,6 +75,17 @@
   --border-glass: hsla(160, 100%, 49% , 0.1);
   --bg-glass-sidebar: hsla(195, 45%, 6%, 0.4);
 
+  /* Executive Glass Overhaul (Aesthetic A) */
+  --executive-glass-bg: hsla(220, 45%, 8%, 0.65);
+  --executive-glass-border: hsla(180, 100%, 50%, 0.12);
+  --executive-glass-blur: 40px;
+  --executive-mesh-glow: hsla(180, 100%, 50%, 0.04);
+  --motion-premium: cubic-bezier(0.16, 1, 0.3, 1);
+ 
+  /* Sharp Dual-Tone Accent Protocol (V6) */
+  --neon-purple: #d14dff;
+  --neon-glow-purple: 0 0 15px rgba(209, 77, 255, 0.5);
+
   /* ---- Gradients ---- */
   --gradient-primary: linear-gradient(135deg, var(--color-primary-500), var(--color-accent-400));
   --gradient-hero: linear-gradient(160deg, var(--color-neutral-950) 0%, hsl(252, 40%, 12%) 50%, var(--color-neutral-950) 100%);
@@ -144,12 +155,16 @@
   --shadow-glow: 0 0 20px hsla(252, 80%, 55%, 0.25);
   --shadow-glow-accent: 0 0 20px hsla(175, 80%, 48%, 0.2);
 
+}
+  
   /* ---- Animations ---- */
   @keyframes gradient-move {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
+
+:root {
 
   /* ---- Transitions ---- */
   --transition-fast: 150ms ease;

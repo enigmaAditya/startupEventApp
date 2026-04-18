@@ -1,0 +1,35 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/(index.html)?",
+      "destination": "/pages/index.html"
+    },
+    {
+      "source": "/events",
+      "destination": "/pages/events.html"
+    },
+    {
+      "source": "/event-detail",
+      "destination": "/pages/event-detail.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/pages/login.html"
+    },
+    {
+      "source": "/register",
+      "destination": "/pages/register.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/pages/dashboard.html"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
+    }
+  ],
+  "cleanUrls": true,
+  "trailingSlash": false
+}

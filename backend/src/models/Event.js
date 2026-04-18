@@ -81,6 +81,13 @@ const eventSchema = new mongoose.Schema(
     },
     prizePool: { type: String },
     isFeatured: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false },
+    moderationStatus: {
+      type: String,
+      enum: ['active', 'hidden', 'flagged'],
+      default: 'active',
+    },
+    moderationNote: { type: String, maxlength: 1000 },
     chatHistory: [
       {
         userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },

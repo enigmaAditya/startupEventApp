@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details — V8 Simple</title>
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .event-header { margin-bottom: var(--space-8); }
+    .info-strip { display: flex; gap: var(--space-6); padding: var(--space-4) 0; border-top: 1px solid rgba(255,255,255,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); margin-bottom: var(--space-8); color: var(--text-secondary); }
+    .main-grid { display: grid; grid-template-columns: 1fr 340px; gap: var(--space-8); }
+    .content-card { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: var(--space-8); border-radius: 8px; }
+  </style>
+</head>
+<body style="padding: 40px; font-family: sans-serif; background: #0a0a0a; color: #fff;">
+  <main class="container">
+    <div class="event-header">
+      <h1 id="title" style="font-size: 3rem; margin-bottom: 10px;">Build for Tomorrow</h1>
+      <div class="info-strip">
+        <span>📅 Friday, 15 May</span> • <span>📍 Bangalore</span> • <span>🎟️ Free</span>
+      </div>
+    </div>
+    
+    <div class="main-grid">
+      <div class="content-card">
+        <h2>About</h2>
+        <p style="line-height: 1.6; color: #ccc;">A 48-hour hackathon bringing together 500+ developers to build the future of decentralised tech. Join us for a weekend of high-intensity coding and networking.</p>
+        <hr style="opacity:0.1; margin: 40px 0;">
+        <h2>Live Chat</h2>
+        <div style="height: 200px; background: rgba(255,255,255,0.01); border: 1px dashed rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; color: #666;">
+          Chat logic will be restored once file-swap is complete.
+        </div>
+      </div>
+      
+      <aside>
+        <div class="content-card" style="margin-bottom: 20px;">
+          <h3>RSVP</h3>
+          <p>Register now to secure your spot.</p>
+          <button style="width: 100%; padding: 15px; background: #00f2ff; color: #000; border: none; font-weight: bold; cursor: pointer;">RSVP NOW</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

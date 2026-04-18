@@ -3,767 +3,495 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Event details — RSVP now and join the startup community.">
+  <meta name="description" content="Event details — Join the startup community.">
   <title>Event Details — StartupEvents</title>
-
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
-</head>
-<body>
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/modern-ui.css?v=8.0">
+  
+  <style>
+    /* V8 Standard Professional — Clean Minimalist Style */
+    .event-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-8);
+      padding: var(--space-5) 0;
+      margin-bottom: var(--space-8);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+    }
 
-  <!-- ============ NAVBAR ============ -->
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
+
+    .meta-value {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .main-card {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: var(--space-8);
+      margin-bottom: var(--space-8);
+      border-radius: 8px;
+    }
+
+    .simple-header {
+      font-family: 'Syne', sans-serif;
+      font-size: var(--text-2xl);
+      margin-bottom: var(--space-6);
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+
+    .terminal-control {
+      background: #000 !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+      color: #fff !important;
+      font-family: inherit !important;
+      border-radius: 4px !important;
+    }
+
+    .passport-terminal {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: var(--space-6);
+      border-radius: 8px;
+    }
+
+    .badge--cyan {
+      background: var(--neon-cyan);
+      color: #000;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+    }
+
+    .btn--standard-rsvp {
+      background: var(--neon-cyan) !important;
+      color: #000 !important;
+      font-weight: 800 !important;
+      border-radius: 4px !important;
+      padding: 12px !important;
+      width: 100% !important;
+      text-transform: uppercase !important;
+      letter-spacing: 0.05em !important;
+      border: none !important;
+    }
+  </style>
+</head>
+<body class="modern-ui">
+
   <header>
-    <nav class="navbar" id="navbar">
-      <a href="index.html" class="navbar__brand">
-        <span class="navbar__brand-icon">🚀</span>
-        StartupEvents
-      </a>
-      <ul class="navbar__links" id="nav-links">
+    <nav class="navbar">
+      <a href="index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <ul class="navbar__links">
         <li><a href="index.html" class="navbar__link">Home</a></li>
         <li><a href="events.html" class="navbar__link navbar__link--active">Events</a></li>
         <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
+        <!-- Dynamically populated by auth.js -->
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
         <a href="login.html" class="btn btn--secondary btn--sm">Log In</a>
         <a href="register.html" class="btn btn--primary btn--sm">Sign Up</a>
       </div>
-      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
-        <span class="navbar__toggle-bar"></span>
-        <span class="navbar__toggle-bar"></span>
-        <span class="navbar__toggle-bar"></span>
-      </button>
     </nav>
   </header>
 
-  <main>
-    <div class="container">
-      <!-- ============ BREADCRUMB ============ -->
-      <nav aria-label="Breadcrumb" style="padding: var(--space-4) 0;">
-        <span style="font-size: var(--text-sm); color: var(--text-tertiary);">
-          <a href="events.html" style="color: var(--text-tertiary);">Events</a>
-          <span style="margin: 0 var(--space-2);">›</span>
-          <span style="color: var(--text-secondary);" id="breadcrumb-title">Loading...</span>
-        </span>
-      </nav>
+  <main class="container" style="padding-top: var(--space-8);">
+    <!-- Breadcrumb -->
+    <nav style="margin-bottom: var(--space-6);">
+      <span style="font-size: var(--text-sm); color: var(--text-tertiary);">
+        <a href="events.html" style="color: var(--text-tertiary);">Events</a> › <span id="breadcrumb-title">Loading...</span>
+      </span>
+    </nav>
 
-      <!-- Loading state -->
-      <div id="event-loading" style="text-align: center; padding: var(--space-16);">
-        <div style="font-size: 3rem; margin-bottom: var(--space-4);">⏳</div>
-        <p style="color: var(--text-secondary);">Loading event details...</p>
-      </div>
+    <div id="event-loading" style="text-align: center; padding: var(--space-16);">⌛ Loading event...</div>
 
-      <!-- ============ EVENT DETAIL GRID ============ -->
-      <div class="event-detail" id="event-detail" style="display: none;">
-        <!-- Main Content -->
-        <div class="event-detail__main">
+    <div class="event-detail" id="event-detail" style="display: none; display: grid; grid-template-columns: 1fr 340px; gap: var(--space-10);">
+      <div class="event-detail__main">
+        <!-- Media -->
+        <div style="background: #000; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; overflow: hidden; margin-bottom: var(--space-8);">
+          <video controls id="event-video" style="width: 100%; max-height: 400px; display: none;">
+            <source src="" type="video/mp4">
+          </video>
+          <div id="event-hero-fallback" style="height: 300px; display: flex; align-items: center; justify-content: center; font-size: 6rem;">📅</div>
+        </div>
 
-          <!-- Multimedia: <video> element (FE Unit I — HTML5 Multimedia) -->
-          <div style="border-radius: var(--radius-xl); overflow: hidden; margin-bottom: var(--space-8); background: var(--gradient-card); border: 1px solid var(--border-color);">
-            <video controls preload="metadata" poster="" id="event-video"
-                   style="width: 100%; display: block; max-height: 400px; object-fit: cover;">
-              <source src="" type="video/mp4">
-              Your browser does not support the HTML5 video element.
-            </video>
-            <div id="event-hero-fallback" style="display: none; align-items: center; justify-content: center; height: 260px;">
-              <div style="font-size: 6rem;" id="hero-emoji">📅</div>
-            </div>
+        <!-- Title & Description Header -->
+        <div style="margin-bottom: var(--space-8);">
+          <div style="display: flex; gap: var(--space-2); margin-bottom: var(--space-4);">
+            <span class="badge--cyan" id="detail-category">Event</span>
+            <span id="detail-status" style="font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; border: 1px solid rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 4px;">Upcoming</span>
           </div>
+          <h1 id="detail-title" style="font-size: 3rem; font-weight: 800; font-family: 'Syne', sans-serif; margin-bottom: var(--space-4); letter-spacing: -0.02em;">—</h1>
+          <p id="detail-description" style="font-size: 1.15rem; color: var(--text-secondary); line-height: 1.6;">—</p>
+        </div>
 
-          <!-- Event Title & Meta -->
-          <div style="margin-bottom: var(--space-8);">
-            <div style="display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-4);">
-              <span class="badge" id="detail-category">Event</span>
-              <span class="badge badge--success" id="detail-status">Upcoming</span>
-            </div>
-            <h1 style="font-size: var(--text-4xl); margin-bottom: var(--space-4);" id="detail-title">—</h1>
-            <p style="font-size: var(--text-lg); color: var(--text-secondary); line-height: var(--leading-relaxed);" id="detail-description">—</p>
-          </div>
+        <!-- V8 Meta Strip (The Simple Line) -->
+        <div class="event-meta-strip">
+          <div class="meta-item"><span>📅</span> <span class="meta-value" id="detail-date">—</span> <span style="opacity:0.4;">•</span> <span id="detail-time">—</span></div>
+          <div class="meta-item"><span>📍</span> <span class="meta-value" id="detail-venue">—</span> <span style="opacity:0.4;">,</span> <span id="detail-city">—</span></div>
+          <div class="meta-item"><span>👥</span> <span id="detail-capacity" class="meta-value">— / —</span> <span style="opacity:0.4;" id="detail-spots">SLOTS</span></div>
+          <div class="meta-item"><span>🎟️</span> <span class="meta-value" id="detail-price">FREE</span></div>
+        </div>
 
-          <!-- Event Details Grid -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10); padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div>
-              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">📅 Date & Time</div>
-              <div style="font-weight: var(--font-semibold);" id="detail-date">—</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="detail-time">—</div>
-            </div>
-            <div>
-              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">📍 Location</div>
-              <div style="font-weight: var(--font-semibold);" id="detail-venue">—</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="detail-city">—</div>
-            </div>
-            <div>
-              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">👥 Capacity</div>
-              <div style="font-weight: var(--font-semibold);" id="detail-capacity">—</div>
-              <div style="font-size: var(--text-sm); color: var(--text-secondary);" id="detail-spots">—</div>
-            </div>
-            <div>
-              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-1);">💰 Price</div>
-              <div style="font-weight: var(--font-semibold);" id="detail-price">Free</div>
-            </div>
-          </div>
-
-          <!-- About Section -->
-          <section style="margin-bottom: var(--space-10);">
-            <h2 style="font-size: var(--text-2xl); margin-bottom: var(--space-4);">About This Event</h2>
-            <div style="color: var(--text-secondary); line-height: var(--leading-relaxed);" id="detail-about">—</div>
+        <!-- Unified Content Card -->
+        <div class="main-card">
+          <section id="about-section" style="margin-bottom: var(--space-12);">
+            <h2 class="simple-header">About This Event</h2>
+            <div id="detail-about" style="line-height: 1.8; color: var(--text-secondary); font-size: 1.05rem;">—</div>
           </section>
 
-          <!-- Tags -->
-          <section style="margin-bottom: var(--space-10);">
-            <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-4);">Tags</h3>
-            <div style="display: flex; gap: var(--space-2); flex-wrap: wrap;" id="detail-tags"></div>
+          <section id="tags-section" style="margin-bottom: var(--space-10);">
+            <h3 style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-tertiary); margin-bottom: var(--space-4);">Tagged Areas</h3>
+            <div id="detail-tags" style="display: flex; gap: var(--space-2); flex-wrap: wrap;"></div>
           </section>
 
-          <!-- ============ LIVE CHAT (Socket.IO — BE Unit III) ============ -->
-          <section style="margin-bottom: var(--space-10); padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);" id="live-chat-section">
-            <h2 style="font-size: var(--text-xl); margin-bottom: var(--space-4);">💬 Live Chat <span id="online-count" style="font-size:var(--text-sm);color:var(--text-tertiary);"></span></h2>
-            <div id="chat-messages" style="max-height: 300px; overflow-y: auto; margin-bottom: var(--space-4); display: flex; flex-direction: column; gap: var(--space-2);"></div>
-            <div id="chat-typing" style="font-size:var(--text-sm);color:var(--text-tertiary);min-height:1.2em;margin-bottom:var(--space-2);"></div>
-            <form id="chat-form" style="display: flex; gap: var(--space-2);">
-              <input type="text" class="form-input" id="chat-input" placeholder="Type a message..." autocomplete="off" style="flex:1;">
-              <button type="submit" class="btn btn--primary">Send</button>
+          <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin: var(--space-12) 0;">
+
+          <!-- Live Chat (Functional BE Unit III) -->
+          <section id="live-chat-section">
+            <h2 class="simple-header">💬 Live Chat <span id="online-count" style="font-size:0.8rem; color:var(--text-tertiary); font-weight:normal;"></span></h2>
+            <div id="chat-messages" style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: var(--space-3); margin-bottom: var(--space-6); padding-right: 15px;"></div>
+            <div id="chat-typing" style="height: 1.2em; font-size: 0.75rem; color: var(--neon-purple); margin-bottom: 8px;"></div>
+            <form id="chat-form" style="display: flex; gap: var(--space-3);">
+              <input type="text" id="chat-input" class="form-input terminal-control" placeholder="Share your thoughts..." style="flex:1;">
+              <button type="submit" class="btn btn--secondary">Send</button>
             </form>
           </section>
 
-          <!-- ============ REVIEWS & RATINGS ============ -->
-          <section id="reviews-section" style="margin-bottom: var(--space-10);">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
-              <h2 style="font-size: var(--text-2xl);">Community Reviews</h2>
-              <div id="avg-rating-pill" class="badge badge--primary" style="display: none;">— ★</div>
-            </div>
+          <hr style="border:0; border-top:1px solid rgba(255,255,255,0.05); margin: var(--space-12) 0;">
 
-            <!-- Add Review Form (Visible only to attendees after event ends) -->
-            <div id="review-form-container" style="display: none; padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--brand-primary); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
-              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-4);">Rate this experience</h3>
+          <!-- Community Reviews -->
+          <section id="reviews-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-8);">
+              <h2 class="simple-header" style="margin-bottom:0;">Reviews</h2>
+              <div id="avg-rating-pill" style="padding: 4px 12px; background: rgba(255,255,255,0.05); border-radius: 4px; font-weight: 700; font-size: 0.9rem; display: none;">— ★</div>
+            </div>
+            
+            <div id="review-form-container" style="display: none; padding: var(--space-8); background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); margin-bottom: var(--space-10); border-radius: 8px;">
+              <h3 style="font-size: 1rem; margin-bottom: var(--space-4); font-weight: 700;">Rate your experience</h3>
               <form id="review-form">
-                <div class="form-group">
-                  <label class="form-label">Rating</label>
-                  <div style="display: flex; gap: var(--space-2); font-size: 1.5rem; color: var(--text-tertiary);" id="star-rating">
-                    <span style="cursor: pointer;" data-value="1">☆</span>
-                    <span style="cursor: pointer;" data-value="2">☆</span>
-                    <span style="cursor: pointer;" data-value="3">☆</span>
-                    <span style="cursor: pointer;" data-value="4">☆</span>
-                    <span style="cursor: pointer;" data-value="5">☆</span>
-                  </div>
-                  <input type="hidden" name="rating" id="review-rating-value" required>
+                <div id="star-rating" style="font-size: 1.8rem; display: flex; gap: 10px; margin-bottom: var(--space-6); color: var(--text-tertiary);">
+                  <span style="cursor:pointer;" data-value="1">☆</span><span style="cursor:pointer;" data-value="2">☆</span><span style="cursor:pointer;" data-value="3">☆</span><span style="cursor:pointer;" data-value="4">☆</span><span style="cursor:pointer;" data-value="5">☆</span>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="review-comment">Your Feedback (Optional)</label>
-                  <textarea class="form-input" id="review-comment" name="comment" rows="3" placeholder="What did you think of the event?"></textarea>
-                </div>
-                <button type="submit" class="btn btn--primary" id="review-submit-btn">Submit Review</button>
+                <input type="hidden" id="review-rating-value">
+                <textarea id="review-comment" class="form-input terminal-control" placeholder="What did you think of the event?" rows="3" style="width: 100%; margin-bottom: var(--space-6); padding: 12px;"></textarea>
+                <button type="submit" class="btn btn--secondary btn--sm">Submit Review</button>
               </form>
             </div>
 
-            <div id="reviews-list" style="display: flex; flex-direction: column; gap: var(--space-4);">
-              <p style="color: var(--text-tertiary);" id="no-reviews-msg">No reviews yet. Be the first to share your thoughts!</p>
+            <div id="reviews-list" style="display: flex; flex-direction: column; gap: var(--space-6);">
+               <p style="color: var(--text-tertiary); text-align: center; padding: 20px;" id="no-reviews-msg">No community reviews yet.</p>
             </div>
           </section>
         </div>
+      </div>
 
-        <!-- ============ SIDEBAR ============ -->
-        <aside class="event-detail__sidebar">
-          <!-- RSVP Card -->
-          <div id="rsvp-card-container" style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Registration</div>
-            <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: var(--space-1);" id="sidebar-price">Free</div>
-            <div style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-6);" id="sidebar-spots">—</div>
-
-            <!-- RSVP Form (FE Unit I — forms, input types, <select>, <datalist>) -->
+      <aside>
+        <!-- Standard RSVP Protocol -->
+        <div id="rsvp-card-container" class="passport-terminal" style="margin-bottom: var(--space-6);">
+          <div style="margin-bottom: var(--space-8);">
+            <div id="sidebar-price" style="font-size: 2rem; font-weight: 800; font-family: 'Syne', sans-serif; margin-bottom: 2px;">Free</div>
+            <div id="sidebar-spots" style="font-size: 0.85rem; color: var(--text-tertiary);">— spots available</div>
+          </div>
+          <div id="rsvp-auth-terminal">
             <form id="rsvp-form">
-              <div class="form-group">
-                <label class="form-label" for="rsvp-role">Your Role</label>
-                <select class="form-input form-select" id="rsvp-role" name="role">
+              <div class="form-group" style="margin-bottom: var(--space-5);">
+                <label style="font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; display: block;">Role</label>
+                <select id="rsvp-role" class="form-input terminal-control" style="width: 100%; height: 45px;">
                   <option value="developer">Developer</option>
                   <option value="designer">Designer</option>
-                  <option value="product-manager">Product Manager</option>
+                  <option value="product">Product Manager</option>
                   <option value="entrepreneur">Entrepreneur</option>
                   <option value="student">Student</option>
-                  <option value="other">Other</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label class="form-label" for="rsvp-team">Team Size</label>
-                <datalist id="team-sizes">
-                  <option value="1">Solo</option>
-                  <option value="2">2 Members</option>
-                  <option value="3">3 Members</option>
-                  <option value="4">4 Members</option>
-                  <option value="5">5 Members</option>
-                </datalist>
-                <input type="number" class="form-input" id="rsvp-team" name="teamSize" min="1" max="5" value="1" list="team-sizes" placeholder="1–5 members">
+              <div class="form-group" style="margin-bottom: var(--space-5);">
+                <label style="font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; font-weight: 700; margin-bottom: 6px; display: block;">Team Size</label>
+                <input type="number" id="rsvp-team" class="form-input terminal-control" value="1" min="1" max="5" style="width: 100%; height: 45px;">
               </div>
-              <div class="form-group">
-                <label class="form-check">
-                  <input type="checkbox" class="form-check__input" id="rsvp-agree" name="agree" required>
-                  <span class="form-check__label">I agree to the event terms and code of conduct</span>
+              <div style="margin-bottom: var(--space-8);">
+                <label style="display: flex; align-items: flex-start; gap: 10px; font-size: 0.8rem; cursor: pointer;">
+                  <input type="checkbox" id="rsvp-agree" required style="margin-top: 3px;">
+                  <span style="color: var(--text-secondary);">I agree to the event policy and conduct code.</span>
                 </label>
               </div>
-              <button type="submit" class="btn btn--primary btn--full btn--lg" id="rsvp-submit-btn">
-                🎟️ RSVP Now
-              </button>
-              <div id="rsvp-msg" style="margin-top:var(--space-3);font-size:var(--text-sm);"></div>
+              <button type="submit" id="rsvp-submit-btn" class="btn btn--standard-rsvp">RSVP Now</button>
+              <div id="rsvp-msg" style="margin-top: 15px; font-size: 0.75rem; text-align: center; color: var(--text-tertiary); font-family: 'JetBrains Mono', monospace;"></div>
             </form>
-
-            <!-- Calendar Sync -->
-            <div id="calendar-sync-container" style="margin-top: var(--space-6); padding-top: var(--space-6); border-top: 1px solid var(--border-color); display: none;">
-              <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-3);">Sync to Calendar</div>
-              <a href="#" id="google-calendar-link" target="_blank" class="btn btn--ghost btn--full btn--sm" style="justify-content: center; gap: var(--space-2);">
-                📅 Add to Google Calendar
-              </a>
-            </div>
           </div>
+        </div>
 
-          <!-- Organizer Card -->
-          <div id="organizer-sidebar-wrapper" style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-4);">Organized By</div>
-            <div style="display: flex; align-items: center; gap: var(--space-4);" id="organizer-card">
-              <div class="avatar avatar--lg" id="organizer-initials">?</div>
-              <div>
-                <div style="font-weight: var(--font-semibold);" id="organizer-name">—</div>
-              </div>
-            </div>
-          </div>
+        <!-- Functional Calendar Sync -->
+        <div id="calendar-sync-container" class="passport-terminal" style="display: none; margin-bottom: var(--space-6); text-align: center; border-style: dashed;">
+           <div style="font-size: 1.2rem; margin-bottom: 12px;">🗓️</div>
+           <a href="#" id="google-calendar-link" target="_blank" class="btn btn--secondary btn--full btn--sm">Add to Google Calendar</a>
+        </div>
 
-          <!-- Share Card -->
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-4);">Share This Event</div>
-            <div style="display: flex; gap: var(--space-2);">
-              <button class="btn btn--secondary btn--sm" id="share-twitter">🐦 Twitter</button>
-              <button class="btn btn--secondary btn--sm" id="share-linkedin">💼 LinkedIn</button>
-              <button class="btn btn--secondary btn--sm" id="share-copy">📋 Copy</button>
-            </div>
+        <!-- Identity Section -->
+        <div class="passport-terminal" style="margin-bottom: var(--space-6);">
+          <div style="font-size: 0.7rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 15px;">Event Host</div>
+          <div style="display: flex; align-items: center; gap: 15px;">
+            <div id="organizer-initials" style="width: 45px; height: 45px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; font-weight: 800; border-radius: 6px; color: var(--neon-cyan);">?</div>
+            <div id="organizer-name" style="font-weight: 700; font-family: 'Syne', sans-serif;">—</div>
           </div>
-        </aside>
-      </div>
+        </div>
+      </aside>
     </div>
   </main>
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__bottom">
-        <span>&copy; 2026 StartupEvents. All rights reserved.</span>
-        <span>Made with ❤️ for the startup community</span>
-      </div>
-    </div>
-  </footer>
-
-  <div class="toast-container" id="toast-container"></div>
-
-  <script src="../js/theme.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/utils.js"></script>
-  <!-- Socket.IO client (BE Unit III — WebSockets) -->
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    /* ============================================
-       Event Detail — Dynamic API Loading
-       FE Unit III: async/await, fetch, Promises
-       FE Unit IV: DOM manipulation, dynamic styling
-       BE Unit III: Socket.IO live chat
-       ============================================ */
-    (async function () {
-      'use strict';
-
-      var params = new URLSearchParams(window.location.search);
-      var eventId = params.get('id');
+  <!-- Final Script Block — Restoring All Logic Units -->
+  <script type="module" src="../js/theme.js"></script>
+  <script type="module" src="../js/auth.js"></script>
+  <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+  <script type="module">
+    (function() {
+      // Use window.io as standard script provides it globally
+      const io = window.io; 
+      const urlParams = new URLSearchParams(window.location.search);
+      const eventId = urlParams.get('id');
 
       if (!eventId) {
-        document.getElementById('event-loading').innerHTML =
-          '<div style="font-size:3rem;margin-bottom:var(--space-4);">⚠️</div><p style="color:var(--text-secondary);">No event ID provided. <a href="events.html">Browse events</a></p>';
+        document.body.innerHTML = '<div style="padding: 100px; text-align:center;"><h2>Event Context Missing</h2><a href="events.html" style="color:var(--neon-cyan);">Browse active events</a></div>';
         return;
       }
 
-      var categoryConfig = {
-        hackathon:      { emoji: '🏆', label: 'Hackathon' },
-        'pitch-night':  { emoji: '🎤', label: 'Pitch Night' },
-        workshop:       { emoji: '🛠️', label: 'Workshop' },
-        meetup:         { emoji: '☕', label: 'Meetup' },
-        conference:     { emoji: '🎪', label: 'Conference' },
+      const CONFIG = {
+        hackathon: { label: 'HACKATHON', emoji: '💻' },
+        workshop: { label: 'WORKSHOP', emoji: '🛠️' },
+        seminar: { label: 'SEMINAR', emoji: '🎙️' },
+        networking: { label: 'NETWORKING', emoji: '🤝' },
+        social: { label: 'SOCIAL', emoji: '🎉' }
       };
 
-      /* ---------- Fetch Event ---------- */
-      try {
-        var res = await fetch('/api/v1/events/' + eventId);
-        var json = await res.json();
+      fetch('/api/v1/events/' + eventId)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.success) throw new Error('Data load failure');
+          renderEvent(data.data);
+        })
+        .catch(err => {
+          document.getElementById('event-loading').innerHTML = '❌ Event data could not be retrieved.';
+        });
 
-        if (!res.ok || !json.success) throw new Error(json.error?.message || 'Event not found');
-
-        var evt = json.data;
-        populate(evt);
-        initRSVP(evt);
-        initChat(evt);
-        initShare(evt);
-        initCalendar(evt);
-        initReviews(evt);
-      } catch (err) {
-        document.getElementById('event-loading').innerHTML =
-          '<div style="font-size:3rem;margin-bottom:var(--space-4);">😕</div>' +
-          '<p style="color:var(--text-secondary);">' + err.message + '. <a href="events.html">Browse events</a></p>';
-      }
-
-      /* ---------- Populate page ---------- */
-      function populate(evt) {
-        var cfg = categoryConfig[evt.category] || { emoji: '📅', label: 'Event' };
-
-        document.title = evt.title + ' — StartupEvents';
+      function renderEvent(evt) {
+        document.getElementById('event-loading').style.display = 'none';
+        document.getElementById('event-detail').style.display = 'grid';
+        
+        const cfg = CONFIG[evt.category] || { label: 'EVENT', emoji: '📅' };
+        
         document.getElementById('breadcrumb-title').textContent = evt.title;
         document.getElementById('detail-title').textContent = evt.title;
         document.getElementById('detail-description').textContent = evt.description || '';
-        var aboutEl = document.getElementById('detail-about');
-        var aboutP = document.createElement('p');
-        aboutP.textContent = evt.description || 'No description available.';
-        aboutEl.innerHTML = '';
-        aboutEl.appendChild(aboutP);
+        document.getElementById('detail-about').textContent = evt.description || 'No detailed description available.';
         document.getElementById('detail-category').textContent = cfg.label;
-        document.getElementById('detail-status').textContent = evt.status || 'upcoming';
 
-        var dateObj = evt.date ? new Date(evt.date) : null;
-        document.getElementById('detail-date').textContent = dateObj
-          ? dateObj.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
-          : 'TBD';
-        document.getElementById('detail-time').textContent = dateObj
-          ? dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })
-          : '';
+        const dateObj = evt.date ? new Date(evt.date) : null;
+        if (dateObj) {
+          document.getElementById('detail-date').textContent = dateObj.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+          document.getElementById('detail-time').textContent = dateObj.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+        }
 
         document.getElementById('detail-venue').textContent = evt.location?.venue || 'Online';
-        document.getElementById('detail-city').textContent = [evt.location?.city, evt.location?.state].filter(Boolean).join(', ') || '';
+        document.getElementById('detail-city').textContent = evt.location?.city || '';
 
-        // Prioritize actual attendees array for the UI count
-        var attending = Array.isArray(evt.attendees) ? evt.attendees.length : (evt.attendeeCount || 0);
-        var cap = evt.capacity || '∞';
-        document.getElementById('detail-capacity').textContent = attending + ' / ' + cap + ' Registered';
-        var remaining = typeof evt.capacity === 'number' ? (evt.capacity - attending) : '∞';
-        document.getElementById('detail-spots').textContent = (remaining < 0 ? 0 : remaining) + ' spots remaining';
-        document.getElementById('sidebar-spots').textContent = (remaining < 0 ? 0 : remaining) + ' spots remaining';
+        const attending = Array.isArray(evt.attendees) ? evt.attendees.length : 0;
+        const cap = evt.capacity || '∞';
+        document.getElementById('detail-capacity').textContent = attending + ' / ' + cap;
+        const remaining = typeof evt.capacity === 'number' ? (evt.capacity - attending) : '∞';
+        document.getElementById('detail-spots').textContent = 'AVAILABILITY';
+        document.getElementById('sidebar-spots').textContent = Math.max(0, remaining) + ' spots available';
 
-        if (evt.price && evt.price > 0) {
+        if (evt.price > 0) {
           document.getElementById('detail-price').textContent = '₹' + evt.price;
           document.getElementById('sidebar-price').textContent = '₹' + evt.price;
         }
 
-        // Video / hero fallback
-        var videoEl = document.getElementById('event-video');
-        var fallback = document.getElementById('event-hero-fallback');
-        if (evt.videoUrl) {
-          videoEl.querySelector('source').src = evt.videoUrl;
-          videoEl.poster = evt.imageUrl || '';
-          videoEl.load();
-          videoEl.style.display = 'block';
-          fallback.style.display = 'none';
-        } else {
-          videoEl.style.display = 'none';
-          fallback.style.display = 'flex';
-          document.getElementById('hero-emoji').textContent = cfg.emoji;
+        if (evt.organizer) {
+          document.getElementById('organizer-name').textContent = (evt.organizer.firstName || '') + ' ' + (evt.organizer.lastName || '');
+          document.getElementById('organizer-initials').textContent = (evt.organizer.firstName?.[0] || '') + (evt.organizer.lastName?.[0] || '');
         }
 
-        // Tags
-        var tagsEl = document.getElementById('detail-tags');
-        tagsEl.innerHTML = '';
-        (evt.tags || []).forEach(function (t) {
-          var span = document.createElement('span');
-          span.className = 'tag';
-          span.textContent = t;
-          tagsEl.appendChild(span);
+        const tagsEl = document.getElementById('detail-tags');
+        (evt.tags || []).forEach(t => {
+          const s = document.createElement('span');
+          s.className = 'badge';
+          s.style.background = 'rgba(255,255,255,0.08)';
+          s.style.fontSize = '0.7rem';
+          s.textContent = t;
+          tagsEl.appendChild(s);
         });
 
-        // Organizer
-        if (evt.organizer) {
-          var user = JSON.parse(localStorage.getItem('user') || 'null');
-          var finalUserId = user ? (user._id || user.id) : null;
-          var isOwnEvent = finalUserId && (finalUserId === evt.organizer._id || finalUserId === evt.organizer);
-
-          if (isOwnEvent) {
-            var wrapper = document.getElementById('organizer-sidebar-wrapper');
-            if (wrapper) {
-              wrapper.innerHTML = '<div style="font-size: 2rem; margin-bottom: var(--space-2);">🌟</div><div style="font-size: var(--text-lg); font-weight: var(--font-bold); color: var(--brand-primary); margin-bottom: var(--space-2);">Your Event</div><p style="font-size: var(--text-sm); color: var(--text-secondary); margin-bottom: var(--space-4);">You are managing this event. Jump into the admin panel to edit details, roster, or lock RSVPs.</p><a href="manage-event.html?id=' + evt._id + '" class="btn btn--primary btn--full btn--sm">Manage Event</a>';
-            }
-          } else {
-            var orgName = (evt.organizer.firstName || '') + ' ' + (evt.organizer.lastName || '');
-            document.getElementById('organizer-name').textContent = orgName.trim() || 'Organizer';
-            document.getElementById('organizer-initials').textContent =
-              (evt.organizer.firstName?.[0] || '') + (evt.organizer.lastName?.[0] || '');
-          }
-        }
-
-        document.getElementById('event-loading').style.display = 'none';
-        document.getElementById('event-detail').style.display = '';
+        initRSVP(evt);
+        initChat(evt);
+        initReviews(evt);
+        initCalendar(evt);
       }
 
-      /* ---------- RSVP form (async/await + fetch) ---------- */
       function initRSVP(evt) {
-        var form = document.getElementById('rsvp-form');
-        var btn = document.getElementById('rsvp-submit-btn');
-        var msgEl = document.getElementById('rsvp-msg');
-        
-        var user = JSON.parse(localStorage.getItem('user') || 'null');
-        var userId = user ? (user._id || user.id) : null;
-        var isOrganizer = user && (user.role === 'organizer' || user.role === 'admin');
+        const form = document.getElementById('rsvp-form');
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        const userId = user?.id || user?._id;
 
-        var container = document.getElementById('rsvp-card-container');
-
-        if (isOrganizer) {
-          form.style.display = 'none';
-          msgEl.style.color = 'var(--text-tertiary)';
-          msgEl.textContent = 'Organizers cannot RSVP to events.';
-          return;
+        const isAttending = evt.attendees.some(id => (id._id || id) === userId);
+        if (isAttending) {
+          document.getElementById('rsvp-auth-terminal').innerHTML = '<div style="text-align:center; padding: 30px;"><div style="font-size:2rem; margin-bottom:10px;">✅</div><h3 style="font-weight:800; color:var(--neon-cyan);">RSVP SECURED</h3><p style="font-size:0.8rem; color:var(--text-tertiary);">You are on the guest list.</p></div>';
+          document.getElementById('calendar-sync-container').style.display = 'block';
         }
 
-        // Check if user is already in the attendees list (Source of Truth)
-        var hasRegistered = false;
-        if (userId && evt.attendees && Array.isArray(evt.attendees)) {
-            hasRegistered = evt.attendees.some(function(attendee) {
-                var attendeeId = attendee._id || attendee;
-                return attendeeId === userId;
-            });
-        }
-
-        // SYNC: If server says not registered but localStorage says we are, fix localStorage
-        var cachedUser = JSON.parse(localStorage.getItem('user') || 'null');
-        if (cachedUser && Array.isArray(cachedUser.eventsAttending)) {
-          var localIndex = cachedUser.eventsAttending.indexOf(evt._id);
-          if (!hasRegistered && localIndex !== -1) {
-            cachedUser.eventsAttending.splice(localIndex, 1);
-            localStorage.setItem('user', JSON.stringify(cachedUser));
-          } else if (hasRegistered && localIndex === -1) {
-            cachedUser.eventsAttending.push(evt._id);
-            localStorage.setItem('user', JSON.stringify(cachedUser));
-          }
-        }
-
-        if (hasRegistered) {
-            container.innerHTML = `<div style="text-align:center; padding:var(--space-2) 0;"><div style="font-size: 3rem; margin-bottom: var(--space-2);">🎉</div><h3 style="font-size: var(--text-xl); margin-bottom: var(--space-2); color: var(--color-success);">You're In!</h3><p style="color: var(--text-secondary); font-size: var(--text-sm); line-height: 1.5;">Get ready for an amazing experience. We have successfully secured your spot on the guest list.</p></div>`;
-            return;
-        }
-
-        form.addEventListener('submit', async function (e) {
+        form.addEventListener('submit', async (e) => {
           e.preventDefault();
-          var token = localStorage.getItem('accessToken');
-          if (!token) {
-            msgEl.style.color = 'var(--color-warning)';
-            msgEl.textContent = 'Please log in to RSVP.';
-            return;
-          }
+          const btn = document.getElementById('rsvp-submit-btn');
+          const token = localStorage.getItem('accessToken');
+          if (!token) { location.href = 'login.html'; return; }
+
           btn.disabled = true;
-          btn.textContent = 'Submitting...';
+          btn.textContent = 'Processing...';
           try {
-            var r = await fetch('/api/v1/events/' + evt._id + '/rsvp', {
+            const r = await fetch(`/api/v1/events/${evt._id}/rsvp`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-              credentials: 'include',
-              body: JSON.stringify({
-                role: document.getElementById('rsvp-role').value,
-                teamSize: parseInt(document.getElementById('rsvp-team').value, 10) || 1,
-              }),
+              body: JSON.stringify({ role: document.getElementById('rsvp-role').value, teamSize: document.getElementById('rsvp-team').value })
             });
-            var data = await r.json();
-            if (r.ok && data.success) {
-              msgEl.style.color = 'var(--color-success)';
-              msgEl.textContent = 'RSVP confirmed! See you there 🎉';
-              btn.textContent = '✅ Registered';
-
-              // Sync registration state to localStorage so "Already In" shows up on index/events pages
-              var cachedUser = JSON.parse(localStorage.getItem('user') || '{}');
-              if (cachedUser) {
-                if (!Array.isArray(cachedUser.eventsAttending)) cachedUser.eventsAttending = [];
-                if (!cachedUser.eventsAttending.includes(evt._id)) {
-                  cachedUser.eventsAttending.push(evt._id);
-                  localStorage.setItem('user', JSON.stringify(cachedUser));
-                }
-              }
-
-              if (window.__eventBus) window.__eventBus.emit('event:rsvped', { title: evt.title });
-            } else {
-              throw new Error(data.error?.message || 'RSVP failed');
-            }
-          } catch (err) {
-            msgEl.style.color = 'var(--color-error)';
-            msgEl.textContent = err.message;
-            btn.disabled = false;
-            btn.textContent = '🎟️ RSVP Now';
-          }
+            const d = await r.json();
+            if (d.success) location.reload();
+            else throw new Error(d.error?.message || 'RSVP process failed');
+          } catch(err) { alert(err.message); btn.disabled = false; btn.textContent = 'RSVP Now'; }
         });
       }
 
-      /* ---------- Live Chat via Socket.IO ---------- */
       function initChat(evt) {
-        var chatSection = document.getElementById('live-chat-section');
-        var user = JSON.parse(localStorage.getItem('user') || 'null');
-
         if (typeof io === 'undefined') {
-          chatSection.style.display = 'none';
+          console.warn('Socket.IO not detected — retrying in 1s');
+          setTimeout(() => initChat(evt), 1000);
           return;
         }
+        const socketUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_BACKEND_URL) || '';
+        const socket = io(socketUrl);
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        const userId = user?.id || user?._id;
+        
+        socket.emit('join:event', { eventId: evt._id, userId, role: user?.role });
 
-        // ACCESS CONTROL: Organizers can only see chat for events they OWN
-        if (user && user.role === 'organizer') {
-          var orgId = evt.organizer ? (evt.organizer._id || evt.organizer) : null;
-          var userId = user._id || user.id;
-          
-          if (orgId && userId && orgId.toString() !== userId.toString()) {
-            chatSection.style.display = 'none';
-            // Also helpful: show a message that they can't access this chat
-            var infoMsg = document.createElement('div');
-            infoMsg.style.cssText = 'padding:var(--space-6); text-align:center; color:var(--text-tertiary); background:var(--bg-card); border-radius:var(--radius-xl); border:1px solid var(--border-color);';
-            infoMsg.innerHTML = '<div style="font-size:2rem;margin-bottom:var(--space-2);">🔒</div><p>This event\'s chat is private for the host and registered attendees.</p>';
-            chatSection.parentNode.insertBefore(infoMsg, chatSection);
-            return;
-          }
-        }
+        const messagesEl = document.getElementById('chat-messages');
+        const form = document.getElementById('chat-form');
+        const input = document.getElementById('chat-input');
+        const typingEl = document.getElementById('chat-typing');
 
-        var socket = io({ transports: ['websocket', 'polling'] });
-        socket.emit('join:event', { 
-          eventId: evt._id,
-          userId: user ? (user._id || user.id) : null,
-          role: user ? user.role : 'guest'
-        });
-
-        var messagesEl = document.getElementById('chat-messages');
-        var typingEl = document.getElementById('chat-typing');
-
-        function addMessage(msg) {
-          var div = document.createElement('div');
-          
-          // Strict check: Is the sender the exact user who created this event?
-          var isOrgMsg = false;
-          if (msg.userId && evt.organizer) {
-             var orgId = evt.organizer._id || evt.organizer;
-             if (msg.userId === orgId) isOrgMsg = true;
-          }
-          
-          if (isOrgMsg) {
-             div.style.cssText = 'padding:var(--space-2) var(--space-3);background:rgba(88,101,242,0.1);border:1px solid rgba(88,101,242,0.3);border-radius:var(--radius-md);';
-          } else {
-             div.style.cssText = 'padding:var(--space-2) var(--space-3);background:var(--bg-tertiary);border-radius:var(--radius-md);';
-          }
-
-          if (isOrgMsg) {
-              var badge = document.createElement('span');
-              badge.textContent = 'ORGANIZER';
-              badge.style.cssText = 'background:var(--brand-primary);color:#fff;font-size:0.5rem;padding:2px 4px;border-radius:4px;margin-right:var(--space-2);vertical-align:middle;font-weight:bold;';
-              div.appendChild(badge);
-          }
-
-          var strong = document.createElement('strong');
-          strong.textContent = msg.user || 'Anonymous';
-          strong.style.cssText = isOrgMsg ? 'color:var(--brand-primary);margin-right:var(--space-2);font-size:var(--text-sm);' : 'color:var(--brand-primary);margin-right:var(--space-2);font-size:var(--text-sm);';
-          
-          var span = document.createElement('span');
-          span.textContent = msg.message;
-          span.style.cssText = isOrgMsg ? 'color:var(--text-primary);font-size:var(--text-sm);' : 'color:var(--text-secondary);font-size:var(--text-sm);';
-          
-          div.appendChild(strong);
-          div.appendChild(span);
-          messagesEl.appendChild(div);
+        function appendMessage(m) {
+          const d = document.createElement('div');
+          d.style.padding = '8px 12px';
+          d.style.background = 'rgba(255,255,255,0.03)';
+          d.style.borderRadius = '4px';
+          const name = m.user || m.userName || 'Member';
+          d.innerHTML = `<strong style="color:var(--neon-cyan); font-size:0.8rem;">${name}:</strong> <span style="font-size:0.9rem;">${m.message}</span>`;
+          messagesEl.appendChild(d);
           messagesEl.scrollTop = messagesEl.scrollHeight;
         }
 
-        socket.on('chat:history', function (history) {
+        socket.on('chat:history', history => {
           messagesEl.innerHTML = '';
-          history.forEach(function (msg) {
-             addMessage({ user: msg.userName, message: msg.message, userId: msg.userId || '' });
-          });
+          (history || []).forEach(appendMessage);
         });
 
-        socket.on('chat:message', addMessage);
-        socket.on('user:joined', function () {
-          addMessage({ user: '🟢 System', message: 'Someone joined the event chat' });
-        });
-        socket.on('chat:typing', function (data) {
+        socket.on('chat:message', appendMessage);
+
+        socket.on('chat:typing', data => {
           typingEl.textContent = (data.user || 'Someone') + ' is typing...';
           clearTimeout(typingEl._t);
-          typingEl._t = setTimeout(function () { typingEl.textContent = ''; }, 2000);
+          typingEl._t = setTimeout(() => { typingEl.textContent = ''; }, 2000);
         });
 
-        var chatForm = document.getElementById('chat-form');
-        var chatInput = document.getElementById('chat-input');
-        var typingTimeout;
-
-        chatInput.addEventListener('input', function () {
-          if (!user) return; // Guests can't trigger typing indicators
-          clearTimeout(typingTimeout);
-          socket.emit('chat:typing', { eventId: evt._id, user: user?.firstName || 'Anonymous' });
-          typingTimeout = setTimeout(function () {}, 2000);
+        input.addEventListener('input', () => {
+          if (user) socket.emit('chat:typing', { eventId: evt._id, user: user.firstName });
         });
 
-        if (!user) {
-          chatForm.style.display = 'none';
-          var loginPrompt = document.createElement('div');
-          loginPrompt.style.cssText = 'padding:var(--space-4); background:var(--bg-tertiary); border-radius:var(--radius-lg); text-align:center; font-size:var(--text-sm); color:var(--text-secondary); border:1px dashed var(--border-color);';
-          loginPrompt.innerHTML = '👋 <a href="login.html" style="color:var(--brand-primary); font-weight:bold;">Log in</a> to join the live conversation.';
-          chatForm.parentNode.appendChild(loginPrompt);
-          return;
-        }
-
-        chatForm.addEventListener('submit', function (e) {
+        form.addEventListener('submit', (e) => {
           e.preventDefault();
-          var text = chatInput.value.trim();
-          if (!text) return;
-          var userName = user ? user.firstName : 'Anonymous';
-          var userId = user ? (user._id || user.id) : null;
-          socket.emit('chat:message', { eventId: evt._id, message: text, user: userName, userId: userId });
-          addMessage({ user: userName, message: text, userId: userId });
-          chatInput.value = '';
+          if (!user) { alert('Login to chat'); return; }
+          const val = input.value.trim();
+          if (!val) return;
+          const msgObj = { eventId: evt._id, message: val, user: user.firstName, userId };
+          socket.emit('chat:message', msgObj);
+          appendMessage(msgObj); // Instant echo
+          input.value = '';
         });
       }
 
-      /* ---------- Share buttons ---------- */
-      function initShare(evt) {
-        var url = window.location.href;
-        var title = evt.title;
-
-        document.getElementById('share-twitter').addEventListener('click', function () {
-          window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(title) + '&url=' + encodeURIComponent(url), '_blank');
-        });
-        document.getElementById('share-linkedin').addEventListener('click', function () {
-          window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
-        });
-        document.getElementById('share-copy').addEventListener('click', function () {
-          navigator.clipboard.writeText(url).then(function () {
-            if (window.showToast) window.showToast({ type: 'success', title: 'Link copied!', message: 'Event URL copied to clipboard' });
+      function initReviews(evt) {
+        const list = document.getElementById('reviews-list');
+        fetch(`/api/v1/events/${evt._id}/reviews`)
+          .then(r => r.json())
+          .then(d => {
+            if (d.success && d.data.length > 0) {
+              document.getElementById('no-reviews-msg').style.display = 'none';
+              d.data.forEach(r => {
+                const dv = document.createElement('div');
+                dv.style.padding = '15px';
+                dv.style.background = 'rgba(255,255,255,0.03)';
+                dv.style.borderRadius = '6px';
+                dv.innerHTML = `<div style="display:flex; justify-content:space-between; margin-bottom:5px;"><strong style="font-size:0.9rem;">${r.user?.firstName || 'Community Member'}</strong> <span style="color:var(--neon-cyan);">${'★'.repeat(r.rating)}</span></div><p style="font-size:0.85rem; color:var(--text-secondary);">${r.comment}</p>`;
+                list.appendChild(dv);
+              });
+            }
           });
+
+        const stars = document.querySelectorAll('#star-rating span');
+        const ratVal = document.getElementById('review-rating-value');
+        stars.forEach(s => {
+          s.onclick = () => {
+            const v = s.getAttribute('data-value');
+            ratVal.value = v;
+            stars.forEach(st => {
+               st.textContent = st.getAttribute('data-value') <= v ? '★' : '☆';
+               st.style.color = st.getAttribute('data-value') <= v ? 'var(--neon-cyan)' : 'var(--text-tertiary)';
+            });
+          };
         });
+
+        document.getElementById('review-form').onsubmit = async (e) => {
+          e.preventDefault();
+          const token = localStorage.getItem('accessToken');
+          if (!ratVal.value) { alert('Select stars'); return; }
+          const res = await fetch(`/api/v1/events/${evt._id}/reviews`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ rating: parseInt(ratVal.value), comment: document.getElementById('review-comment').value })
+          });
+          if (res.ok) location.reload();
+        };
+
+        const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
+        const hasAttended = evt.attendees.some(id => (id._id || id) === userId);
+        const isPast = new Date(evt.date) < new Date();
+        if (hasAttended && isPast) document.getElementById('review-form-container').style.display = 'block';
       }
 
-      /* ---------- Calendar Sync ---------- */
       function initCalendar(evt) {
-        var container = document.getElementById('calendar-sync-container');
-        var link = document.getElementById('google-calendar-link');
-        if (!container || !link) return;
-
-        // Only show if the event is upcoming or ongoing
-        if (evt.status === 'completed' || evt.status === 'cancelled') return;
-
-        container.style.display = 'block';
-
-        // Format dates for Google (YYYYMMDDTHHMMSSZ)
-        function formatGoogleDate(dateStr) {
-          if (!dateStr) return '';
-          return new Date(dateStr).toISOString().replace(/-|:|\.\d\d\d/g, '');
-        }
-
-        var start = formatGoogleDate(evt.date);
-        var end = formatGoogleDate(evt.endDate || new Date(new Date(evt.date).getTime() + 2 * 60 * 60 * 1000));
-        
-        var gUrl = 'https://www.google.com/calendar/render?action=TEMPLATE' +
-          '&text=' + encodeURIComponent(evt.title) +
-          '&details=' + encodeURIComponent(evt.description || '') +
-          '&location=' + encodeURIComponent(evt.location?.venue + ', ' + evt.location?.city || '') +
-          '&dates=' + start + '/' + end;
-
-        link.href = gUrl;
-      }
-
-      /* ---------- Event Reviews ---------- */
-      async function initReviews(evt) {
-        var section = document.getElementById('reviews-section');
-        var formContainer = document.getElementById('review-form-container');
-        var listContainer = document.getElementById('reviews-list');
-        var noMsg = document.getElementById('no-reviews-msg');
-        var avgPill = document.getElementById('avg-rating-pill');
-
-        var user = JSON.parse(localStorage.getItem('user') || 'null');
-        var userId = user ? (user._id || user.id) : null;
-
-        // 1. Fetch existing reviews
-        try {
-          var r = await fetch('/api/v1/events/' + evt._id + '/reviews');
-          var data = await r.json();
-          if (data.success && data.data.length > 0) {
-            noMsg.style.display = 'none';
-            listContainer.innerHTML = '';
-            var totalRating = 0;
-
-            data.data.forEach(function (rev) {
-              totalRating += rev.rating;
-              var div = document.createElement('div');
-              div.style.cssText = 'padding:var(--space-4); background:var(--bg-tertiary); border-radius:var(--radius-lg);';
-              div.innerHTML = `
-                <div style="display:flex; justify-content:space-between; margin-bottom:var(--space-2);">
-                  <span style="font-weight:var(--font-semibold); font-size:var(--text-sm);">${rev.user?.firstName || 'Community Member'}</span>
-                  <span style="color:var(--brand-primary); font-size:var(--text-xs);">${'★'.repeat(rev.rating)}${'☆'.repeat(5-rev.rating)}</span>
-                </div>
-                <p style="font-size:var(--text-sm); line-height:1.5; color:var(--text-secondary);">${rev.comment || 'No comment provided.'}</p>
-              `;
-              listContainer.appendChild(div);
-            });
-
-            if (avgPill) {
-              avgPill.textContent = (totalRating / data.data.length).toFixed(1) + ' ★';
-              avgPill.style.display = 'inline-block';
-            }
-          }
-        } catch (e) { console.error('Reviews load error:', e); }
-
-        // 2. Show form if criteria met: event is completed AND user attended AND hasn't reviewed
-        var hasAttended = userId && evt.attendees && evt.attendees.some(id => (id._id || id) === userId);
-        var isCompleted = evt.status === 'completed' || (new Date(evt.endDate || evt.date) < new Date());
-
-        if (hasAttended && isCompleted) {
-          formContainer.style.display = 'block';
-          
-          // Handle Star Raters
-          var stars = document.querySelectorAll('#star-rating span');
-          var ratingInput = document.getElementById('review-rating-value');
-          stars.forEach(s => {
-            s.addEventListener('click', function() {
-              var val = this.getAttribute('data-value');
-              ratingInput.value = val;
-              stars.forEach(st => {
-                st.textContent = st.getAttribute('data-value') <= val ? '★' : '☆';
-                st.style.color = st.getAttribute('data-value') <= val ? 'var(--brand-primary)' : 'var(--text-tertiary)';
-              });
-            });
-          });
-
-          // Handle Submit
-          document.getElementById('review-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            var btn = document.getElementById('review-submit-btn');
-            var token = localStorage.getItem('accessToken');
-            
-            if (!ratingInput.value) {
-              if (window.showToast) window.showToast({ type: 'warning', title: 'Rating Required', message: 'Please select a star rating.' });
-              return;
-            }
-
-            btn.disabled = true;
-            btn.textContent = 'Submitting...';
-
-            try {
-              var res = await fetch('/api/v1/events/' + evt._id + '/reviews', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-                credentials: 'include',
-                body: JSON.stringify({
-                  rating: parseInt(ratingInput.value),
-                  comment: document.getElementById('review-comment').value.trim()
-                })
-              });
-              var resData = await res.json();
-              if (res.ok && resData.success) {
-                if (window.showToast) window.showToast({ type: 'success', title: 'Thank You!', message: 'Your review has been shared.' });
-                formContainer.style.display = 'none';
-                initReviews(evt); // Refresh
-              } else {
-                throw new Error(resData.error?.message || 'Submission failed');
-              }
-            } catch (err) {
-              if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: err.message });
-              btn.disabled = false;
-              btn.textContent = 'Submit Review';
-            }
-          });
-        }
+        const link = document.getElementById('google-calendar-link');
+        const start = new Date(evt.date).toISOString().replace(/-|:|\.\d\d\d/g, '');
+        const end = new Date(new Date(evt.date).getTime() + 7200000).toISOString().replace(/-|:|\.\d\d\d/g, '');
+        link.href = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(evt.title)}&dates=${start}/${end}&location=${encodeURIComponent(evt.location?.venue || '')}`;
       }
     })();
   </script>

@@ -3,250 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Browse and filter all startup events — hackathons, pitch nights, workshops, meetups, and conferences.">
   <title>Browse Events — StartupEvents</title>
-
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/modern-ui.css?v=8.0">
+  
+  <style>
+    .page-header { padding: var(--space-12) 0; text-align: center; }
+    .filter-bar { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: var(--space-6); border-radius: 8px; margin-bottom: var(--space-10); display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
+    .filter-group { display: flex; gap: var(--space-3); flex: 1; min-width: 300px; }
+    .search-input { flex: 2; background: #000 !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #fff; padding: 10px 15px; border-radius: 4px; }
+  </style>
 </head>
-<body>
+<body class="modern-ui">
 
-  <!-- ============ NAVBAR ============ -->
   <header>
-    <nav class="navbar" id="navbar">
-      <a href="index.html" class="navbar__brand">
-        <span class="navbar__brand-icon">🚀</span>
-        StartupEvents
-      </a>
-      <ul class="navbar__links" id="nav-links">
+    <nav class="navbar">
+      <a href="index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <ul class="navbar__links">
         <li><a href="index.html" class="navbar__link">Home</a></li>
         <li><a href="events.html" class="navbar__link navbar__link--active">Events</a></li>
         <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
+        <!-- Dynamically populated by auth.js -->
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
         <a href="login.html" class="btn btn--secondary btn--sm">Log In</a>
         <a href="register.html" class="btn btn--primary btn--sm">Sign Up</a>
       </div>
-      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
-        <span class="navbar__toggle-bar"></span>
-        <span class="navbar__toggle-bar"></span>
-        <span class="navbar__toggle-bar"></span>
-      </button>
     </nav>
   </header>
 
-  <main>
-    <!-- ============ PAGE HEADER ============ -->
-    <div class="container">
-      <div class="page-header">
-        <h1 class="page-header__title">Explore Events</h1>
-        <p class="page-header__subtitle">Discover upcoming startup events happening around you</p>
-      </div>
-
-      <!-- ============ FILTER BAR ============ -->
-      <div class="filter-bar" id="filter-bar">
-        <div class="filter-bar__search">
-          <input
-            type="search"
-            class="form-input"
-            id="search-input"
-            placeholder="🔍  Search events by name, tag, or location..."
-            aria-label="Search events"
-          >
-        </div>
-        <div class="filter-bar__group">
-          <select class="form-input form-select" id="filter-category" aria-label="Filter by category">
-            <option value="">All Categories</option>
-            <option value="hackathon">🏆 Hackathon</option>
-            <option value="pitch-night">🎤 Pitch Night</option>
-            <option value="workshop">🛠️ Workshop</option>
-            <option value="meetup">☕ Meetup</option>
-            <option value="conference">🎪 Conference</option>
-          </select>
-          <select class="form-input form-select" id="filter-sort" aria-label="Sort events">
-            <option value="date-asc">Date (Soonest)</option>
-            <option value="date-desc">Date (Latest)</option>
-            <option value="popular">Most Popular</option>
-            <option value="name-asc">Name (A-Z)</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- ============ ACTIVE FILTERS ============ -->
-      <div id="active-filters" style="display: flex; gap: var(--space-2); flex-wrap: wrap; margin-bottom: var(--space-6);"></div>
-
-      <!-- ============ EVENTS GRID ============ -->
-      <section class="section section--sm" id="events-section">
-        <div class="events-grid" id="events-grid">
-          <!-- Cards rendered dynamically via fetch + DOM manipulation (FE Unit III & IV) -->
-          <!-- Skeleton Loading States -->
-          <div class="card card--loading">
-            <div class="card__image-placeholder skeleton"></div>
-            <div class="card__body">
-              <div class="skeleton skeleton--title"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 80%;"></div>
-            </div>
-          </div>
-          <div class="card card--loading">
-            <div class="card__image-placeholder skeleton"></div>
-            <div class="card__body">
-              <div class="skeleton skeleton--title"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 80%;"></div>
-            </div>
-          </div>
-          <div class="card card--loading">
-            <div class="card__image-placeholder skeleton"></div>
-            <div class="card__body">
-              <div class="skeleton skeleton--title"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 80%;"></div>
-            </div>
-          </div>
-          <div class="card card--loading">
-            <div class="card__image-placeholder skeleton"></div>
-            <div class="card__body">
-              <div class="skeleton skeleton--title"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 80%;"></div>
-            </div>
-          </div>
-          <div class="card card--loading">
-            <div class="card__image-placeholder skeleton"></div>
-            <div class="card__body">
-              <div class="skeleton skeleton--title"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 80%;"></div>
-            </div>
-          </div>
-          <div class="card card--loading">
-            <div class="card__image-placeholder skeleton"></div>
-            <div class="card__body">
-              <div class="skeleton skeleton--title"></div>
-              <div class="skeleton skeleton--text"></div>
-              <div class="skeleton skeleton--text" style="width: 80%;"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ============ EMPTY STATE (hidden by default) ============ -->
-        <div class="empty-state" id="empty-state" style="display: none;">
-          <div class="empty-state__icon">🔍</div>
-          <h3 class="empty-state__title">No events found</h3>
-          <p class="empty-state__message">Try adjusting your filters or search to find what you're looking for.</p>
-          <button class="btn btn--secondary" id="clear-filters-btn">Clear All Filters</button>
-        </div>
-
-        <!-- Sentinel for IntersectionObserver (FE Unit III) -->
-        <div id="scroll-sentinel" style="height: 1px;"></div>
-        <div id="infinite-scroll-loader" style="display: none; justify-content: center; padding: var(--space-8);">
-          <span style="color: var(--text-secondary);">Loading more events...</span>
-        </div>
-        <div id="end-of-list" style="display: none; text-align: center; padding: var(--space-6); color: var(--text-tertiary);">
-          You've seen all events 🎉
-        </div>
-      </section>
+  <main class="container">
+    <div class="page-header">
+      <h1 style="font-size: 2.5rem; font-weight: 800; font-family: 'Syne', sans-serif; margin-bottom: 8px;">Explore Events</h1>
+      <p style="color: var(--text-secondary);">Discover upcoming startup hackathons and workshops</p>
     </div>
+
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="search-input" placeholder="Search events...">
+      <div class="filter-group">
+        <select class="form-input" style="background:#000; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; flex:1;">
+          <option value="">All Categories</option>
+          <option value="hackathon">🏆 Hackathon</option>
+          <option value="workshop">🛠️ Workshop</option>
+        </select>
+        <select class="form-input" style="background:#000; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; flex:1;">
+          <option value="date-asc">Soonest First</option>
+          <option value="popular">Most Popular</option>
+        </select>
+      </div>
+    </div>
+
+    <section id="events-section">
+      <div class="events-grid" id="events-grid">
+        <!-- Dynamically rendered via eventCard.js (Unified to V8 Detail) -->
+        <div style="padding: 50px; text-align: center; color: var(--text-tertiary); grid-column: 1/-1;">⌛ Loading the latest roster...</div>
+      </div>
+    </section>
   </main>
 
-  <!-- ============ FOOTER ============ -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer__grid">
-        <div>
-          <div class="footer__brand">🚀 StartupEvents</div>
-          <p class="footer__description">The premier platform for discovering and hosting startup-related events.</p>
-        </div>
-        <div>
-          <h4 class="footer__heading">Platform</h4>
-          <a href="events.html" class="footer__link">Browse Events</a>
-          <a href="register.html" class="footer__link">Create Event</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Company</h4>
-          <a href="#" class="footer__link">About Us</a>
-          <a href="#" class="footer__link">Contact</a>
-        </div>
-        <div>
-          <h4 class="footer__heading">Legal</h4>
-          <a href="#" class="footer__link">Privacy Policy</a>
-          <a href="#" class="footer__link">Terms of Service</a>
-        </div>
-      </div>
-      <div class="footer__bottom">
-        <span>&copy; 2026 StartupEvents. All rights reserved.</span>
-        <span>Made with ❤️ for the startup community</span>
-      </div>
-    </div>
-  </footer>
-
-  <div class="toast-container" id="toast-container"></div>
-
-  <script src="../js/theme.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/services/eventBus.js"></script>
-  <script src="../js/components/eventCard.js"></script>
-  <script src="../js/components/modal.js"></script>
-  <script src="../js/components/delegation.js"></script>
-  <script src="../js/utils/infiniteScroll.js"></script>
-  <script src="../js/filters.js"></script>
-  <script src="../js/search.js"></script>
-  <script src="../js/utils.js"></script>
-  <script>
-    /* ============================================
-       Fetch events from API & render (FE Unit III — async/await, fetch)
-       ============================================ */
-    (async function () {
-      'use strict';
-      var currentPage = 1;
-      var allLoaded = false;
-      var cachedEvents = [];
-
-      async function fetchEvents(page) {
-        var res = await fetch('/api/v1/events?page=' + page + '&limit=6');
-        return res.json();
-      }
-
-      async function loadInitial() {
-        try {
-          var data = await fetchEvents(1);
-          if (data.success && data.data.length > 0) {
-            cachedEvents = data.data;
-            window.__renderEventGrid(data.data, 'events-grid', false);
-            allLoaded = !data.pagination.hasNext;
-          } else {
-            window.__renderEmptyState('events-grid', 'No events yet');
-          }
-        } catch (e) {
-          window.__renderEmptyState('events-grid', 'Failed to load events');
+  <!-- Scripts -->
+  <script type="module" src="../js/theme.js"></script>
+  <script type="module" src="../js/auth.js"></script>
+  <script type="module" src="../js/services/eventBus.js"></script>
+  <script type="module" src="../js/components/eventCard.js"></script>
+  <script type="module" src="../js/utils.js"></script>
+  <script type="module">
+    (async function() {
+      try {
+        const res = await fetch('/api/v1/events?limit=12');
+        const data = await res.json();
+        if (data.success && data.data.length > 0) {
+          window.__renderEventGrid(data.data, 'events-grid', false);
+        } else {
+          document.getElementById('events-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:100px;">No events found in this sector.</div>';
         }
-      }
-
-      await loadInitial();
-
-      if (typeof window.__createInfiniteScroll === 'function') {
-        window.__createInfiniteScroll({
-          sentinelId: 'scroll-sentinel',
-          containerId: 'events-grid',
-          loadMore: async function (page) {
-            var data = await fetchEvents(page);
-            if (data.success) {
-              cachedEvents = cachedEvents.concat(data.data);
-              return { items: data.data, hasMore: data.pagination.hasNext };
-            }
-            return { items: [], hasMore: false };
-          },
-          renderItem: function (event) { return window.__renderEventCard(event); },
-        });
+      } catch(e) {
+        document.getElementById('events-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:100px;">Sync Error. Please refresh.</div>';
       }
     })();
   </script>

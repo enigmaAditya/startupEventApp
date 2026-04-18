@@ -12,11 +12,17 @@
 
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/modern-ui.css?v=3.0">
+  
+  <style>
+    /* Standard Professional (V8) Dashboard Baseline */
+    .dashboard { padding-top: var(--space-4); }
+  </style>
 </head>
-<body>
+<body class="modern-ui">
 
   <!-- ============ NAVBAR ============ -->
   <header>
@@ -95,7 +101,7 @@
     <!-- Main Content -->
     <main class="dashboard__main">
       <!-- ============ OVERVIEW TAB ============ -->
-      <section id="tab-overview">
+      <section id="tab-overview" class="animate-in">
         <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋</h1>
         <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening with your events</p>
 
@@ -223,12 +229,12 @@
 
   <div class="toast-container" id="toast-container"></div>
 
-  <script src="../js/theme.js"></script>
-  <script src="../js/auth.js"></script>
-  <script src="../js/services/eventBus.js"></script>
-  <script src="../js/validation.js"></script>
-  <script src="../js/utils.js"></script>
-  <script>
+  <script type="module" src="../js/theme.js"></script>
+  <script type="module" src="../js/auth.js"></script>
+  <script type="module" src="../js/services/eventBus.js"></script>
+  <script type="module" src="../js/validation.js"></script>
+  <script type="module" src="../js/utils.js"></script>
+  <script type="module">
     /* ============================================
        Dashboard — Dynamic Data Loading
        FE Unit III: async/await, fetch, Promises

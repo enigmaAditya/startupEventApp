@@ -18,7 +18,7 @@
   const createEventCard = (event) => {
     // ---- Create card wrapper ----
     const card = document.createElement('article');
-    card.className = 'card';
+    card.className = 'card animate-in';
     card.dataset.category = event.category || '';
     card.dataset.date = event.date || '';
     card.dataset.city = event.location?.city || '';
@@ -47,42 +47,39 @@
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ');
 
+    // Role detection for UI enrichment
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const isAdmin = user && user.role === 'admin';
+
     // ---- Build inner HTML ----
     card.innerHTML = `
-      <div class="card__image" style="display:flex; align-items:center; justify-content:center; font-size:3rem;">
+      <div class="card__image">
         ${config.emoji}
       </div>
       <div class="card__body">
         <div class="card__meta">
-          <span class="tag" style="background: ${config.color}20; color: ${config.color}; border: 1px solid ${config.color}40;">${categoryName}</span>
+          <span class="tag" style="background: ${config.color}20; color: ${config.color}; border: 1px solid ${config.color}40; border-radius:4px;">${categoryName}</span>
           <span class="card__date">📅 ${dateStr}</span>
         </div>
-        <h3 class="card__title">${escapeHTML(event.title || 'Untitled Event')}</h3>
-        <p class="card__description">${escapeHTML(truncate(event.description || '', 120))}</p>
+        <h3 class="card__title">${escapeHTML(truncate(event.title || 'Untitled', 40))}</h3>
+        <p class="card__description">${escapeHTML(truncate(event.description || '', 80))}</p>
         
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
           <span style="font-size: var(--text-xs); color: var(--text-tertiary);">
             👥 ${(Array.isArray(event.attendees) ? event.attendees.length : (event.attendeeCount || 0))} RSVPs
           </span>
           ${(function() {
-            const user = JSON.parse(localStorage.getItem('user') || 'null');
             const userId = user ? (user._id || user.id) : null;
-            const isRegistered = (userId && event.attendees && event.attendees.some(a => (a._id || a) === userId)) || 
-                               (user && user.eventsAttending && user.eventsAttending.includes(event._id || event.id));
-            
-            return isRegistered ? '<span class="badge badge--success" style="font-size: 0.6rem;">✓ Registered</span>' : '';
+            const isRegistered = (userId && event.attendees && event.attendees.some(a => (a._id || a) === userId));
+            return isRegistered ? '<span class="badge badge--success" style="font-size: 0.6rem;">Registered</span>' : '';
           })()}
         </div>
-
-        ${event.tags && event.tags.length > 0 ? `
-          <div class="card__tags">
-            ${event.tags.slice(0, 3).map((tag) => `<span class="tag">${escapeHTML(tag)}</span>`).join('')}
-          </div>
-        ` : ''}
       </div>
       <div class="card__footer">
-        <span class="card__location">📍 ${escapeHTML(event.location?.city || 'Online')}</span>
-        <a href="event-detail.html?id=${event._id || event.id || ''}" class="btn btn--sm btn--primary">View Details →</a>
+        <span class="card__location" style="font-size: 0.75rem;">📍 ${escapeHTML(truncate(event.location?.city || 'Online', 15))}</span>
+        <a href="event-detail.html?id=${event._id || event.id || ''}" class="btn btn--sm btn--secondary">
+          View Details →
+        </a>
       </div>
     `;
 

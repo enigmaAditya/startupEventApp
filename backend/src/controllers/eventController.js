@@ -39,6 +39,20 @@ const getEvents = async (req, res, next) => {
     if (organizer) filter.organizer = organizer;
     if (city) filter['location.city'] = new RegExp(city, 'i');
 
+    // Moderation Filter: Hide 'hidden' events from public.
+    // Allow Admins to see all.
+    // Allow Organizers to see their own hidden events.
+    if (!req.user || req.user.role !== 'admin') {
+      if (req.user && req.user.role === 'organizer') {
+        filter.$or = [
+          { moderationStatus: { $ne: 'hidden' } },
+          { organizer: req.user._id }
+        ];
+      } else {
+        filter.moderationStatus = { $ne: 'hidden' };
+      }
+    }
+
     let query;
     let countFilter = filter;
 
@@ -162,13 +176,22 @@ const updateEvent = async (req, res, next) => {
       return next(ApiError.notFound('Event not found'));
     }
 
-    // Check ownership (only organizer can update their own event)
-    if (event.organizer.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
+    // Check ownership
+    const isOwner = event.organizer.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
       return next(ApiError.forbidden('Not authorized to update this event'));
     }
 
-    const allowedUpdates = ['title', 'description', 'category', 'date', 'endDate',
+    // POLICY: Admins can ONLY update moderation/featured fields, NOT core content
+    let allowedUpdates = ['title', 'description', 'category', 'date', 'endDate',
       'time', 'location', 'capacity', 'tags', 'status', 'isVirtual', 'isFeatured', 'prizePool', 'isFullyBooked'];
+    
+    if (isAdmin && !isOwner) {
+      // Stripping content fields for admins
+      allowedUpdates = ['isFeatured', 'isVerified', 'moderationStatus', 'moderationNote', 'status'];
+    }
     const updates = {};
     for (const key of allowedUpdates) {
       if (req.body[key] !== undefined) updates[key] = req.body[key];

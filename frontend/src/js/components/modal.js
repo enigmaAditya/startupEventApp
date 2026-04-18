@@ -191,6 +191,7 @@
     const eventOrganizerId = getUserId(event.organizer);
     
     const isOwner = currentUser && currentUserId && eventOrganizerId && (currentUserId.toString() === eventOrganizerId.toString());
+    const isAdmin = currentUser && currentUser.role === 'admin';
     const isOtherOrganizer = currentUser && currentUser.role === 'organizer' && !isOwner;
     
     // Robust attendance check
@@ -204,7 +205,10 @@
     let actionLabel = '🎫 RSVP Now';
     let actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
 
-    if (isOwner) {
+    if (isAdmin) {
+      actionLabel = '⚡ Moderate (Admin)';
+      actionTarget = `manage-event.html?id=${event._id || event.id || ''}`;
+    } else if (isOwner) {
       actionLabel = '🛠️ Manage Event';
       actionTarget = `manage-event.html?id=${event._id || event.id || ''}`;
     } else if (isOtherOrganizer) {

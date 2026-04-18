@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,15 +9,30 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+    rel="stylesheet">
 
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/modern-ui.css?v=3.0">
+
+  <style>
+    /* Crisis Style: Guaranteeing Centering & Size */
+    .modern-ui .card__image {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      height: 140px !important;
+      font-size: 4rem !important;
+    }
+  </style>
 </head>
-<body>
+
+<body class="modern-ui">
 
   <!-- ============ NAVBAR ============ -->
   <header>
@@ -33,7 +49,8 @@
       <div class="navbar__actions">
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
         <div class="dropdown" id="user-dropdown">
-          <button class="btn btn--ghost" style="display: flex; align-items: center; gap: var(--space-2);" id="user-dropdown-toggle">
+          <button class="btn btn--ghost" style="display: flex; align-items: center; gap: var(--space-2);"
+            id="user-dropdown-toggle">
             <div class="avatar avatar--sm">JD</div>
             <span style="font-size: var(--text-sm);">John Doe</span>
           </button>
@@ -61,7 +78,9 @@
           <div>
             <div id="sidebar-user-name" style="font-weight: var(--font-semibold);">John Doe</div>
             <div id="sidebar-user-role" style="font-size: var(--text-xs); color: var(--text-tertiary);">Organizer</div>
-            <div id="admin-badge" style="display: none; margin-top: 4px; font-size: 10px; padding: 2px 6px; background: var(--color-primary-600); color: white; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content;">🛡️ Admin Mode</div>
+            <div id="admin-badge"
+              style="display: none; margin-top: 4px; font-size: 10px; padding: 2px 6px; background: var(--color-primary-600); color: white; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; width: fit-content;">
+              🛡️ Admin Mode</div>
           </div>
         </div>
       </div>
@@ -87,7 +106,8 @@
           👥 Users
         </a>
         <div style="margin-top: auto; padding-top: var(--space-6); border-top: 1px solid var(--border-color);">
-          <a href="#" class="dashboard__sidebar-link" style="color: var(--color-error);" onclick="event.preventDefault(); window.__logout();">
+          <a href="#" class="dashboard__sidebar-link" style="color: var(--color-error);"
+            onclick="event.preventDefault(); window.__logout();">
             🚪 Logout
           </a>
         </div>
@@ -97,42 +117,68 @@
     <!-- Main Content -->
     <main class="dashboard__main">
       <!-- ============ OVERVIEW TAB ============ -->
-      <section id="tab-overview">
-        <h1 id="welcome-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋</h1>
-        <p id="welcome-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening with your events</p>
+      <section id="tab-overview" class="animate-in">
+        <h1 id="welcome-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Welcome back, John 👋
+        </h1>
+        <p id="welcome-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Here's what's happening
+          with your events</p>
 
         <!-- Organizer Verification HUD -->
-        <div id="verification-banner" style="display: none; padding: var(--space-6); background: rgba(88, 101, 242, 0.1); border: 1px solid var(--brand-primary); border-radius: var(--radius-2xl); margin-bottom: var(--space-8);">
+        <div id="verification-banner"
+          style="display: none; padding: var(--space-6); background: rgba(88, 101, 242, 0.1); border: 1px solid var(--brand-primary); border-radius: var(--radius-2xl); margin-bottom: var(--space-8);">
           <div style="display: flex; justify-content: space-between; align-items: center;">
             <div>
-              <h2 style="font-size: var(--text-lg); color: var(--brand-primary); margin-bottom: 4px;">🛡️ Verification Pending</h2>
-              <p style="font-size: var(--text-sm); color: var(--text-secondary);">Your application is being reviewed. You can create drafts, but they will go live only after approval.</p>
+              <h2 style="font-size: var(--text-lg); color: var(--brand-primary); margin-bottom: 4px;">🛡️ Verification
+                Pending</h2>
+              <p style="font-size: var(--text-sm); color: var(--text-secondary);">Your application is being reviewed.
+                You can create drafts, but they will go live only after approval.</p>
             </div>
             <button class="btn btn--secondary btn--sm" id="dashboard-revoke-btn">Revoke Application</button>
           </div>
         </div>
 
         <!-- Stats Cards -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div id="stat-org-events-label" style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">My Total Events</div>
+        <div
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-10);">
+          <div
+            style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
+            <div id="stat-org-events-label"
+              style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">
+              My Total Events</div>
             <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-org-events">—</div>
-            <div id="stat-org-events-sub" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Syncing...</div>
+            <div id="stat-org-events-sub"
+              style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Syncing...
+            </div>
           </div>
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div id="stat-reach-label" style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Member Reach</div>
+          <div
+            style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
+            <div id="stat-reach-label"
+              style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">
+              Member Reach</div>
             <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-reach">—</div>
-            <div id="stat-reach-sub" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Total registrations</div>
+            <div id="stat-reach-sub"
+              style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Total
+              registrations</div>
           </div>
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
-            <div id="stat-growth-label" style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">7-Day Growth</div>
+          <div
+            style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);">
+            <div id="stat-growth-label"
+              style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">
+              7-Day Growth</div>
             <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-growth">—</div>
-            <div id="stat-growth-sub" style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">New this week</div>
+            <div id="stat-growth-sub"
+              style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">New this week
+            </div>
           </div>
-          <div style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);" id="stat-platform-card">
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">Global Events</div>
+          <div
+            style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl);"
+            id="stat-platform-card">
+            <div
+              style="font-size: var(--text-xs); color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2);">
+              Global Events</div>
             <div style="font-size: var(--text-3xl); font-weight: var(--font-bold);" id="stat-all-events">—</div>
-            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Platform total</div>
+            <div style="font-size: var(--text-xs); color: var(--text-tertiary); margin-top: var(--space-1);">Platform
+              total</div>
           </div>
         </div>
 
@@ -144,7 +190,8 @@
       <!-- ============ MY EVENTS TAB ============ -->
       <section id="tab-my-events" style="display: none;">
         <h1 id="my-events-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">My Events</h1>
-        <p id="my-events-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you have organized</p>
+        <p id="my-events-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Events you have
+          organized</p>
         <div id="my-events-list" style="display: flex; flex-direction: column; gap: var(--space-3);">
           <div class="skeleton" style="height: 70px; width: 100%; margin-bottom: var(--space-2);"></div>
           <div class="skeleton" style="height: 70px; width: 100%; margin-bottom: var(--space-2);"></div>
@@ -154,19 +201,23 @@
 
       <!-- ============ CREATE EVENT TAB ============ -->
       <section id="tab-create-event" style="display: none;">
-        <h1 id="create-event-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Create New Event</h1>
-        <p id="create-event-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Fill in the details to create and publish your event</p>
+        <h1 id="create-event-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Create New Event
+        </h1>
+        <p id="create-event-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Fill in the
+          details to create and publish your event</p>
 
         <form id="create-event-form" style="max-width: 700px;" novalidate>
           <div class="form-group">
             <label class="form-label form-label--required" for="event-title">Event Title</label>
-            <input type="text" class="form-input" id="event-title" name="title" placeholder="e.g., Build for Tomorrow — 48hr Hackathon" required>
+            <input type="text" class="form-input" id="event-title" name="title"
+              placeholder="e.g., Build for Tomorrow — 48hr Hackathon" required>
             <span class="form-error" id="event-title-error"></span>
           </div>
 
           <div class="form-group">
             <label class="form-label form-label--required" for="event-description">Description</label>
-            <textarea class="form-input" id="event-description" name="description" placeholder="Describe your event in detail..." required></textarea>
+            <textarea class="form-input" id="event-description" name="description"
+              placeholder="Describe your event in detail..." required></textarea>
             <span class="form-error" id="event-description-error"></span>
           </div>
 
@@ -185,7 +236,8 @@
             </div>
             <div class="form-group">
               <label class="form-label form-label--required" for="event-capacity">Capacity</label>
-              <input type="number" class="form-input" id="event-capacity" name="capacity" placeholder="e.g., 500" min="1" required>
+              <input type="number" class="form-input" id="event-capacity" name="capacity" placeholder="e.g., 500"
+                min="1" required>
               <span class="form-error" id="event-capacity-error"></span>
             </div>
           </div>
@@ -204,7 +256,8 @@
 
           <div class="form-group">
             <label class="form-label form-label--required" for="event-venue">Venue</label>
-            <input type="text" class="form-input" id="event-venue" name="venue" placeholder="e.g., TechHub Bangalore" required>
+            <input type="text" class="form-input" id="event-venue" name="venue" placeholder="e.g., TechHub Bangalore"
+              required>
             <span class="form-error" id="event-venue-error"></span>
           </div>
 
@@ -228,13 +281,15 @@
 
           <div class="form-group">
             <label class="form-label" for="event-tags">Tags</label>
-            <input type="text" class="form-input" id="event-tags" name="tags" placeholder="e.g., AI/ML, Web3, FinTech (comma separated)">
+            <input type="text" class="form-input" id="event-tags" name="tags"
+              placeholder="e.g., AI/ML, Web3, FinTech (comma separated)">
             <span class="form-hint">Separate tags with commas</span>
           </div>
 
           <div class="form-group">
             <label class="form-label" for="event-image">Event Image</label>
-            <input type="file" class="form-input" id="event-image" name="image" accept="image/*" style="padding: var(--space-3);">
+            <input type="file" class="form-input" id="event-image" name="image" accept="image/*"
+              style="padding: var(--space-3);">
           </div>
 
           <div style="display: flex; gap: var(--space-4); padding-top: var(--space-4);">
@@ -250,8 +305,10 @@
 
       <!-- ============ ANALYTICS TAB ============ -->
       <section id="tab-analytics" style="display: none;">
-        <h1 id="analytics-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Analytics Command Center</h1>
-        <p id="analytics-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Track your audience reach and event performance</p>
+        <h1 id="analytics-title" style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Analytics Command
+          Center</h1>
+        <p id="analytics-sub" style="color: var(--text-secondary); margin-bottom: var(--space-8);">Track your audience
+          reach and event performance</p>
 
         <!-- Analytics Loading State -->
         <div id="analytics-loading" style="padding: var(--space-10); text-align: center;">
@@ -264,29 +321,45 @@
 
         <div id="analytics-content" style="display: none;">
           <!-- Key Insight Cards -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10);">
-            <div style="padding: var(--space-8); background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(88, 101, 242, 0.05)); border: 1px solid rgba(88, 101, 242, 0.2); border-radius: var(--radius-2xl);">
-              <div style="font-size: var(--text-xs); color: var(--brand-primary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2); font-weight: var(--font-bold);">Total Network Reach</div>
-              <div style="font-size: 3.5rem; font-weight: var(--font-bold); letter-spacing: -0.02em;" id="ana-reach">0</div>
-              <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-top: var(--space-1);">Total registered attendees across all events</div>
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-6); margin-bottom: var(--space-10);">
+            <div
+              style="padding: var(--space-8); background: linear-gradient(135deg, rgba(88, 101, 242, 0.1), rgba(88, 101, 242, 0.05)); border: 1px solid rgba(88, 101, 242, 0.2); border-radius: var(--radius-2xl);">
+              <div
+                style="font-size: var(--text-xs); color: var(--brand-primary); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2); font-weight: var(--font-bold);">
+                Total Network Reach</div>
+              <div style="font-size: 3.5rem; font-weight: var(--font-bold); letter-spacing: -0.02em;" id="ana-reach">0
+              </div>
+              <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-top: var(--space-1);">Total
+                registered attendees across all events</div>
             </div>
-            
-            <div style="padding: var(--space-8); background: linear-gradient(135deg, rgba(0, 250, 154, 0.1), rgba(0, 250, 154, 0.05)); border: 1px solid rgba(0, 250, 154, 0.2); border-radius: var(--radius-2xl);">
-              <div style="font-size: var(--text-xs); color: #00FA9A; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2); font-weight: var(--font-bold);">7-Day Growth</div>
-              <div style="font-size: 3.5rem; font-weight: var(--font-bold); letter-spacing: -0.02em; color: #00FA9A;" id="ana-growth">+0</div>
-              <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-top: var(--space-1);">New RSVPs in the last week</div>
+
+            <div
+              style="padding: var(--space-8); background: linear-gradient(135deg, rgba(0, 250, 154, 0.1), rgba(0, 250, 154, 0.05)); border: 1px solid rgba(0, 250, 154, 0.2); border-radius: var(--radius-2xl);">
+              <div
+                style="font-size: var(--text-xs); color: #00FA9A; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: var(--space-2); font-weight: var(--font-bold);">
+                7-Day Growth</div>
+              <div style="font-size: 3.5rem; font-weight: var(--font-bold); letter-spacing: -0.02em; color: #00FA9A;"
+                id="ana-growth">+0</div>
+              <div style="font-size: var(--text-sm); color: var(--text-tertiary); margin-top: var(--space-1);">New RSVPs
+                in the last week</div>
             </div>
           </div>
 
           <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: var(--space-8); align-items: start;">
             <!-- Top Event Card -->
-            <div style="padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl);">
-              <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3);">
+            <div
+              style="padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl);">
+              <h3
+                style="font-size: var(--text-xl); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-3);">
                 ⭐ Top Performing Event
               </h3>
-              <div id="ana-top-event" style="padding: var(--space-6); background: var(--bg-tertiary); border-radius: var(--radius-xl); border: 1px dashed var(--border-color);">
-                <div style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: var(--space-2);" id="ana-top-title">—</div>
-                <div style="display: flex; gap: var(--space-4); font-size: var(--text-sm); color: var(--text-secondary);">
+              <div id="ana-top-event"
+                style="padding: var(--space-6); background: var(--bg-tertiary); border-radius: var(--radius-xl); border: 1px dashed var(--border-color);">
+                <div style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: var(--space-2);"
+                  id="ana-top-title">—</div>
+                <div
+                  style="display: flex; gap: var(--space-4); font-size: var(--text-sm); color: var(--text-secondary);">
                   <span id="ana-top-category">—</span>
                   <span id="ana-top-attendees">0 attendees</span>
                 </div>
@@ -294,7 +367,8 @@
             </div>
 
             <!-- Category Mix -->
-            <div style="padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl);">
+            <div
+              style="padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl);">
               <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-6);">Category Distribution</h3>
               <div id="ana-categories" style="display: grid; gap: var(--space-4);">
                 <!-- Category bars injected here -->
@@ -303,7 +377,8 @@
           </div>
 
           <!-- Activity Feed -->
-          <div style="margin-top: var(--space-10); padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl);">
+          <div
+            style="margin-top: var(--space-10); padding: var(--space-8); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl);">
             <h3 style="font-size: var(--text-xl); margin-bottom: var(--space-6);">Recent Network Activity</h3>
             <div id="ana-activity" style="display: grid; gap: var(--space-2);">
               <!-- Activity rows injected here -->
@@ -313,15 +388,20 @@
       </section>
 
       <!-- ============ USERS TAB (Admin only) ============ -->
-      <section id="tab-users" style="display: none;">
+      <section id="tab-users" style="display: none;" class="animate-in">
         <h1 style="font-size: var(--text-3xl); margin-bottom: var(--space-2);">Community Directory</h1>
-        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Manage platform stakeholders and moderate accounts</p>
+        <p style="color: var(--text-secondary); margin-bottom: var(--space-8);">Manage platform stakeholders and
+          moderate accounts</p>
 
-        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl); overflow: hidden;">
-          <div style="padding: var(--space-6); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+        <div class="table-container"
+          style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-2xl); overflow: hidden;">
+          <div
+            style="padding: var(--space-6); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
             <div style="position: relative; flex: 1; min-width: 300px;">
-              <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary);">🔍</span>
-              <input type="text" id="user-search" class="form-input" placeholder="Search by name or email..." style="padding-left: 44px; margin-bottom: 0;">
+              <span
+                style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-tertiary);">🔍</span>
+              <input type="text" id="user-search" class="form-input" placeholder="Search by name or email..."
+                style="padding-left: 44px; margin-bottom: 0;">
             </div>
             <select id="user-role-filter" class="form-input form-select" style="width: auto; margin-bottom: 0;">
               <option value="">All Roles</option>
@@ -330,11 +410,12 @@
               <option value="admin">Admins</option>
             </select>
           </div>
-          
+
           <div style="overflow-x: auto;">
             <table style="width: 100%; border-collapse: collapse; text-align: left;">
               <thead>
-                <tr style="background: var(--bg-tertiary); color: var(--text-tertiary); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">
+                <tr
+                  style="background: var(--bg-tertiary); color: var(--text-tertiary); font-size: var(--text-xs); text-transform: uppercase; letter-spacing: 0.05em;">
                   <th style="padding: var(--space-4) var(--space-6);">User</th>
                   <th style="padding: var(--space-4) var(--space-6);">Role</th>
                   <th style="padding: var(--space-4) var(--space-6);">Verification</th>
@@ -347,7 +428,8 @@
               </tbody>
             </table>
           </div>
-          <div id="users-empty-state" style="display: none; padding: var(--space-10); text-align: center; color: var(--text-tertiary);">
+          <div id="users-empty-state"
+            style="display: none; padding: var(--space-10); text-align: center; color: var(--text-tertiary);">
             <div style="font-size: 3rem; margin-bottom: var(--space-4);">👥</div>
             <p>No users found matching your search.</p>
           </div>
@@ -391,7 +473,7 @@
       var user = JSON.parse(localStorage.getItem('user') || 'null');
       var token = localStorage.getItem('accessToken');
       if (!user || !token) { window.location.href = 'login.html'; return; }
-      
+
       var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
       /* ---------- Mandatory State Sync (The "Truth" Check) ---------- */
@@ -405,10 +487,10 @@
       } catch (e) { console.error('Role sync failed', e); }
 
       var isOrganizer = user.role === 'organizer' || user.role === 'admin';
-      
-      if (!isOrganizer) { 
-        window.location.href = 'dashboard.html'; 
-        return; 
+
+      if (!isOrganizer) {
+        window.location.href = 'dashboard.html';
+        return;
       }
 
       /* ---------- Populate sidebar & welcome ---------- */
@@ -464,7 +546,7 @@
       if (user.role === 'organizer' && user.organizerStatus === 'pending') {
         const banner = document.getElementById('verification-banner');
         if (banner) banner.style.display = 'block';
-        
+
         const publishBtn = document.getElementById('create-event-submit-btn');
         if (publishBtn) {
           publishBtn.innerHTML = '🕒 Awaiting Verification';
@@ -512,13 +594,13 @@
 
         if (analyticsData.success) {
           const stats = analyticsData.data;
-          
+
           const orgEvents = document.getElementById('stat-org-events');
           if (orgEvents) orgEvents.textContent = stats.totalEvents || 0;
-          
+
           const reachEl = document.getElementById('stat-reach');
           if (reachEl) reachEl.textContent = (stats.totalReach || 0).toLocaleString();
-          
+
           const growthEl = document.getElementById('stat-growth');
           if (growthEl) growthEl.textContent = (stats.growthScore >= 0 ? '+' : '') + stats.growthScore;
 
@@ -627,7 +709,7 @@
           const query = new URLSearchParams({ search, role }).toString();
           const res = await fetch(`/api/v1/users?${query}`, { headers: authHeaders, credentials: 'include' });
           const data = await res.json();
-          
+
           if (res.ok && data.success) {
             renderUsersTable(data.data);
           } else {
@@ -653,14 +735,14 @@
         tableBody.innerHTML = users.map(user => {
           const initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
           const joinDate = new Date(user.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
-          
+
           const roleColors = {
             admin: { bg: 'rgba(147, 51, 234, 0.1)', text: '#9333EA' },
             organizer: { bg: 'rgba(59, 130, 246, 0.1)', text: '#3B82F6' },
             attendee: { bg: 'rgba(16, 185, 129, 0.1)', text: '#10B981' }
           };
           const colors = roleColors[user.role] || { bg: 'var(--bg-tertiary)', text: 'var(--text-secondary)' };
-          
+
           const statusMap = {
             verified: { label: '✅ Verified', color: 'var(--color-success)' },
             pending: { label: '🕒 Pending', color: 'var(--color-primary)' },
@@ -716,11 +798,11 @@
         }).join('');
       }
 
-      window.__verifyUser = async function(id, status) {
+      window.__verifyUser = async function (id, status) {
         try {
-          const res = await fetch(`/api/v1/users/${id}/verify`, { 
-            method: 'PATCH', 
-            headers: authHeaders, 
+          const res = await fetch(`/api/v1/users/${id}/verify`, {
+            method: 'PATCH',
+            headers: authHeaders,
             credentials: 'include',
             body: JSON.stringify({ status })
           });
@@ -731,7 +813,7 @@
         } catch (e) { console.error(e); }
       };
 
-      window.__toggleUserStatus = async function(id) {
+      window.__toggleUserStatus = async function (id) {
         try {
           const res = await fetch(`/api/v1/users/${id}/status`, { method: 'PATCH', headers: authHeaders, credentials: 'include' });
           if (res.ok) {
@@ -741,11 +823,11 @@
         } catch (e) { console.error(e); }
       };
 
-      window.__changeUserRole = async function(id, role) {
+      window.__changeUserRole = async function (id, role) {
         try {
-          const res = await fetch(`/api/v1/users/${id}/role`, { 
-            method: 'PATCH', 
-            headers: authHeaders, 
+          const res = await fetch(`/api/v1/users/${id}/role`, {
+            method: 'PATCH',
+            headers: authHeaders,
             credentials: 'include',
             body: JSON.stringify({ role })
           });
@@ -762,7 +844,7 @@
 
       function debounce(func, wait) {
         let timeout;
-        return function(...args) {
+        return function (...args) {
           clearTimeout(timeout);
           timeout = setTimeout(() => func.apply(this, args), wait);
         };
@@ -771,7 +853,7 @@
       async function fetchAnalytics() {
         var loading = document.getElementById('analytics-loading');
         var content = document.getElementById('analytics-content');
-        
+
         if (loading) loading.style.display = '';
         if (content) content.style.display = 'none';
 
@@ -802,10 +884,10 @@
         var reachEl = document.getElementById('ana-reach');
         var growthEl = document.getElementById('ana-growth');
         var reachLabel = document.getElementById('ana-reach-label');
-        
+
         if (reachEl) reachEl.textContent = (data.totalReach || 0).toLocaleString();
         if (growthEl) growthEl.textContent = (data.growthScore >= 0 ? '+' : '') + data.growthScore;
-        
+
         if (data.isAdminView && reachLabel) {
           reachLabel.textContent = 'Platform-wide Reach';
         }
@@ -898,7 +980,7 @@
               btn.textContent = '🎉 Publish Event';
               btn.disabled = false;
               if (window.__eventBus) window.__eventBus.emit('event:created', data.data);
-              
+
               // Refresh page to show new event
               setTimeout(() => window.location.reload(), 1500);
             } else {
@@ -915,4 +997,5 @@
     })();
   </script>
 </body>
+
 </html>

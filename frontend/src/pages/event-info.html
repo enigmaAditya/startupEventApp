@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>StartupEvents — Redirecting...</title>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+        if (eventId) {
+            window.location.href = 'event-detail.html?id=' + eventId;
+        } else {
+            window.location.href = 'events.html';
+        }
+    </script>
+</head>
+<body style="background: #0a0a0a; color: #fff; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
+    <div style="text-align: center;">
+        <div style="font-size: 2rem; margin-bottom: 20px;">🛡️</div>
+        <h2>Standardizing your session...</h2>
+        <p style="color: #666;">Legacy page detected. Moving to Professional View.</p>
+    </div>
+</body>
+</html>

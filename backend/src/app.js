@@ -37,8 +37,9 @@ app.use(helmet());
 
 // 2. CORS configuration
 // Demonstrates: CORS middleware, options object
+const allowedOrigins = config.corsOrigin ? config.corsOrigin.split(',').map(o => o.trim()) : [];
 app.use(cors({
-  origin: config.corsOrigin,
+  origin: allowedOrigins.length > 0 ? allowedOrigins : 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization'],

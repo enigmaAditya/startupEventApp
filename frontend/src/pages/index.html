@@ -14,54 +14,57 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/reset.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/responsive.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="/css/modern-ui.css?v=3.0">
+  
+  <style>
+    /* Standard Professional (V8) Enhancements */
+    .hero--landing {
+      padding: var(--space-20) 0;
+      text-align: center;
+    }
+  </style>
 </head>
-<body>
+<body class="modern-ui">
 
-  <!-- ============ HERO SECTION (full-screen with inline nav) ============ -->
-  <main>
-    <section class="hero hero--landing" id="hero">
-      <!-- Floating orbs -->
-      <div class="hero__orb hero__orb--1" aria-hidden="true"></div>
-      <div class="hero__orb hero__orb--2" aria-hidden="true"></div>
-      <div class="hero__orb hero__orb--3" aria-hidden="true"></div>
-
-      <!-- Inline transparent nav -->
-      <nav class="landing-nav" id="navbar" aria-label="Main navigation">
-        <a href="index.html" class="navbar__brand">
-          <span class="navbar__brand-icon">🚀</span>
-          StartupEvents
-        </a>
-        <div class="landing-nav__right">
-          <a href="events.html" class="landing-nav__link">Events</a>
-          <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
-          <a href="login.html" class="btn btn--secondary btn--sm" id="landing-login-btn">Log In</a>
-          <a href="register.html" class="btn btn--primary btn--sm" id="landing-signup-btn">Sign Up</a>
-        </div>
-      </nav>
-
-      <div class="hero__content">
-        <span class="hero__badge">
-          ✨ Over 500+ startup events listed
-        </span>
-        <h1 class="hero__title">
-          Discover <span class="hero__title-gradient animated-gradient-text">Startup Events</span> That Ignite Innovation
-        </h1>
-        <p class="hero__subtitle">
-          Find hackathons, pitch nights, workshops, and founder meetups near you. Connect with the startup community and build something extraordinary.
-        </p>
-        <div class="hero__actions">
-          <a href="events.html" class="btn btn--primary btn--lg">
-            🔍 Explore Events
-          </a>
-          <a href="register.html" class="btn btn--secondary btn--lg" id="hero-create-btn">
-            Create an Event
-          </a>
-        </div>
+  <!-- ============ NAVBAR ============ -->
+  <header>
+    <nav class="navbar" id="navbar">
+      <a href="index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <ul class="navbar__links" id="nav-links">
+        <li><a href="index.html" class="navbar__link navbar__link--active">Home</a></li>
+        <li><a href="events.html" class="navbar__link">Events</a></li>
+        <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
+      </ul>
+      <div class="navbar__actions">
+        <a href="login.html" class="btn btn--secondary btn--sm" id="landing-login-btn">Log In</a>
+        <a href="register.html" class="btn btn--primary btn--sm" id="landing-signup-btn">Sign Up</a>
       </div>
-    </section>
+      <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+        <span class="navbar__toggle-bar"></span>
+      </button>
+    </nav>
+  </header>
+
+    <main>
+      <section class="hero hero--landing" id="hero" style="background: radial-gradient(circle at top right, rgba(0, 242, 255, 0.05), transparent);">
+        <div class="hero__content">
+          <h1 class="hero__title">
+            Discover <span style="color:var(--neon-cyan);">Startup Events</span> That Ignite Innovation
+          </h1>
+          <p class="hero__subtitle" style="color: var(--text-secondary);">
+            Find hackathons, pitch nights, workshops, and founder meetups near you. Connect with the startup community and build something extraordinary.
+          </p>
+          <div class="hero__actions">
+            <a href="events.html" class="btn btn--primary btn--lg">🔍 Explore Events</a>
+            <a href="register.html" class="btn btn--secondary btn--lg" id="hero-create-btn">Create an Event</a>
+          </div>
+        </div>
+      </section>
 
     <!-- ============ STATS SECTION ============ -->
     <section class="section" id="stats-section">
@@ -221,74 +224,22 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- JavaScript -->
-  <script src="../js/theme.js"></script>
-  <script src="../js/components/eventCard.js"></script>
-  <script src="../js/components/modal.js"></script>
-  <script src="../js/counter.js"></script>
-  <script src="../js/utils.js"></script>
-  <script>
-    /* RBAC: adapt landing nav + hero CTA for logged-in users */
+  <script type="module" src="../js/theme.js"></script>
+  <script type="module" src="../js/auth.js"></script>
+  <script type="module" src="../js/components/eventCard.js"></script>
+  <script type="module" src="../js/counter.js"></script>
+  <script type="module" src="../js/utils.js"></script>
+  <script type="module">
+    /* RBAC: adapt hero CTA for logged-in users */
     (function () {
-      var u = JSON.parse(localStorage.getItem('user') || 'null');
-      var btn = document.getElementById('hero-create-btn');
-
-      if (u) {
-        if (btn) {
-          if (u.role === 'attendee') {
-            btn.textContent = '🚀 Host an Event';
-            btn.href = 'dashboard.html';
-          } else {
-            btn.href = 'dashboard.html#create-event';
-          }
-        }
-
-        var loginBtn = document.getElementById('landing-login-btn');
-        var signupBtn = document.getElementById('landing-signup-btn');
-        if (loginBtn) loginBtn.remove();
-        if (signupBtn) signupBtn.remove();
-
-        var navRight = document.querySelector('.landing-nav__right');
-        if (navRight) {
-          var initials = (u.firstName?.[0] || '') + (u.lastName?.[0] || '');
-          var name = u.firstName || 'User';
-
-          var dashLink = document.createElement('a');
-          dashLink.href = 'dashboard.html';
-          dashLink.className = 'landing-nav__link';
-          dashLink.textContent = 'Dashboard';
-          navRight.insertBefore(dashLink, navRight.querySelector('#theme-toggle'));
-
-          var avatarLink = document.createElement('a');
-          avatarLink.href = 'dashboard.html';
-          avatarLink.className = 'landing-nav__avatar';
-          avatarLink.innerHTML = '<span class="avatar avatar--sm">' + initials + '</span> ' + name;
-          navRight.appendChild(avatarLink);
-
-          var logoutBtn = document.createElement('button');
-          logoutBtn.className = 'btn btn--ghost btn--sm';
-          logoutBtn.style.color = 'var(--color-error)';
-          logoutBtn.style.marginLeft = 'var(--space-2)';
-          logoutBtn.textContent = 'Logout';
-          logoutBtn.onclick = async function() {
-            try {
-              await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
-            } catch(e) {}
-            localStorage.removeItem('user');
-            localStorage.removeItem('accessToken');
-            window.location.reload();
-          };
-          navRight.appendChild(logoutBtn);
-        }
-
-        /* Footer CTA Logic: Adapt if already logged in */
-        var footerBtn = document.getElementById('footer-cta-btn');
-        var footerTitle = document.querySelector('#cta-section h2');
-        if (footerBtn) {
-          footerBtn.href = 'dashboard.html';
-          footerBtn.textContent = '🚀 Back to Dashboard';
-        }
-        if (footerTitle) {
-          footerTitle.textContent = 'Welcome back to the community';
+      const u = JSON.parse(localStorage.getItem('user') || 'null');
+      const btn = document.getElementById('hero-create-btn');
+      if (u && btn) {
+        if (u.role === 'attendee') {
+          btn.textContent = '🚀 Host an Event';
+          btn.href = 'dashboard.html';
+        } else {
+          btn.href = 'dashboard.html#create-event';
         }
       }
     })();

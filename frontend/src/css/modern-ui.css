@@ -1,0 +1,307 @@
+/* ============================================
+   StartupEvents — Modern UI Overlay
+   Architecture: Reversible Scoped Styling
+   ============================================ */
+
+.modern-ui {
+  --glass-bg: var(--executive-glass-bg);
+  --glass-border: var(--executive-glass-border);
+  --glass-blur: var(--executive-glass-blur);
+  
+  --neon-cyan: #00f2ff;
+  --neon-magenta: #ff0055;
+  --neon-lime: #39ff14;
+  --neon-glow: 0 0 20px rgba(0, 242, 255, 0.4);
+  
+  --accent-glow: hsla(252, 80%, 55%, 0.3);
+  --accent-glow-secondary: hsla(175, 80%, 48%, 0.2);
+}
+
+/* ---- Orbital Mesh Background Protocol ---- */
+@keyframes meshPulse {
+  0% { transform: translate(-10%, -10%) scale(1); }
+  50% { transform: translate(0%, 0%) scale(1.1); }
+  100% { transform: translate(-10%, -10%) scale(1); }
+}
+
+.modern-ui::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: 
+    radial-gradient(circle at 10% 10%, var(--executive-mesh-glow) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, var(--executive-mesh-glow) 0%, transparent 40%);
+  filter: blur(80px);
+  z-index: -1;
+  animation: meshPulse 15s infinite var(--motion-premium);
+  pointer-events: none;
+}
+
+/* ---- Global CRT Filter (Subtle Executive Variant) ---- */
+.modern-ui::after {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.15) 100%);
+  pointer-events: none;
+  z-index: 1000;
+  mix-blend-mode: overlay;
+}
+
+/* ---- Global Fade-In Protocol ---- */
+@keyframes executiveEntrance {
+  from { opacity: 0; transform: translateY(15px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modern-ui .animate-executive {
+  animation: executiveEntrance 0.8s var(--motion-premium) both;
+}
+
+/* ---- Executive Terminal Pulse ---- */
+@keyframes terminalPulse {
+  0% { border-color: var(--executive-glass-border); box-shadow: 0 0 0 transparent; }
+  50% { border-color: rgba(0, 242, 255, 0.4); box-shadow: 0 0 15px rgba(0, 242, 255, 0.1); }
+  100% { border-color: var(--executive-glass-border); box-shadow: 0 0 0 transparent; }
+}
+
+/* ---- Global Animations ---- */
+@keyframes modernFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modern-ui .animate-in {
+  animation: modernFadeInUp 0.6s var(--transition-spring) both;
+}
+
+/* ---- Dashboard Sidebar Overhaul ---- */
+.modern-ui .dashboard__sidebar {
+  background: var(--bg-glass-sidebar) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border-right: 1px solid var(--glass-border);
+  box-shadow: 10px 0 30px hsla(0, 0%, 0%, 0.2);
+}
+
+.modern-ui .dashboard__sidebar-link {
+  transition: all var(--transition-base);
+  border-radius: var(--radius-lg);
+  margin: 0 var(--space-2) var(--space-1);
+  padding: var(--space-3) var(--space-4);
+}
+
+.modern-ui .dashboard__sidebar-link--active {
+  background: hsla(252, 80%, 55%, 0.1) !important;
+  color: var(--color-primary-400) !important;
+  box-shadow: inset 2px 0 0 var(--color-primary-400);
+}
+
+.modern-ui .dashboard__sidebar-link:hover:not(.dashboard__sidebar-link--active) {
+  background: hsla(0, 0%, 100%, 0.03);
+  transform: translateX(4px);
+}
+
+/* ---- Modern Stats Cards ---- */
+.modern-ui [style*="grid-template-columns"] > div {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border) !important;
+  box-shadow: var(--shadow-xl);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-ui [style*="grid-template-columns"] > div::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modern-ui [style*="grid-template-columns"] > div:hover {
+  transform: translateY(-5px);
+  border-color: hsla(252, 80%, 55%, 0.3) !important;
+  box-shadow: 0 15px 35px -5px hsla(0, 0%, 0%, 0.4), var(--shadow-glow);
+}
+
+.modern-ui [style*="grid-template-columns"] > div:hover::before {
+  opacity: 1;
+}
+
+/* ---- Premium Tables (Admin Directory) ---- */
+.modern-ui .table-container {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border) !important;
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-xl);
+  overflow: hidden;
+}
+
+.modern-ui table thead tr {
+  background: hsla(0, 0%, 100%, 0.02) !important;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.modern-ui table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.modern-ui table tbody tr:hover {
+  background: hsla(0, 0%, 100%, 0.02) !important;
+}
+
+/* ---- Improved Status Badges ---- */
+.modern-ui .badge {
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+}
+
+.modern-ui .badge--success {
+  border-color: hsla(152, 70%, 45%, 0.2);
+  background: hsla(152, 70%, 45%, 0.1);
+}
+
+/* ---- Hero Refinement (index.html) ---- */
+.modern-ui .hero--landing {
+  background: var(--gradient-hero) !important;
+}
+
+.modern-ui .landing-nav {
+  background: hsla(220, 25%, 6%, 0.5) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border);
+  margin-top: var(--space-4);
+  margin-inline: var(--space-8);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-3) var(--space-8);
+  width: auto;
+}
+
+/* ---- Verification Banners ---- */
+.modern-ui .card {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  background: hsla(220, 20%, 14%, 0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid hsla(0, 0%, 100%, 0.1) !important;
+  box-shadow: 0 15px 35px -5px hsla(0, 0%, 0%, 0.4);
+  transition: transform 0.3s var(--transition-spring), box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+.modern-ui .card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: hsla(252, 80%, 55%, 0.4) !important;
+  box-shadow: 0 25px 50px -12px hsla(0, 0%, 0%, 0.6), var(--shadow-glow);
+}
+
+.modern-ui .card__image {
+  height: 140px !important;
+  min-height: 140px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 4rem !important;
+  background: linear-gradient(135deg, hsla(252, 50%, 50%, 0.1), hsla(175, 50%, 50%, 0.05)) !important;
+  border-bottom: 1px solid hsla(0, 0%, 100%, 0.05) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-ui .card__image::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100px;
+  height: 100px;
+  background: var(--brand-primary);
+  filter: blur(60px);
+  opacity: 0.15;
+  pointer-events: none;
+}
+
+
+.modern-ui .card__body {
+  flex: 1 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.modern-ui .card__footer {
+  margin-top: auto;
+  height: 70px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  padding: 0 var(--space-6) !important;
+  border-top: 1px solid var(--glass-border);
+  background: hsla(0, 0%, 100%, 0.02);
+}
+
+/* ---- Aggressive Admin HUD ---- */
+.modern-ui .admin-hud {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 2px solid var(--neon-cyan);
+  box-shadow: var(--neon-glow);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-ui .admin-hud::before {
+  content: 'MODERATOR OVERRIDE';
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--neon-cyan);
+  color: #000;
+  font-size: 8px;
+  font-weight: 900;
+  padding: 2px 8px;
+  letter-spacing: 0.1em;
+}
+
+/* ---- Neon Moderation Alerts ---- */
+.modern-ui .moderation-alert {
+  background: hsla(355, 100%, 50%, 0.1);
+  border: 1px solid var(--neon-magenta);
+  box-shadow: 0 0 15px hsla(355, 100%, 50%, 0.2);
+  color: var(--neon-magenta);
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-6);
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.modern-ui .moderation-alert strong {
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+

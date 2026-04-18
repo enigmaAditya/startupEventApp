@@ -6,8 +6,6 @@
 
 import type {
   ApiResponse,
-  PaginatedResponse,
-  HttpMethod,
   RequestConfig,
   IEvent,
   IEventFilters,
@@ -21,7 +19,7 @@ import type {
   IRSVP,
 } from '../types';
 
-const BASE_URL = 'http://localhost:4000/api/v1';
+const BASE_URL = (import.meta as any).env?.VITE_API_URL || '/api/v1';
 
 /**
  * Custom HTTP Error with typed data

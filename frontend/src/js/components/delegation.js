@@ -85,9 +85,27 @@
     const card = button.closest('.card');
     const eventId = card?.dataset.eventId;
 
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    const isAdmin = user && user.role === 'admin';
+
     // Check button type based on text or class
-    if (button.textContent.includes('View Details')) {
-      // Navigate to event detail
+    if (button.textContent.includes('View Details') || button.textContent.includes('MODERATE')) {
+      // For Admin, hijack the click to open the modal
+      if (isAdmin && typeof window.__eventDetailModal === 'function' && card) {
+        const eventData = {
+          _id: eventId,
+          title: card.querySelector('.card__title')?.textContent || '',
+          description: card.querySelector('.card__description')?.textContent || '',
+          category: card.dataset.category,
+          date: card.dataset.date,
+          location: { city: card.dataset.city },
+          organizer: card.dataset.organizerId,
+        };
+        window.__eventDetailModal(eventData);
+        return;
+      }
+      
+      // For Attendee, navigate to event detail
       if (eventId) {
         window.location.href = `event-detail.html?id=${eventId}`;
       }
