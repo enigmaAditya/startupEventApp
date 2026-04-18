@@ -7,6 +7,9 @@
 (function () {
   'use strict';
 
+  // Global API Base URL (Environment Aware)
+  window.API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+
   // ============ MOBILE NAV TOGGLE ============
   const setupNavToggle = () => {
     const toggle = document.getElementById('nav-toggle');

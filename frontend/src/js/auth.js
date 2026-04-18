@@ -47,7 +47,7 @@
     // Expose global logout function
     window.__logout = async () => {
       try {
-        await fetch('/api/v1/auth/logout', { method: 'POST', credentials: 'include' });
+        await fetch(window.API_BASE_URL + '/auth/logout', { method: 'POST', credentials: 'include' });
       } catch { /* ignore */ }
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');

@@ -478,7 +478,7 @@
 
       /* ---------- Mandatory State Sync (The "Truth" Check) ---------- */
       try {
-        var profileRes = await fetch('/api/v1/users/me', { headers: authHeaders, credentials: 'include' });
+        var profileRes = await fetch(window.API_BASE_URL + '/users/me', { headers: authHeaders, credentials: 'include' });
         var profileData = await profileRes.json();
         if (profileRes.ok && profileData.success) {
           user = profileData.data; // Sync with newest server data
@@ -558,7 +558,7 @@
         document.getElementById('dashboard-revoke-btn')?.addEventListener('click', async () => {
           if (!confirm('Cancel your application? You will return to attendee status.')) return;
           try {
-            const res = await fetch('/api/v1/users/revoke-application', { method: 'POST', headers: authHeaders, credentials: 'include' });
+            const res = await fetch(window.API_BASE_URL + '/users/revoke-application', { method: 'POST', headers: authHeaders, credentials: 'include' });
             if (res.ok) {
               const updated = Object.assign({}, user, { role: 'attendee', organizerStatus: 'none' });
               localStorage.setItem('user', JSON.stringify(updated));
@@ -587,9 +587,9 @@
         // Unified data fetching Strategy
         // Call analytics API to get the source of truth for stats
         const [profileData, analyticsData, globalEventsData] = await Promise.all([
-          authFetch('/api/v1/users/me'),
-          authFetch('/api/v1/analytics/organizer'),
-          fetch('/api/v1/events?limit=1').then(r => r.json()) // Only for platform total
+          authFetch(window.API_BASE_URL + '/users/me'),
+          authFetch(window.API_BASE_URL + '/analytics/organizer'),
+          fetch(window.API_BASE_URL + '/events?limit=1').then(r => r.json()) // Only for platform total
         ]);
 
         if (analyticsData.success) {
@@ -619,7 +619,7 @@
 
         // Fetch My Events / Platform Oversight separately for the list
         const listFilter = user.role === 'admin' ? '' : `?organizer=${user._id || user.id}`;
-        activeEventsData = await fetch(`/api/v1/events${listFilter}`, { headers: authHeaders, credentials: 'include' }).then(r => r.json());
+        activeEventsData = await fetch(window.API_BASE_URL + `/events${listFilter}`, { headers: authHeaders, credentials: 'include' }).then(r => r.json());
 
       } catch (e) {
         console.error('Dashboard load error:', e);
@@ -663,7 +663,7 @@
 
       document.getElementById('settings-save-btn').addEventListener('click', async function () {
         try {
-          var res = await fetch('/api/v1/users/me', {
+          var res = await fetch(window.API_BASE_URL + '/users/me', {
             method: 'PUT',
             headers: authHeaders,
             credentials: 'include',
@@ -707,7 +707,7 @@
 
         try {
           const query = new URLSearchParams({ search, role }).toString();
-          const res = await fetch(`/api/v1/users?${query}`, { headers: authHeaders, credentials: 'include' });
+          const res = await fetch(window.API_BASE_URL + `/users?${query}`, { headers: authHeaders, credentials: 'include' });
           const data = await res.json();
 
           if (res.ok && data.success) {
@@ -800,7 +800,7 @@
 
       window.__verifyUser = async function (id, status) {
         try {
-          const res = await fetch(`/api/v1/users/${id}/verify`, {
+          const res = await fetch(window.API_BASE_URL + `/users/${id}/verify`, {
             method: 'PATCH',
             headers: authHeaders,
             credentials: 'include',
@@ -815,7 +815,7 @@
 
       window.__toggleUserStatus = async function (id) {
         try {
-          const res = await fetch(`/api/v1/users/${id}/status`, { method: 'PATCH', headers: authHeaders, credentials: 'include' });
+          const res = await fetch(window.API_BASE_URL + `/users/${id}/status`, { method: 'PATCH', headers: authHeaders, credentials: 'include' });
           if (res.ok) {
             if (window.showToast) window.showToast({ type: 'success', title: 'Updated', message: 'User status changed' });
             fetchUsers();
@@ -825,7 +825,7 @@
 
       window.__changeUserRole = async function (id, role) {
         try {
-          const res = await fetch(`/api/v1/users/${id}/role`, {
+          const res = await fetch(window.API_BASE_URL + `/users/${id}/role`, {
             method: 'PATCH',
             headers: authHeaders,
             credentials: 'include',
@@ -858,7 +858,7 @@
         if (content) content.style.display = 'none';
 
         try {
-          var res = await fetch('/api/v1/analytics/organizer', {
+          var res = await fetch(window.API_BASE_URL + '/analytics/organizer', {
             headers: authHeaders,
             credentials: 'include'
           });
@@ -967,7 +967,7 @@
               isVirtual: document.getElementById('event-virtual').value !== 'false',
               tags: tags,
             };
-            var res = await fetch('/api/v1/events', {
+            var res = await fetch(window.API_BASE_URL + '/events', {
               method: 'POST',
               headers: authHeaders,
               credentials: 'include',

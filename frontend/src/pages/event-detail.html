@@ -284,7 +284,7 @@
         social: { label: 'SOCIAL', emoji: '🎉' }
       };
 
-      fetch('/api/v1/events/' + eventId)
+      fetch(window.API_BASE_URL + '/events/' + eventId)
         .then(r => r.json())
         .then(data => {
           if (!data.success) throw new Error('Data load failure');
@@ -368,7 +368,7 @@
           btn.disabled = true;
           btn.textContent = 'Processing...';
           try {
-            const r = await fetch(`/api/v1/events/${evt._id}/rsvp`, {
+            const r = await fetch(window.API_BASE_URL + `/events/${evt._id}/rsvp`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
               body: JSON.stringify({ role: document.getElementById('rsvp-role').value, teamSize: document.getElementById('rsvp-team').value })
@@ -386,7 +386,7 @@
           setTimeout(() => initChat(evt), 1000);
           return;
         }
-        const socketUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_BACKEND_URL) || '';
+        const socketUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_BACKEND_URL) || window.API_BASE_URL.replace('/api/v1', '');
         const socket = io(socketUrl);
         const user = JSON.parse(localStorage.getItem('user') || 'null');
         const userId = user?.id || user?._id;
@@ -440,7 +440,7 @@
 
       function initReviews(evt) {
         const list = document.getElementById('reviews-list');
-        fetch(`/api/v1/events/${evt._id}/reviews`)
+        fetch(window.API_BASE_URL + `/events/${evt._id}/reviews`)
           .then(r => r.json())
           .then(d => {
             if (d.success && d.data.length > 0) {
@@ -473,7 +473,7 @@
           e.preventDefault();
           const token = localStorage.getItem('accessToken');
           if (!ratVal.value) { alert('Select stars'); return; }
-          const res = await fetch(`/api/v1/events/${evt._id}/reviews`, {
+          const res = await fetch(window.API_BASE_URL + `/events/${evt._id}/reviews`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({ rating: parseInt(ratVal.value), comment: document.getElementById('review-comment').value })

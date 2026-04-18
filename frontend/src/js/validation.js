@@ -181,7 +181,7 @@
         }
 
         try {
-          const res = await fetch('/api/v1/auth/login', {
+          const res = await fetch(window.API_BASE_URL + '/auth/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -319,7 +319,7 @@
         const roleSelect = document.getElementById('register-role');
 
         try {
-          const res = await fetch('/api/v1/auth/register', {
+          const res = await fetch(window.API_BASE_URL + '/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

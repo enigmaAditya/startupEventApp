@@ -415,7 +415,7 @@
         }, 8000);
 
         try {
-          var eventRes = await fetch('/api/v1/events/' + eventId);
+          var res = await fetch(window.API_BASE_URL + '/events/' + eventId);
           clearTimeout(timeout);
           var json = await eventRes.json();
           if (!json.success) throw new Error("Event not found");
@@ -538,7 +538,7 @@
             isVirtual: document.getElementById('event-virtual').value !== 'false',
           };
 
-          var res = await fetch('/api/v1/events/' + eventId, {
+          var res = await fetch(window.API_BASE_URL + '/events/' + eventId, {
             method: 'PUT',
             headers: authHeaders,
             credentials: 'include',
@@ -585,7 +585,7 @@
       document.getElementById('toggle-rsvp-btn').addEventListener('click', async function () {
         var isClosing = !currentEventData.isFullyBooked;
         try {
-          var res = await fetch('/api/v1/events/' + eventId, {
+          var res = await fetch(window.API_BASE_URL + '/events/' + eventId, {
             method: 'PUT',
             headers: authHeaders,
             credentials: 'include',
@@ -643,7 +643,7 @@
           this.disabled = true;
           this.textContent = 'COMMITTING...';
           try {
-            var res = await fetch('/api/v1/events/' + eventId, {
+            var res = await fetch(window.API_BASE_URL + '/events/' + eventId, {
               method: 'PUT',
               headers: authHeaders,
               body: JSON.stringify({

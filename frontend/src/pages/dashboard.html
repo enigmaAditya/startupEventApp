@@ -252,7 +252,7 @@
 
       /* ---------- Mandatory State Sync (The "Truth" Check) ---------- */
       try {
-        var profileRes = await fetch('/api/v1/users/me', { headers: authHeaders, credentials: 'include' });
+        var profileRes = await fetch(window.API_BASE_URL + '/users/me', { headers: authHeaders, credentials: 'include' });
         var profileData = await profileRes.json();
         if (profileRes.ok && profileData.success) {
           user = profileData.data; // Sync with newest server data
@@ -341,7 +341,7 @@
 
       document.getElementById('warning-modal-confirm')?.addEventListener('click', async () => {
         try {
-          const res = await fetch('/api/v1/users/request-organizer', { method: 'POST', headers: authHeaders, credentials: 'include' });
+          const res = await fetch(window.API_BASE_URL + '/users/request-organizer', { method: 'POST', headers: authHeaders, credentials: 'include' });
           const data = await res.json();
           if (res.ok) {
             document.getElementById('organizer-warning-overlay').classList.remove('modal-overlay--active');
@@ -357,7 +357,7 @@
       async function revokeApplication() {
         if (!confirm('Are you sure you want to cancel your application?')) return;
         try {
-          const res = await fetch('/api/v1/users/revoke-application', { method: 'POST', headers: authHeaders, credentials: 'include' });
+          const res = await fetch(window.API_BASE_URL + '/users/revoke-application', { method: 'POST', headers: authHeaders, credentials: 'include' });
           if (res.ok) {
             user.organizerStatus = 'none';
             localStorage.setItem('user', JSON.stringify(user));
@@ -374,7 +374,7 @@
 
       /* ---------- Load Overview stats + upcoming events ---------- */
       try {
-        var eventsData  = await fetch('/api/v1/events?limit=50').then(function (r) { return r.json(); });
+        var eventsData  = await fetch(window.API_BASE_URL + '/events?limit=50').then(function (r) { return r.json(); });
 
         if (profileData.success) {
           var p = profileData.data;
@@ -466,7 +466,7 @@
 
       document.getElementById('settings-save-btn').addEventListener('click', async function () {
         try {
-          var res = await fetch('/api/v1/users/me', {
+          var res = await fetch(window.API_BASE_URL + '/users/me', {
             method: 'PUT',
             headers: authHeaders,
             credentials: 'include',
@@ -496,7 +496,7 @@
         if (!container || !section) return;
 
         try {
-          var data = await authFetch('/api/v1/recommendations');
+          var data = await authFetch(window.API_BASE_URL + '/recommendations');
           if (data.success && data.data.length > 0) {
             section.style.display = 'block';
             container.innerHTML = '';

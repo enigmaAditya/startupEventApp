@@ -80,7 +80,7 @@
   <script type="module">
     (async function() {
       try {
-        const res = await fetch('/api/v1/events?limit=12');
+        const res = await fetch(window.API_BASE_URL + '/events?limit=12');
         const data = await res.json();
         if (data.success && data.data.length > 0) {
           window.__renderEventGrid(data.data, 'events-grid', false);
