@@ -36,13 +36,26 @@ const app = express();
 app.use(helmet());
 
 // 2. CORS configuration
-// Demonstrates: CORS middleware, options object
-const allowedOrigins = config.corsOrigin ? config.corsOrigin.split(',').map(o => o.trim()) : [];
+const allowedOrigins = config.corsOrigin 
+  ? config.corsOrigin.split(',').map(o => o.trim()) 
+  : ['http://localhost:3000', 'https://startup-event-app.vercel.app'];
+
 app.use(cors({
-  origin: allowedOrigins.length > 0 ? allowedOrigins : 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    
+    const isAllowed = allowedOrigins.some(ao => origin.startsWith(ao)) || origin.includes('vercel.app');
+    
+    if (isAllowed || config.nodeEnv === 'development') {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
 }));
 
 // 3. Rate limiting

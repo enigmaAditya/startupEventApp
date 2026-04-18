@@ -27,17 +27,17 @@
 
   <header>
     <nav class="navbar">
-      <a href="index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <a href="/index.html" class="navbar__brand">🚀 StartupEvents</a>
       <ul class="navbar__links">
-        <li><a href="index.html" class="navbar__link">Home</a></li>
-        <li><a href="events.html" class="navbar__link navbar__link--active">Events</a></li>
-        <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="/index.html" class="navbar__link">Home</a></li>
+        <li><a href="/pages/events.html" class="navbar__link navbar__link--active">Events</a></li>
+        <li><a href="/pages/dashboard.html" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
         <!-- Dynamically populated by auth.js -->
-        <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
-        <a href="login.html" class="btn btn--secondary btn--sm">Log In</a>
-        <a href="register.html" class="btn btn--primary btn--sm">Sign Up</a>
+        <div id="nav-auth-loading" class="skeleton skeleton--btn" style="width: 100px; height: 36px;"></div>
+        <a href="/pages/login.html" class="btn btn--secondary btn--sm">Log In</a>
+        <a href="/pages/register.html" class="btn btn--primary btn--sm">Sign Up</a>
       </div>
     </nav>
   </header>
