@@ -51,7 +51,7 @@
       } catch { /* ignore */ }
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
-      window.location.href = 'index.html';
+      window.location.href = '/index.html';
     };
 
     logoutBtn.addEventListener('click', window.__logout);

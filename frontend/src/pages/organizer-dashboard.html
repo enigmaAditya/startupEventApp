@@ -51,12 +51,13 @@
         <div class="dropdown" id="user-dropdown">
           <button class="btn btn--ghost" style="display: flex; align-items: center; gap: var(--space-2);"
             id="user-dropdown-toggle">
-            <div class="avatar avatar--sm">JD</div>
-            <span style="font-size: var(--text-sm);">John Doe</span>
+            <div class="avatar avatar--sm" id="nav-user-avatar">JD</div>
+            <span style="font-size: var(--text-sm);" id="nav-user-name">John Doe</span>
           </button>
           <div class="dropdown__menu" id="user-dropdown-menu">
             <button class="dropdown__item">👤 Profile</button>
-            <button class="dropdown__item" style="color: var(--color-error);">🚪 Logout</button>
+            <button class="dropdown__item" style="color: var(--color-error);" 
+              onclick="event.preventDefault(); window.__logout();">🚪 Logout</button>
           </div>
         </div>
       </div>
@@ -568,6 +569,13 @@
         });
       }
 
+      // Sync top navbar
+      const navAvatar = document.getElementById('nav-user-avatar');
+      const navName = document.getElementById('nav-user-name');
+      if (navAvatar) navAvatar.textContent = initials;
+      if (navName) navName.textContent = fullName;
+
+      // Sync sidebar
       var sidebar = document.querySelector('.dashboard__sidebar');
       var sideAvatar = sidebar.querySelector('.avatar');
       if (sideAvatar) sideAvatar.textContent = initials;
