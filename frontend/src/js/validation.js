@@ -199,8 +199,8 @@
               window.showToast({ type: 'success', title: 'Welcome back!', message: `Logged in as ${data.data.user.firstName}` });
             }
             const dashboardUrl = (data.data.user.role === 'organizer' || data.data.user.role === 'admin') 
-              ? '/organizer-dashboard.html' 
-              : '/dashboard.html';
+              ? '/organizer-dashboard' 
+              : '/dashboard';
             setTimeout(() => { window.location.href = dashboardUrl; }, 800);
           } else {
             const msg = data.error?.message || data.errors?.[0]?.msg || 'Invalid email or password';
@@ -340,8 +340,8 @@
               window.showToast({ type: 'success', title: 'Account created!', message: `Welcome, ${data.data.user.firstName}!` });
             }
             const dashboardUrl = (data.data.user.role === 'organizer' || data.data.user.role === 'admin') 
-              ? '/organizer-dashboard.html' 
-              : '/dashboard.html';
+              ? '/organizer-dashboard' 
+              : '/dashboard';
             setTimeout(() => { window.location.href = dashboardUrl; }, 800);
           } else {
             const msg = data.error?.message || data.errors?.[0]?.msg || 'Registration failed';

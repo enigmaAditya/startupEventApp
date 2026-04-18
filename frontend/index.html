@@ -12,12 +12,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="./css/variables.css">
-  <link rel="stylesheet" href="./css/reset.css">
-  <link rel="stylesheet" href="./css/layout.css">
-  <link rel="stylesheet" href="./css/components.css">
-  <link rel="stylesheet" href="./css/responsive.css">
-  <link rel="stylesheet" href="./css/modern-ui.css?v=3.0">
+  <link rel="stylesheet" href="./src/css/variables.css">
+  <link rel="stylesheet" href="./src/css/reset.css">
+  <link rel="stylesheet" href="./src/css/layout.css">
+  <link rel="stylesheet" href="./src/css/components.css">
+  <link rel="stylesheet" href="./src/css/responsive.css">
+  <link rel="stylesheet" href="./src/css/modern-ui.css?v=3.0">
   
   <style>
     /* Standard Professional (V8) Enhancements */
@@ -32,15 +32,15 @@
   <!-- ============ NAVBAR ============ -->
   <header>
     <nav class="navbar" id="navbar">
-      <a href="/index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <a href="/" class="navbar__brand">🚀 StartupEvents</a>
       <ul class="navbar__links" id="nav-links">
-        <li><a href="/index.html" class="navbar__link navbar__link--active">Home</a></li>
-        <li><a href="/events.html" class="navbar__link">Events</a></li>
-        <li><a href="/dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="/" class="navbar__link navbar__link--active">Home</a></li>
+        <li><a href="/events" class="navbar__link">Events</a></li>
+        <li><a href="/dashboard" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
-        <a href="/login.html" class="btn btn--secondary btn--sm" id="landing-login-btn">Log In</a>
-        <a href="/register.html" class="btn btn--primary btn--sm" id="landing-signup-btn">Sign Up</a>
+        <a href="/login" class="btn btn--secondary btn--sm" id="landing-login-btn">Log In</a>
+        <a href="/register" class="btn btn--primary btn--sm" id="landing-signup-btn">Sign Up</a>
       </div>
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
         <span class="navbar__toggle-bar"></span>
@@ -224,11 +224,11 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- JavaScript -->
-  <script src="./js/utils.js"></script>
-  <script type="module" src="./js/theme.js"></script>
-  <script type="module" src="./js/auth.js"></script>
-  <script type="module" src="./js/components/eventCard.js"></script>
-  <script type="module" src="./js/counter.js"></script>
+  <script src="./src/js/utils.js"></script>
+  <script type="module" src="./src/js/theme.js"></script>
+  <script type="module" src="./src/js/auth.js"></script>
+  <script type="module" src="./src/js/components/eventCard.js"></script>
+  <script type="module" src="./src/js/counter.js"></script>
   <script type="module">
     /* RBAC: adapt hero CTA for logged-in users */
     (function () {

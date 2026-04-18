@@ -13,11 +13,11 @@
     href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/variables.css">
-  <link rel="stylesheet" href="./css/reset.css">
-  <link rel="stylesheet" href="./css/layout.css">
-  <link rel="stylesheet" href="./css/components.css">
-  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./src/css/variables.css">
+  <link rel="stylesheet" href="./src/css/reset.css">
+  <link rel="stylesheet" href="./src/css/layout.css">
+  <link rel="stylesheet" href="./src/css/components.css">
+  <link rel="stylesheet" href="./src/css/responsive.css">
 
   <style id="atomic-neon-noir">
     /* ATOMIC NEON-NOIR OVERRIDE — HARDENED */
@@ -109,14 +109,14 @@
   <!-- ============ NAVBAR ============ -->
   <header>
     <nav class="navbar" id="navbar">
-      <a href="/index.html" class="navbar__brand">
+      <a href="/" class="navbar__brand">
         <span class="navbar__brand-icon">🚀</span>
         StartupEvents
       </a>
       <ul class="navbar__links" id="nav-links">
-        <li><a href="/index.html" class="navbar__link">Home</a></li>
-        <li><a href="/events.html" class="navbar__link">Events</a></li>
-        <li><a href="/dashboard.html" class="navbar__link navbar__link--active">Dashboard</a></li>
+        <li><a href="/" class="navbar__link">Home</a></li>
+        <li><a href="/events" class="navbar__link">Events</a></li>
+        <li><a href="/dashboard" class="navbar__link navbar__link--active">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
@@ -137,7 +137,7 @@
     <!-- Sidebar -->
     <aside class="dashboard__sidebar">
       <div style="margin-bottom: var(--space-8);">
-        <a href="/organizer-dashboard.html" class="btn btn--ghost btn--sm" style="margin-bottom: var(--space-4);">← Back
+        <a href="/organizer-dashboard" class="btn btn--ghost btn--sm" style="margin-bottom: var(--space-4);">← Back
           to Dashboard</a>
         <div style="font-weight: var(--font-semibold); font-size: var(--text-lg);" id="sidebar-event-title">Loading
           Event...</div>
@@ -365,9 +365,9 @@
 
   <div class="toast-container" id="toast-container"></div>
 
-  <script src="./js/utils.js"></script>
-  <script src="./js/theme.js"></script>
-  <script src="./js/auth.js"></script>
+  <script src="./src/js/utils.js"></script>
+  <script src="./src/js/theme.js"></script>
+  <script src="./src/js/auth.js"></script>
   <script>
     (async function () {
       'use strict';

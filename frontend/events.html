@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="./css/variables.css">
-  <link rel="stylesheet" href="./css/reset.css">
-  <link rel="stylesheet" href="./css/layout.css">
-  <link rel="stylesheet" href="./css/components.css">
-  <link rel="stylesheet" href="./css/responsive.css">
-  <link rel="stylesheet" href="./css/modern-ui.css?v=8.0">
+  <link rel="stylesheet" href="./src/css/variables.css">
+  <link rel="stylesheet" href="./src/css/reset.css">
+  <link rel="stylesheet" href="./src/css/layout.css">
+  <link rel="stylesheet" href="./src/css/components.css">
+  <link rel="stylesheet" href="./src/css/responsive.css">
+  <link rel="stylesheet" href="./src/css/modern-ui.css?v=8.0">
   
   <style>
     .page-header { padding: var(--space-12) 0; text-align: center; }
@@ -27,17 +27,17 @@
 
   <header>
     <nav class="navbar">
-      <a href="/index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <a href="/" class="navbar__brand">🚀 StartupEvents</a>
       <ul class="navbar__links">
-        <li><a href="/index.html" class="navbar__link">Home</a></li>
-        <li><a href="/events.html" class="navbar__link navbar__link--active">Events</a></li>
-        <li><a href="/dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="/" class="navbar__link">Home</a></li>
+        <li><a href="/events" class="navbar__link navbar__link--active">Events</a></li>
+        <li><a href="/dashboard" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
         <!-- Dynamically populated by auth.js -->
         <div id="nav-auth-loading" class="skeleton skeleton--btn" style="width: 100px; height: 36px;"></div>
-        <a href="/login.html" class="btn btn--secondary btn--sm">Log In</a>
-        <a href="/register.html" class="btn btn--primary btn--sm">Sign Up</a>
+        <a href="/login" class="btn btn--secondary btn--sm">Log In</a>
+        <a href="/register" class="btn btn--primary btn--sm">Sign Up</a>
       </div>
     </nav>
   </header>
@@ -72,11 +72,11 @@
   </main>
 
   <!-- Scripts -->
-  <script src="./js/utils.js"></script>
-  <script type="module" src="./js/theme.js"></script>
-  <script type="module" src="./js/auth.js"></script>
-  <script type="module" src="./js/services/eventBus.js"></script>
-  <script type="module" src="./js/components/eventCard.js"></script>
+  <script src="./src/js/utils.js"></script>
+  <script type="module" src="./src/js/theme.js"></script>
+  <script type="module" src="./src/js/auth.js"></script>
+  <script type="module" src="./src/js/services/eventBus.js"></script>
+  <script type="module" src="./src/js/components/eventCard.js"></script>
   <script type="module">
     (async function() {
       try {

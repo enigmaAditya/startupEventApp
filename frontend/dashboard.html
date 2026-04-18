@@ -10,12 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="./css/variables.css">
-  <link rel="stylesheet" href="./css/reset.css">
-  <link rel="stylesheet" href="./css/layout.css">
-  <link rel="stylesheet" href="./css/components.css">
-  <link rel="stylesheet" href="./css/responsive.css">
-  <link rel="stylesheet" href="./css/modern-ui.css?v=3.0">
+  <link rel="stylesheet" href="./src/css/variables.css">
+  <link rel="stylesheet" href="./src/css/reset.css">
+  <link rel="stylesheet" href="./src/css/layout.css">
+  <link rel="stylesheet" href="./src/css/components.css">
+  <link rel="stylesheet" href="./src/css/responsive.css">
+  <link rel="stylesheet" href="./src/css/modern-ui.css?v=3.0">
   
   <style>
     /* Standard Professional (V8) Dashboard Baseline */
@@ -27,14 +27,14 @@
   <!-- ============ NAVBAR ============ -->
   <header>
     <nav class="navbar" id="navbar">
-      <a href="/index.html" class="navbar__brand">
+      <a href="/" class="navbar__brand">
         <span class="navbar__brand-icon">🚀</span>
         StartupEvents
       </a>
       <ul class="navbar__links" id="nav-links">
-        <li><a href="/index.html" class="navbar__link">Home</a></li>
-        <li><a href="/events.html" class="navbar__link">Events</a></li>
-        <li><a href="/dashboard.html" class="navbar__link navbar__link--active">Dashboard</a></li>
+        <li><a href="/" class="navbar__link">Home</a></li>
+        <li><a href="/events" class="navbar__link">Events</a></li>
+        <li><a href="/dashboard" class="navbar__link navbar__link--active">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
@@ -180,7 +180,7 @@
         <div style="text-align: center; padding: var(--space-10); color: var(--text-tertiary);">
           <div style="font-size: 3rem; margin-bottom: var(--space-4);">🎟️</div>
           <p>Your RSVPs will appear here after you register for events.</p>
-          <a href="/events.html" class="btn btn--primary" style="margin-top: var(--space-4);">Browse Events</a>
+          <a href="/events" class="btn btn--primary" style="margin-top: var(--space-4);">Browse Events</a>
         </div>
       </section>
 
@@ -229,11 +229,11 @@
 
   <div class="toast-container" id="toast-container"></div>
 
-  <script src="./js/utils.js"></script>
-  <script type="module" src="./js/theme.js"></script>
-  <script type="module" src="./js/auth.js"></script>
-  <script type="module" src="./js/services/eventBus.js"></script>
-  <script type="module" src="./js/validation.js"></script>
+  <script src="./src/js/utils.js"></script>
+  <script type="module" src="./src/js/theme.js"></script>
+  <script type="module" src="./src/js/auth.js"></script>
+  <script type="module" src="./src/js/services/eventBus.js"></script>
+  <script type="module" src="./src/js/validation.js"></script>
   <script type="module">
     /* ============================================
        Dashboard — Dynamic Data Loading
@@ -422,7 +422,7 @@
                 '<div style="flex:1;"><div style="font-weight:var(--font-semibold);">' + evt.title + '</div>' +
                 '<div style="font-size:var(--text-sm);color:var(--text-secondary);">' + dateStr + ' · ' + (evt.location?.city || 'Online') + '</div></div>' +
                 '<span class="badge badge--success">' + (evt.attendeeCount || 0) + ' RSVPs</span>' +
-                '<a href="event-detail.html?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
+                '<a href="/event-detail?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
               upcomingContainer.appendChild(row);
             });
           }
@@ -451,7 +451,7 @@
               '<div style="flex:1;"><div style="font-weight:var(--font-semibold);">' + evt.title + '</div>' +
               '<div style="font-size:var(--text-sm);color:var(--text-secondary);">' + dateStr + '</div></div>' +
               '<span class="badge badge--success">Confirmed</span>' +
-              '<a href="event-detail.html?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
+              '<a href="/event-detail?id=' + evt._id + '" class="btn btn--ghost btn--sm">View →</a>';
             listDiv.appendChild(row);
           });
         }
@@ -521,7 +521,7 @@
                   <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--space-6);">
                     ${(evt.tags || []).slice(0, 3).map(t => `<span style="font-size:0.65rem; color:var(--text-tertiary);">#${t}</span>`).join('')}
                   </div>
-                  <a href="event-detail.html?id=${evt._id}" class="btn btn--secondary btn--sm btn--full">View Details</a>
+                  <a href="/event-detail?id=${evt._id}" class="btn btn--secondary btn--sm btn--full">View Details</a>
                 </div>
               `;
               container.appendChild(card);
