@@ -1,35 +1,55 @@
 {
   "version": 2,
-  "rewrites": [
-    {
-      "source": "/(index.html)?",
-      "destination": "/pages/index.html"
-    },
-    {
-      "source": "/events",
-      "destination": "/pages/events.html"
-    },
-    {
-      "source": "/event-detail",
-      "destination": "/pages/event-detail.html"
-    },
-    {
-      "source": "/login",
-      "destination": "/pages/login.html"
-    },
-    {
-      "source": "/register",
-      "destination": "/pages/register.html"
-    },
-    {
-      "source": "/dashboard",
-      "destination": "/pages/dashboard.html"
-    },
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    }
-  ],
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
+    },
+    {
+      "src": "/css/(.*)",
+      "dest": "/css/$1"
+    },
+    {
+      "src": "/js/(.*)",
+      "dest": "/js/$1"
+    },
+    {
+      "src": "/pages/(.*)",
+      "dest": "/pages/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/pages/index.html"
+    },
+    {
+      "src": "/events",
+      "dest": "/pages/events.html"
+    },
+    {
+      "src": "/event-detail",
+      "dest": "/pages/event-detail.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/pages/login.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/pages/register.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/pages/dashboard.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/pages/$1.html"
+    }
+  ]
 }
