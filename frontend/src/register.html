@@ -10,11 +10,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="/css/variables.css">
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/responsive.css">
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/responsive.css">
 </head>
 <body>
 
@@ -27,8 +27,8 @@
       </a>
       <ul class="navbar__links" id="nav-links">
         <li><a href="/index.html" class="navbar__link">Home</a></li>
-        <li><a href="/pages/events.html" class="navbar__link">Events</a></li>
-        <li><a href="/pages/dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="/events.html" class="navbar__link">Events</a></li>
+        <li><a href="/dashboard.html" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
@@ -171,7 +171,7 @@
         <!-- Login link -->
         <p style="text-align: center; font-size: var(--text-sm); color: var(--text-secondary);">
           Already have an account?
-          <a href="login.html" style="font-weight: var(--font-semibold);">Log in</a>
+          <a href="/login.html" style="font-weight: var(--font-semibold);">Log in</a>
         </p>
       </div>
     </div>
@@ -179,9 +179,9 @@
 
   <div class="toast-container" id="toast-container"></div>
 
-  <script type="module" src="/js/theme.js"></script>
-  <script type="module" src="/js/auth.js"></script>
-  <script type="module" src="/js/validation.js"></script>
-  <script type="module" src="/js/utils.js"></script>
+  <script src="./js/utils.js"></script>
+  <script type="module" src="./js/theme.js"></script>
+  <script type="module" src="./js/auth.js"></script>
+  <script type="module" src="./js/validation.js"></script>
 </body>
 </html>

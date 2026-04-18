@@ -10,12 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="/css/variables.css">
-  <link rel="stylesheet" href="/css/reset.css">
-  <link rel="stylesheet" href="/css/layout.css">
-  <link rel="stylesheet" href="/css/components.css">
-  <link rel="stylesheet" href="/css/responsive.css">
-  <link rel="stylesheet" href="/css/modern-ui.css?v=8.0">
+  <link rel="stylesheet" href="./css/variables.css">
+  <link rel="stylesheet" href="./css/reset.css">
+  <link rel="stylesheet" href="./css/layout.css">
+  <link rel="stylesheet" href="./css/components.css">
+  <link rel="stylesheet" href="./css/responsive.css">
+  <link rel="stylesheet" href="./css/modern-ui.css?v=8.0">
   
   <style>
     /* V8 Standard Professional — Clean Minimalist Style */
@@ -101,17 +101,17 @@
 
   <header>
     <nav class="navbar">
-      <a href="index.html" class="navbar__brand">🚀 StartupEvents</a>
+      <a href="/index.html" class="navbar__brand">🚀 StartupEvents</a>
       <ul class="navbar__links">
-        <li><a href="index.html" class="navbar__link">Home</a></li>
-        <li><a href="events.html" class="navbar__link navbar__link--active">Events</a></li>
-        <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="/index.html" class="navbar__link">Home</a></li>
+        <li><a href="/events.html" class="navbar__link navbar__link--active">Events</a></li>
+        <li><a href="/dashboard.html" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
         <!-- Dynamically populated by auth.js -->
         <button class="btn btn--ghost btn--icon" id="theme-toggle" aria-label="Toggle theme">🌙</button>
-        <a href="login.html" class="btn btn--secondary btn--sm">Log In</a>
-        <a href="register.html" class="btn btn--primary btn--sm">Sign Up</a>
+        <a href="/login.html" class="btn btn--secondary btn--sm">Log In</a>
+        <a href="/register.html" class="btn btn--primary btn--sm">Sign Up</a>
       </div>
     </nav>
   </header>
@@ -120,7 +120,7 @@
     <!-- Breadcrumb -->
     <nav style="margin-bottom: var(--space-6);">
       <span style="font-size: var(--text-sm); color: var(--text-tertiary);">
-        <a href="events.html" style="color: var(--text-tertiary);">Events</a> › <span id="breadcrumb-title">Loading...</span>
+        <a href="/events.html" style="color: var(--text-tertiary);">Events</a> › <span id="breadcrumb-title">Loading...</span>
       </span>
     </nav>
 
@@ -261,8 +261,9 @@
   </main>
 
   <!-- Final Script Block — Restoring All Logic Units -->
-  <script type="module" src="/js/theme.js"></script>
-  <script type="module" src="/js/auth.js"></script>
+  <script src="./js/utils.js"></script>
+  <script type="module" src="./js/theme.js"></script>
+  <script type="module" src="./js/auth.js"></script>
   <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
   <script type="module">
     (function() {
@@ -272,7 +273,7 @@
       const eventId = urlParams.get('id');
 
       if (!eventId) {
-        document.body.innerHTML = '<div style="padding: 100px; text-align:center;"><h2>Event Context Missing</h2><a href="events.html" style="color:var(--neon-cyan);">Browse active events</a></div>';
+        document.body.innerHTML = '<div style="padding: 100px; text-align:center;"><h2>Event Context Missing</h2><a href="/events.html" style="color:var(--neon-cyan);">Browse active events</a></div>';
         return;
       }
 
