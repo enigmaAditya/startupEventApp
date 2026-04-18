@@ -43,17 +43,22 @@
     document.addEventListener('click', () => dropdown.classList.remove('dropdown--open'));
 
     const logoutBtn = dropdown.querySelector('#logout-btn');
-    
-    // Expose global logout function
-    window.__logout = async () => {
-      try {
-        await fetch(window.API_BASE_URL + '/auth/logout', { method: 'POST', credentials: 'include' });
-      } catch { /* ignore */ }
-      localStorage.removeItem('user');
-      localStorage.removeItem('accessToken');
-      window.location.href = '/index.html';
-    };
-
-    logoutBtn.addEventListener('click', window.__logout);
+    if (logoutBtn) logoutBtn.addEventListener('click', window.__logout);
   }
+
+  // Define global logout function (available even if no user in localStorage)
+  window.__logout = async () => {
+    console.log('🚪 Initiating logout...');
+    try {
+      if (window.API_BASE_URL) {
+        await fetch(window.API_BASE_URL + '/auth/logout', { method: 'POST', credentials: 'include' });
+      }
+    } catch (e) { console.warn('Logout API call failed, proceeding with local cleanup', e); }
+
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+    
+    // Force redirect to root home
+    window.location.replace('/index.html');
+  };
 })();
