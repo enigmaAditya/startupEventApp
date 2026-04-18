@@ -39,7 +39,7 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'src/pages/index.html'),
+        main: resolve(__dirname, 'src/index.html'),
         events: resolve(__dirname, 'src/pages/events.html'),
         eventDetail: resolve(__dirname, 'src/pages/event-detail.html'),
         login: resolve(__dirname, 'src/pages/login.html'),

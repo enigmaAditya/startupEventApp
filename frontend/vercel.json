@@ -2,54 +2,30 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
-  "routes": [
+  "rewrites": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "source": "/events",
+      "destination": "/pages/events.html"
     },
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "source": "/event-detail",
+      "destination": "/pages/event-detail.html"
     },
     {
-      "src": "/css/(.*)",
-      "dest": "/css/$1"
+      "source": "/login",
+      "destination": "/pages/login.html"
     },
     {
-      "src": "/js/(.*)",
-      "dest": "/js/$1"
+      "source": "/register",
+      "destination": "/pages/register.html"
     },
     {
-      "src": "/pages/(.*)",
-      "dest": "/pages/$1"
+      "source": "/dashboard",
+      "destination": "/pages/dashboard.html"
     },
     {
-      "src": "/",
-      "dest": "/pages/index.html"
-    },
-    {
-      "src": "/events",
-      "dest": "/pages/events.html"
-    },
-    {
-      "src": "/event-detail",
-      "dest": "/pages/event-detail.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/pages/login.html"
-    },
-    {
-      "src": "/register",
-      "dest": "/pages/register.html"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/pages/dashboard.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/pages/$1.html"
+      "source": "/api/(.*)",
+      "destination": "/api/$1"
     }
   ]
 }

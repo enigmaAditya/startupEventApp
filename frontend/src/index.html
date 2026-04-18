@@ -12,8 +12,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400..800&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="../css/variables.css">
-  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="/css/layout.css">
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/responsive.css">
@@ -35,12 +35,12 @@
       <a href="index.html" class="navbar__brand">🚀 StartupEvents</a>
       <ul class="navbar__links" id="nav-links">
         <li><a href="index.html" class="navbar__link navbar__link--active">Home</a></li>
-        <li><a href="events.html" class="navbar__link">Events</a></li>
-        <li><a href="dashboard.html" class="navbar__link">Dashboard</a></li>
+        <li><a href="pages/events.html" class="navbar__link">Events</a></li>
+        <li><a href="pages/dashboard.html" class="navbar__link">Dashboard</a></li>
       </ul>
       <div class="navbar__actions">
-        <a href="login.html" class="btn btn--secondary btn--sm" id="landing-login-btn">Log In</a>
-        <a href="register.html" class="btn btn--primary btn--sm" id="landing-signup-btn">Sign Up</a>
+        <a href="pages/login.html" class="btn btn--secondary btn--sm" id="landing-login-btn">Log In</a>
+        <a href="pages/register.html" class="btn btn--primary btn--sm" id="landing-signup-btn">Sign Up</a>
       </div>
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle navigation">
         <span class="navbar__toggle-bar"></span>
@@ -60,8 +60,8 @@
             Find hackathons, pitch nights, workshops, and founder meetups near you. Connect with the startup community and build something extraordinary.
           </p>
           <div class="hero__actions">
-            <a href="events.html" class="btn btn--primary btn--lg">🔍 Explore Events</a>
-            <a href="register.html" class="btn btn--secondary btn--lg" id="hero-create-btn">Create an Event</a>
+            <a href="pages/events.html" class="btn btn--primary btn--lg">🔍 Explore Events</a>
+            <a href="pages/register.html" class="btn btn--secondary btn--lg" id="hero-create-btn">Create an Event</a>
           </div>
         </div>
       </section>
@@ -98,7 +98,7 @@
             <h2>Featured Events</h2>
             <p style="margin-top: var(--space-2);">Hand-picked events you don't want to miss</p>
           </div>
-          <a href="events.html" class="btn btn--secondary btn--sm">View All →</a>
+          <a href="pages/events.html" class="btn btn--secondary btn--sm">View All →</a>
         </div>
 
         <div class="events-grid" id="featured-events-grid">
@@ -175,7 +175,7 @@
         <p style="max-width: 500px; margin-inline: auto; margin-bottom: var(--space-8);">
           Join hundreds of organizers who use StartupEvents to reach the startup community.
         </p>
-        <a href="register.html" class="btn btn--primary btn--lg" id="footer-cta-btn">
+        <a href="pages/register.html" class="btn btn--primary btn--lg" id="footer-cta-btn">
           🚀 Get Started Free
         </a>
       </div>
@@ -194,8 +194,8 @@
         </div>
         <div>
           <h4 class="footer__heading">Platform</h4>
-          <a href="events.html" class="footer__link">Browse Events</a>
-          <a href="register.html" class="footer__link">Create Event</a>
+          <a href="pages/events.html" class="footer__link">Browse Events</a>
+          <a href="pages/register.html" class="footer__link">Create Event</a>
           <a href="#" class="footer__link">Pricing</a>
           <a href="#" class="footer__link">API</a>
         </div>
@@ -224,11 +224,11 @@
   <div class="toast-container" id="toast-container"></div>
 
   <!-- JavaScript -->
-  <script type="module" src="../js/theme.js"></script>
-  <script type="module" src="../js/auth.js"></script>
-  <script type="module" src="../js/components/eventCard.js"></script>
-  <script type="module" src="../js/counter.js"></script>
-  <script type="module" src="../js/utils.js"></script>
+  <script type="module" src="js/theme.js"></script>
+  <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/components/eventCard.js"></script>
+  <script type="module" src="js/counter.js"></script>
+  <script type="module" src="js/utils.js"></script>
   <script type="module">
     /* RBAC: adapt hero CTA for logged-in users */
     (function () {
@@ -237,9 +237,9 @@
       if (u && btn) {
         if (u.role === 'attendee') {
           btn.textContent = '🚀 Host an Event';
-          btn.href = 'dashboard.html';
+          btn.href = 'pages/dashboard.html';
         } else {
-          btn.href = 'dashboard.html#create-event';
+          btn.href = 'pages/dashboard.html#create-event';
         }
       }
     })();
