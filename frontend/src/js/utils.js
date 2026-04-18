@@ -8,7 +8,18 @@
   'use strict';
 
   // Global API Base URL (Environment Aware)
-  window.API_BASE_URL = import.meta.env.VITE_API_URL || '/api/v1';
+  // We use a safe check because import.meta.env is only available during Vite builds
+  let apiUrl = '/api/v1';
+  try {
+    apiUrl = import.meta.env.VITE_API_URL || apiUrl;
+  } catch (e) {
+    // If we're on the live Render/Vercel site and Vite didn't inject the env,
+    // fallback to the production backend URL automatically.
+    if (window.location.hostname !== 'localhost') {
+      apiUrl = 'https://startup-event-app-backend.onrender.com/api/v1';
+    }
+  }
+  window.API_BASE_URL = apiUrl;
 
   // ============ MOBILE NAV TOGGLE ============
   const setupNavToggle = () => {
