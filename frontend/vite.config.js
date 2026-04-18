@@ -45,6 +45,8 @@ export default defineConfig({
         login: resolve(__dirname, 'src/pages/login.html'),
         register: resolve(__dirname, 'src/pages/register.html'),
         dashboard: resolve(__dirname, 'src/pages/dashboard.html'),
+        organizerDashboard: resolve(__dirname, 'src/pages/organizer-dashboard.html'),
+        manageEvent: resolve(__dirname, 'src/pages/manage-event.html'),
       },
     },
   },
