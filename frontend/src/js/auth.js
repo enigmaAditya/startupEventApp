@@ -1,18 +1,50 @@
 (function () {
   'use strict';
 
+  // Define global logout function FIRST (so it's available when buttons reference it)
+  window.__logout = async () => {
+    console.log('🚪 Initiating logout...');
+    try {
+      if (window.API_BASE_URL) {
+        await fetch(window.API_BASE_URL + '/auth/logout', { method: 'POST', credentials: 'include' });
+      }
+    } catch (e) { console.warn('Logout API call failed, proceeding with local cleanup', e); }
+
+    localStorage.removeItem('user');
+    localStorage.removeItem('accessToken');
+
+    // Force redirect to root home
+    window.location.replace('/');
+  };
+
   const user = JSON.parse(localStorage.getItem('user') || 'null');
   const actionsEl = document.querySelector('.navbar__actions');
   if (!actionsEl) return;
-
-  const themeBtn = document.getElementById('theme-toggle');
 
   if (user) {
     const initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '');
     const name = user.firstName || 'User';
 
+    // Preserve theme toggle button before clearing
+    const existingThemeBtn = document.getElementById('theme-toggle');
+
     actionsEl.innerHTML = '';
-    if (themeBtn) actionsEl.appendChild(themeBtn);
+
+    // Re-create theme toggle (since innerHTML='' destroyed the original's event listeners)
+    const themeBtn = document.createElement('button');
+    themeBtn.className = 'btn btn--ghost btn--icon';
+    themeBtn.id = 'theme-toggle';
+    themeBtn.setAttribute('aria-label', 'Toggle theme');
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    themeBtn.textContent = currentTheme === 'light' ? '☀️' : '🌙';
+    themeBtn.addEventListener('click', () => {
+      const theme = document.documentElement.getAttribute('data-theme');
+      const next = theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('startupevents-theme', next);
+      themeBtn.textContent = next === 'dark' ? '🌙' : '☀️';
+    });
+    actionsEl.appendChild(themeBtn);
 
     const dropdown = document.createElement('div');
     dropdown.className = 'dropdown';
@@ -43,22 +75,6 @@
     document.addEventListener('click', () => dropdown.classList.remove('dropdown--open'));
 
     const logoutBtn = dropdown.querySelector('#logout-btn');
-    if (logoutBtn) logoutBtn.addEventListener('click', window.__logout);
+    if (logoutBtn) logoutBtn.addEventListener('click', () => window.__logout());
   }
-
-  // Define global logout function (available even if no user in localStorage)
-  window.__logout = async () => {
-    console.log('🚪 Initiating logout...');
-    try {
-      if (window.API_BASE_URL) {
-        await fetch(window.API_BASE_URL + '/auth/logout', { method: 'POST', credentials: 'include' });
-      }
-    } catch (e) { console.warn('Logout API call failed, proceeding with local cleanup', e); }
-
-    localStorage.removeItem('user');
-    localStorage.removeItem('accessToken');
-    
-    // Force redirect to root home
-    window.location.replace('/');
-  };
 })();
