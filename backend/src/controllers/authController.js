@@ -137,4 +137,37 @@ const logout = (req, res) => {
     .json({ success: true, message: 'Logged out successfully' });
 };
 
-module.exports = { register, login, logout };
+/**
+ * @desc    Update password (authenticated)
+ * @route   PUT /api/v1/auth/update-password
+ * @access  Private
+ */
+const updatePassword = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ success: false, errors: errors.array() });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    // 1. Get user and explicitly select password field
+    const user = await User.findById(req.user.id).select('+password');
+
+    // 2. Check if current password matches
+    const isMatch = await user.comparePassword(currentPassword);
+    if (!isMatch) {
+      return next(ApiError.unauthorized('Invalid current password'));
+    }
+
+    // 3. Update password (pre-save hook will hash it)
+    user.password = newPassword;
+    await user.save();
+
+    res.status(200).json({ success: true, message: 'Password updated successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, login, logout, updatePassword };

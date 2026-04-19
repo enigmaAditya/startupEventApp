@@ -203,6 +203,23 @@
             <textarea class="form-input" id="settings-bio" placeholder="Tell us about yourself..."></textarea>
           </div>
           <button class="btn btn--primary" id="settings-save-btn">Save Changes</button>
+
+          <hr style="margin: var(--space-10) 0; border: 0; border-top: 1px solid var(--border-color); opacity: 0.3;">
+
+          <h3 style="margin-bottom: var(--space-4); font-size: var(--text-xl);">Security</h3>
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-input" id="settings-current-password" placeholder="••••••••">
+          </div>
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="settings-new-password" placeholder="Minimum 8 characters">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-input" id="settings-confirm-password" placeholder="Re-type new password">
+          </div>
+          <button class="btn btn--secondary" id="settings-password-btn">Update Password</button>
         </div>
       </section>
     </main>
@@ -487,6 +504,55 @@
           }
         } catch (e) {
           if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: e.message });
+        }
+      });
+
+      /* ---------- Change Password Logic ---------- */
+      document.getElementById('settings-password-btn')?.addEventListener('click', async function() {
+        var currentPass = document.getElementById('settings-current-password');
+        var newPass = document.getElementById('settings-new-password');
+        var confirmPass = document.getElementById('settings-confirm-password');
+        var btn = this;
+
+        if (!currentPass || !newPass || !confirmPass) return;
+
+        if (!currentPass.value || !newPass.value) {
+          if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: 'All fields are required' });
+          return;
+        }
+
+        if (newPass.value !== confirmPass.value) {
+          if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: 'New passwords do not match' });
+          return;
+        }
+
+        btn.disabled = true;
+        btn.textContent = 'Updating...';
+
+        try {
+          var res = await fetch(window.API_BASE_URL + '/auth/update-password', {
+            method: 'PUT',
+            headers: authHeaders,
+            credentials: 'include',
+            body: JSON.stringify({
+              currentPassword: currentPass.value,
+              newPassword: newPass.value
+            })
+          });
+          var data = await res.json();
+          if (res.ok && data.success) {
+            if (window.showToast) window.showToast({ type: 'success', title: 'Updated!', message: 'Password changed successfully' });
+            currentPass.value = '';
+            newPass.value = '';
+            confirmPass.value = '';
+          } else {
+            throw new Error(data.error?.message || 'Update failed');
+          }
+        } catch (e) {
+          if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: e.message });
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Update Password';
         }
       });
 
