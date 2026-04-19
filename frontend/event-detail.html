@@ -162,6 +162,89 @@
     html {
       scroll-behavior: smooth;
     }
+
+    /* Floating CTA Bar */
+    .floating-cta {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 90;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 20px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
+      animation: slideUp 0.3s ease;
+    }
+    .floating-cta__inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+    }
+    .floating-cta__info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .floating-cta__price {
+      font-size: 1.1rem;
+      font-weight: 800;
+      font-family: 'Syne', sans-serif;
+    }
+    .floating-cta__spots {
+      font-size: 0.7rem;
+      color: var(--text-tertiary);
+    }
+    .floating-cta__btn {
+      background: var(--neon-cyan);
+      color: #000;
+      font-weight: 800;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 32px;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .floating-cta__btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+    }
+    .floating-cta__btn--muted {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--neon-cyan);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding-bottom: 130px; /* space for floating CTA + section nav */
+      }
+      .section-nav {
+        bottom: 60px; /* sit above the CTA bar */
+      }
+      .floating-cta__btn {
+        padding: 12px 20px;
+        font-size: 0.8rem;
+      }
+    }
+    @media (min-width: 769px) {
+      body {
+        padding-bottom: 80px;
+      }
+    }
   </style>
 </head>
 <body class="modern-ui">
@@ -333,6 +416,17 @@
     </div>
   </main>
 
+  <!-- Floating CTA Bar -->
+  <div class="floating-cta" id="floating-cta">
+    <div class="floating-cta__inner">
+      <div class="floating-cta__info">
+        <span class="floating-cta__price" id="floating-price">Free</span>
+        <span class="floating-cta__spots" id="floating-spots">— spots left</span>
+      </div>
+      <a href="#rsvp-card-container" class="floating-cta__btn" id="floating-action-btn">RSVP Now ↓</a>
+    </div>
+  </div>
+
   <!-- Final Script Block — Restoring All Logic Units -->
   <script type="module" src="./src/js/utils.js"></script>
   <script type="module" src="./src/js/theme.js"></script>
@@ -405,6 +499,14 @@
           document.getElementById('organizer-initials').textContent = (evt.organizer.firstName?.[0] || '') + (evt.organizer.lastName?.[0] || '');
         }
 
+        // Populate floating CTA bar
+        const floatingCta = document.getElementById('floating-cta');
+        const floatingPrice = document.getElementById('floating-price');
+        const floatingSpots = document.getElementById('floating-spots');
+        if (floatingPrice) floatingPrice.textContent = evt.price > 0 ? '₹' + evt.price : 'Free';
+        if (floatingSpots) floatingSpots.textContent = remaining + ' spots left';
+        if (floatingCta) floatingCta.style.display = 'block';
+
         const tagsEl = document.getElementById('detail-tags');
         (evt.tags || []).forEach(t => {
           const s = document.createElement('span');
@@ -446,6 +548,7 @@
       function initRSVP(evt) {
         const form = document.getElementById('rsvp-form');
         const authTerminal = document.getElementById('rsvp-auth-terminal');
+        const floatingBtn = document.getElementById('floating-action-btn');
         const user = JSON.parse(localStorage.getItem('user') || 'null');
         const userId = user?.id || user?._id;
         const organizerId = evt.organizer?._id || evt.organizer?.id || evt.organizer;
@@ -462,6 +565,7 @@
               <p style="font-size:0.8rem; color:var(--text-tertiary); margin-bottom: 20px;">You are the organizer of this event.</p>
               <a href="/manage-event?id=${evt._id}" class="btn btn--standard-rsvp" style="display:block; text-decoration:none; text-align:center;">Manage Event →</a>
             </div>`;
+          if (floatingBtn) { floatingBtn.textContent = '🛠️ Manage Event'; floatingBtn.href = '/manage-event?id=' + evt._id; floatingBtn.classList.add('floating-cta__btn--muted'); }
           return;
         }
 
@@ -473,6 +577,7 @@
               <p style="font-size:0.8rem; color:var(--text-tertiary); margin-bottom: 20px;">You can moderate this event.</p>
               <a href="/manage-event?id=${evt._id}" class="btn btn--standard-rsvp" style="display:block; text-decoration:none; text-align:center;">Moderate Event →</a>
             </div>`;
+          if (floatingBtn) { floatingBtn.textContent = '⚡ Moderate'; floatingBtn.href = '/manage-event?id=' + evt._id; floatingBtn.classList.add('floating-cta__btn--muted'); }
           return;
         }
 
@@ -480,6 +585,7 @@
         if (isAttending) {
           authTerminal.innerHTML = '<div style="text-align:center; padding: 30px;"><div style="font-size:2rem; margin-bottom:10px;">✅</div><h3 style="font-weight:800; color:var(--neon-cyan);">RSVP SECURED</h3><p style="font-size:0.8rem; color:var(--text-tertiary);">You are on the guest list.</p></div>';
           document.getElementById('calendar-sync-container').style.display = 'block';
+          if (floatingBtn) { floatingBtn.textContent = '✅ RSVP Secured'; floatingBtn.classList.add('floating-cta__btn--muted'); }
           return;
         }
 
