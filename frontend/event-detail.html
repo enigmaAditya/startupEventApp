@@ -103,6 +103,7 @@
       }
       .event-detail aside {
         order: -1;
+        position: static !important; /* Not sticky on mobile */
       }
       .event-meta-strip {
         gap: var(--space-4);
@@ -113,6 +114,16 @@
       }
       .main-card {
         padding: var(--space-5);
+      }
+    }
+
+    /* Desktop Sticky Sidebar */
+    @media (min-width: 769px) {
+      .event-detail aside {
+        position: sticky;
+        top: 100px; /* Space for navbar */
+        align-self: start;
+        height: min-content;
       }
     }
 
@@ -195,6 +206,15 @@
       .floating-cta__btn {
         padding: 12px 20px;
         font-size: 0.8rem;
+      }
+    }
+
+    @media (min-width: 769px) {
+      .floating-cta {
+        display: none !important;
+      }
+      body {
+        padding-bottom: 0;
       }
     }
   </style>
