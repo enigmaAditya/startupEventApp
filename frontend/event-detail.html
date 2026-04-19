@@ -506,6 +506,27 @@
       }
 
       function initChat(evt) {
+        const user = JSON.parse(localStorage.getItem('user') || 'null');
+        const userId = user?.id || user?._id;
+        const organizerId = evt.organizer?._id || evt.organizer?.id || evt.organizer;
+        const isOwner = userId && organizerId && userId.toString() === organizerId.toString();
+        const isAdmin = user?.role === 'admin';
+        const isOtherOrganizer = user?.role === 'organizer' && !isOwner;
+
+        // Other organizers cannot see event chats
+        if (isOtherOrganizer) {
+          const chatSection = document.getElementById('live-chat-section');
+          if (chatSection) {
+            chatSection.innerHTML = `
+              <h2 class="simple-header">💬 Live Chat</h2>
+              <div style="text-align:center; padding: 30px; color: var(--text-tertiary); border: 1px dashed rgba(255,255,255,0.1); border-radius: 8px;">
+                <div style="font-size: 1.5rem; margin-bottom: 10px;">🔒</div>
+                <p style="font-size: 0.9rem;">Chat is only available to event attendees and the organizer.</p>
+              </div>`;
+          }
+          return;
+        }
+
         if (typeof io === 'undefined') {
           console.warn('Socket.IO not detected — retrying in 1s');
           setTimeout(() => initChat(evt), 1000);
@@ -513,8 +534,6 @@
         }
         const socketUrl = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_BACKEND_URL) || window.API_BASE_URL.replace('/api/v1', '');
         const socket = io(socketUrl);
-        const user = JSON.parse(localStorage.getItem('user') || 'null');
-        const userId = user?.id || user?._id;
         
         socket.emit('join:event', { eventId: evt._id, userId, role: user?.role });
 
