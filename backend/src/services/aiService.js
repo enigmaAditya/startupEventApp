@@ -249,9 +249,71 @@ const getMockRecommendations = (interests, events) => {
     .sort((a, b) => b.relevanceScore - a.relevanceScore);
 };
 
+/**
+ * Generate a full event draft from a simple prompt
+ * 
+ * Demonstrates: Advanced structured output generation, 
+ *               multi-field schema mapping, persona-based prompting.
+ * 
+ * @param {string} userPrompt - A short idea of the event (e.g., "Web3 hackathon in Delhi")
+ * @returns {Promise<Object>} Structured event draft
+ */
+const generateEventDraft = async (userPrompt) => {
+  if (!isAIAvailable()) {
+    // Mock fallback
+    return {
+      title: `Grand ${userPrompt.split(' ').slice(0, 3).join(' ')} Convention`,
+      description: `Join us for an incredible journey into the heart of ${userPrompt}. We'll gather top experts, founders, and enthusiasts for a day of deep-dives, networking, and innovation. Don't miss this chance to shape the future of the startup ecosystem!`,
+      category: 'conference',
+      tags: ['Networking', 'Innovation', 'Startup'],
+      suggestedCity: 'Mumbai'
+    };
+  }
+
+  const prompt = `You are a professional event architect for a startup community platform called StartupEvents.
+  Your goal is to take a simple event idea and expand it into a full, high-converting event listing.
+
+  INPUT IDEA: "${userPrompt}"
+
+  REQUIRMENTS:
+  1. Generate a catchy, professional Title.
+  2. Write a 3-paragraph compelling Description (benefits-focused).
+  3. Choose the best Category from: hackathon, pitch-night, workshop, meetup, conference.
+  4. Suggest 3-5 relevant startup tags (e.g., AI/ML, SaaS, Web3).
+  5. Identify the most likely City for this event.
+
+  OUTPUT FORMAT: You must respond ONLY with a valid JSON object:
+  {
+    "title": "...",
+    "description": "...",
+    "category": "...",
+    "tags": ["...", "..."],
+    "suggestedCity": "..."
+  }`;
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'You are a professional copywriter who only speaks in JSON.' },
+        { role: 'user', content: prompt }
+      ],
+      temperature: 0.3,
+      max_tokens: 800
+    });
+
+    const content = response.choices[0]?.message?.content || '{}';
+    return JSON.parse(content);
+  } catch (error) {
+    console.error('AI event generation error:', error.message);
+    return { title: 'AI Generation Failed', description: 'Please try describing your event again.' };
+  }
+};
+
 module.exports = {
   isAIAvailable,
   getRecommendations,
   enhanceDescription,
   semanticSearch,
+  generateEventDraft,
 };

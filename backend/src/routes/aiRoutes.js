@@ -8,6 +8,7 @@ const express = require('express');
 const router = express.Router();
 const protect = require('../middlewares/auth');
 const aiService = require('../services/aiService');
+const aiController = require('../controllers/aiController');
 const Event = require('../models/Event');
 
 // @desc    Get AI status (is OpenAI configured?)
@@ -90,5 +91,10 @@ router.get('/search', async (req, res, next) => {
     next(error);
   }
 });
+
+// @desc    Generate a full event draft from a simple prompt
+// @route   POST /api/v1/ai/generate-draft
+// @access  Private (Organizer)
+router.post('/generate-draft', protect, aiController.generateDraft);
 
 module.exports = router;

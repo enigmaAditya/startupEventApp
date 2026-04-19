@@ -29,6 +29,11 @@
       height: 140px !important;
       font-size: 4rem !important;
     }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 200%; }
+    }
   </style>
 </head>
 
@@ -208,6 +213,20 @@
           details to create and publish your event</p>
 
         <form id="create-event-form" style="max-width: 700px;" novalidate>
+          
+          <!-- AI Architect Panel -->
+          <div id="ai-architect-panel" style="margin-bottom: var(--space-8); padding: var(--space-6); background: linear-gradient(135deg, rgba(209, 77, 255, 0.05), rgba(209, 77, 255, 0.02)); border: 1px solid rgba(209, 77, 255, 0.2); border-radius: var(--radius-xl); position: relative; overflow: hidden;">
+            <div id="ai-shimmer" style="display: none; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(209, 77, 255, 0.1), transparent); animation: shimmer 2s infinite;"></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+              <h3 style="font-size: var(--text-sm); color: var(--neon-purple); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin: 0;">✨ AI Architect</h3>
+              <span style="font-size: var(--text-xs); color: var(--text-tertiary);">Describe your event to auto-fill</span>
+            </div>
+            <div style="display: flex; gap: var(--space-3);">
+              <input type="text" id="ai-prompt-input" class="form-input" placeholder="e.g., A weekend Solidity workshop in Mumbai..." style="margin-bottom: 0; background: rgba(0,0,0,0.2); border-color: rgba(209, 77, 255, 0.1);">
+              <button type="button" id="ai-generate-btn" class="btn btn--secondary btn--sm" style="background: rgba(209, 77, 255, 0.1); border-color: var(--neon-purple); color: var(--neon-purple); white-space: nowrap;">Magic Fill</button>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label form-label--required" for="event-title">Event Title</label>
             <input type="text" class="form-input" id="event-title" name="title"
@@ -1068,6 +1087,76 @@
           }
         });
       }
+      /* ---------- AI Architect Logic ---------- */
+      const aiPromptInput = document.getElementById('ai-prompt-input');
+      const aiGenerateBtn = document.getElementById('ai-generate-btn');
+      const aiShimmer = document.getElementById('ai-shimmer');
+
+      if (aiGenerateBtn) {
+        aiGenerateBtn.addEventListener('click', async () => {
+          const prompt = aiPromptInput.value.trim();
+          if (!prompt) {
+            if (window.showToast) window.showToast({ type: 'info', title: 'Need Input', message: 'Tell me your event idea first!' });
+            return;
+          }
+
+          // Visual magic start
+          aiGenerateBtn.disabled = true;
+          aiGenerateBtn.textContent = 'Thinking...';
+          aiShimmer.style.display = 'block';
+
+          try {
+            const res = await fetch(window.API_BASE_URL + '/ai/generate-draft', {
+              method: 'POST',
+              headers: authHeaders,
+              body: JSON.stringify({ prompt }),
+              credentials: 'include'
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+              const draft = data.data;
+
+              // No-overwrite populating logic
+              const fields = [
+                { id: 'event-title', val: draft.title },
+                { id: 'event-description', val: draft.description },
+                { id: 'event-city', val: draft.suggestedCity },
+                { id: 'event-tags', val: (draft.tags || []).join(', ') }
+              ];
+
+              fields.forEach(f => {
+                const el = document.getElementById(f.id);
+                if (el && !el.value.trim()) {
+                  el.value = f.val;
+                  el.style.borderColor = 'var(--neon-purple)';
+                  setTimeout(() => el.style.borderColor = '', 2000);
+                }
+              });
+
+              // Category logic (don't force, but try to match)
+              const catEl = document.getElementById('event-category');
+              if (catEl && !catEl.value && draft.category) {
+                const options = Array.from(catEl.options).map(o => o.value);
+                if (options.includes(draft.category)) {
+                  catEl.value = draft.category;
+                }
+              }
+
+              if (window.showToast) window.showToast({ type: 'success', title: 'Magic Done!', message: 'I have filled in the draft for you.' });
+            } else {
+              throw new Error(data.error?.message || 'AI Generation failed');
+            }
+          } catch (err) {
+            if (window.showToast) window.showToast({ type: 'error', title: 'AI Error', message: err.message });
+          } finally {
+            aiGenerateBtn.disabled = false;
+            aiGenerateBtn.textContent = 'Magic Fill';
+            aiShimmer.style.display = 'none';
+          }
+        });
+      }
+
     })();
   </script>
 </body>
