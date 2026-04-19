@@ -131,10 +131,11 @@
 
         <!-- Recommended for You (AI Matching) -->
         <div id="ai-recommendations-section" style="margin-bottom: var(--space-10); display: none;">
-          <h2 style="display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xl); margin-bottom: var(--space-4);">
+          <h2 style="display: flex; align-items: center; gap: var(--space-3); font-size: var(--text-xl); margin-bottom: var(--space-2);">
             ✨ Recommended for You 
             <span class="badge badge--primary" style="font-size: 0.6rem;">AI Matched</span>
           </h2>
+          <p id="recommendations-explanation" style="color: var(--text-tertiary); font-size: var(--text-sm); margin-bottom: var(--space-6);"></p>
           <div id="recommendations-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-4);">
             <!-- Dynamic AI Cards -->
           </div>
@@ -493,40 +494,74 @@
       async function initRecommendations() {
         var container = document.getElementById('recommendations-container');
         var section = document.getElementById('ai-recommendations-section');
+        var explanationEl = document.getElementById('recommendations-explanation');
         if (!container || !section) return;
 
         try {
           var data = await authFetch(window.API_BASE_URL + '/recommendations');
-          if (data.success && data.data.length > 0) {
-            section.style.display = 'block';
-            container.innerHTML = '';
+          
+          if (!data.success) return;
 
-            data.data.forEach(function (evt) {
-              var dateStr = evt.date ? new Date(evt.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'TBD';
-              var card = document.createElement('div');
-              card.style.cssText = 'padding:var(--space-5); background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-xl); transition:all var(--transition-fast); position:relative; overflow:hidden;';
-              
-              // Decorative background glow for AI cards
-              var glow = document.createElement('div');
-              glow.style.cssText = 'position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:var(--brand-primary); filter:blur(60px); opacity:0.1; z-index:0;';
-              card.appendChild(glow);
+          // Always show the section now (even for 'not enough RSVPs' message)
+          section.style.display = 'block';
 
-              card.innerHTML += `
-                <div style="position:relative; z-index:1;">
-                  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--space-4);">
-                    <span class="badge badge--primary" style="font-size:0.6rem;">${evt.category.toUpperCase()}</span>
-                    <span style="font-size:var(--text-xs); color:var(--text-tertiary);">${dateStr}</span>
-                  </div>
-                  <h3 style="font-size:var(--text-lg); margin-bottom:var(--space-2);">${evt.title}</h3>
-                  <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--space-6);">
-                    ${(evt.tags || []).slice(0, 3).map(t => `<span style="font-size:0.65rem; color:var(--text-tertiary);">#${t}</span>`).join('')}
-                  </div>
-                  <a href="/event-detail?id=${evt._id}" class="btn btn--secondary btn--sm btn--full">View Details</a>
-                </div>
-              `;
-              container.appendChild(card);
-            });
+          // Case: Not enough RSVPs
+          if (data.count === 0) {
+            container.innerHTML = `
+              <div style="grid-column: 1/-1; text-align:center; padding: var(--space-10); border: 1px dashed var(--border-color); border-radius: var(--radius-xl);">
+                <div style="font-size: 2.5rem; margin-bottom: var(--space-4);">${data.rsvpCount === 0 ? '🎯' : '📊'}</div>
+                <h3 style="margin-bottom: var(--space-2); font-size: var(--text-lg);">${data.rsvpCount === 0 ? 'Start Exploring' : 'Almost There!'}</h3>
+                <p style="color: var(--text-tertiary); margin-bottom: var(--space-6); max-width: 400px; margin-inline: auto; line-height: 1.6;">${data.reason}</p>
+                <a href="/events" class="btn btn--primary">Browse Events →</a>
+              </div>`;
+            if (explanationEl) explanationEl.textContent = '';
+            return;
           }
+
+          // Case: Has recommendations
+          if (explanationEl && data.explanation) {
+            explanationEl.textContent = data.explanation;
+          }
+
+          container.innerHTML = '';
+
+          data.data.forEach(function (evt) {
+            var dateStr = evt.date ? new Date(evt.date).toLocaleDateString('en-IN', { month: 'short', day: 'numeric' }) : 'TBD';
+            var matchReason = evt._matchReason || '';
+            var matchScore = evt._matchScore || 0;
+
+            var card = document.createElement('div');
+            card.style.cssText = 'padding:var(--space-5); background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-xl); transition:all var(--transition-fast); position:relative; overflow:hidden; cursor:pointer;';
+            card.addEventListener('mouseenter', function() { card.style.borderColor = 'var(--brand-primary)'; card.style.transform = 'translateY(-2px)'; });
+            card.addEventListener('mouseleave', function() { card.style.borderColor = 'var(--border-color)'; card.style.transform = ''; });
+
+            // Decorative background glow
+            var glow = document.createElement('div');
+            glow.style.cssText = 'position:absolute; top:-20px; right:-20px; width:100px; height:100px; background:var(--brand-primary); filter:blur(60px); opacity:0.1; z-index:0;';
+            card.appendChild(glow);
+
+            var matchBadgeColor = matchScore >= 8 ? '#10b981' : matchScore >= 5 ? '#3b82f6' : '#8b5cf6';
+            var matchLabel = matchScore >= 8 ? 'Strong Match' : matchScore >= 5 ? 'Good Match' : 'For You';
+
+            card.innerHTML += `
+              <div style="position:relative; z-index:1;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:var(--space-3);">
+                  <span class="badge badge--primary" style="font-size:0.6rem;">${evt.category.toUpperCase()}</span>
+                  <span style="font-size:0.6rem; padding:2px 8px; border-radius:20px; background:${matchBadgeColor}20; color:${matchBadgeColor}; font-weight:700;">${matchLabel}</span>
+                </div>
+                <h3 style="font-size:var(--text-lg); margin-bottom:var(--space-2); line-height:1.3;">${evt.title}</h3>
+                <div style="font-size:var(--text-xs); color:var(--text-tertiary); margin-bottom:var(--space-2);">
+                  📅 ${dateStr} · 📍 ${evt.location?.city || 'Online'}
+                </div>
+                ${matchReason ? `<div style="font-size:0.7rem; color:var(--brand-primary); margin-bottom:var(--space-4); font-style:italic;">💡 ${matchReason}</div>` : ''}
+                <div style="display:flex; flex-wrap:wrap; gap:4px; margin-bottom:var(--space-5);">
+                  ${(evt.tags || []).slice(0, 3).map(t => `<span style="font-size:0.65rem; color:var(--text-tertiary);">#${t}</span>`).join('')}
+                </div>
+                <a href="/event-detail?id=${evt._id}" class="btn btn--secondary btn--sm btn--full">View Details →</a>
+              </div>
+            `;
+            container.appendChild(card);
+          });
         } catch (err) {
           console.error('AI Recs failed:', err);
         }
