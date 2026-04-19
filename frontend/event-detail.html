@@ -95,6 +95,74 @@
       letter-spacing: 0.05em !important;
       border: none !important;
     }
+
+    /* Sticky Section Navigation */
+    .section-nav {
+      display: flex;
+      gap: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: var(--space-8);
+      position: sticky;
+      top: 70px;
+      z-index: 50;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+    }
+    .section-nav::-webkit-scrollbar { display: none; }
+    .section-nav__link {
+      flex: 1;
+      min-width: fit-content;
+      padding: 10px 16px;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      cursor: pointer;
+      border: none;
+      background: none;
+    }
+    .section-nav__link:hover,
+    .section-nav__link--active {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Mobile responsive layout */
+    @media (max-width: 768px) {
+      .event-detail {
+        grid-template-columns: 1fr !important;
+        gap: var(--space-6) !important;
+      }
+      .event-detail aside {
+        order: -1;
+      }
+      .event-meta-strip {
+        gap: var(--space-4);
+        font-size: 0.85rem;
+      }
+      #detail-title {
+        font-size: 2rem !important;
+      }
+      .section-nav {
+        top: 60px;
+      }
+      .main-card {
+        padding: var(--space-5);
+      }
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
   </style>
 </head>
 <body class="modern-ui">
@@ -152,6 +220,13 @@
           <div class="meta-item"><span>👥</span> <span id="detail-capacity" class="meta-value">— / —</span> <span style="opacity:0.4;" id="detail-spots">SLOTS</span></div>
           <div class="meta-item"><span>🎟️</span> <span class="meta-value" id="detail-price">FREE</span></div>
         </div>
+        <!-- Section Quick Nav -->
+        <nav class="section-nav" id="section-nav">
+          <a href="#about-section" class="section-nav__link section-nav__link--active">📝 About</a>
+          <a href="#live-chat-section" class="section-nav__link">💬 Chat</a>
+          <a href="#reviews-section" class="section-nav__link">⭐ Reviews</a>
+          <a href="#rsvp-card-container" class="section-nav__link">🎟️ RSVP</a>
+        </nav>
 
         <!-- Unified Content Card -->
         <div class="main-card">
@@ -345,6 +420,28 @@
         initChat(evt);
         initReviews(evt);
         initCalendar(evt);
+        initSectionNav();
+      }
+
+      function initSectionNav() {
+        const navLinks = document.querySelectorAll('.section-nav__link');
+        const sections = ['about-section', 'live-chat-section', 'reviews-section', 'rsvp-card-container'];
+        
+        // Scroll spy — highlight active section
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              navLinks.forEach(link => link.classList.remove('section-nav__link--active'));
+              const activeLink = document.querySelector(`.section-nav__link[href="#${entry.target.id}"]`);
+              if (activeLink) activeLink.classList.add('section-nav__link--active');
+            }
+          });
+        }, { rootMargin: '-100px 0px -60% 0px', threshold: 0.1 });
+
+        sections.forEach(id => {
+          const el = document.getElementById(id);
+          if (el) observer.observe(el);
+        });
       }
 
       function initRSVP(evt) {
