@@ -199,23 +199,43 @@
     body {
       padding-bottom: 70px; /* space for floating CTA bar */
     }
-    @media (max-width: 768px) {
-      body {
-        padding-bottom: 80px;
-      }
-      .floating-cta__btn {
-        padding: 12px 20px;
-        font-size: 0.8rem;
-      }
+    /* About Section Toggle */
+    .about-text-wrapper {
+      position: relative;
+      max-height: 200px; /* Collapsed height */
+      overflow: hidden;
+      transition: max-height 0.4s ease;
     }
-
-    @media (min-width: 769px) {
-      .floating-cta {
-        display: none !important;
-      }
-      body {
-        padding-bottom: 0;
-      }
+    .about-text-wrapper.expanded {
+      max-height: 2000px; /* Large value to allow expansion */
+    }
+    .about-text-wrapper:not(.expanded)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100px;
+      background: linear-gradient(to top, var(--bg-primary), transparent);
+      pointer-events: none;
+    }
+    .toggle-read-more {
+      margin-top: var(--space-4);
+      background: none;
+      border: none;
+      color: var(--neon-cyan);
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .toggle-read-more:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -279,7 +299,10 @@
         <div class="main-card">
           <section id="about-section" style="margin-bottom: var(--space-12);">
             <h2 class="simple-header">About This Event</h2>
-            <div id="detail-about" style="line-height: 1.8; color: var(--text-secondary); font-size: 1.05rem;">—</div>
+            <div id="about-wrapper" class="about-text-wrapper">
+              <div id="detail-about" style="line-height: 1.8; color: var(--text-secondary); font-size: 1.05rem;">—</div>
+            </div>
+            <button id="read-more-btn" class="toggle-read-more" style="display: none;">Read More ↓</button>
           </section>
 
           <section id="tags-section" style="margin-bottom: var(--space-10);">
@@ -458,6 +481,22 @@
           document.getElementById('detail-price').textContent = '₹' + evt.price;
           document.getElementById('sidebar-price').textContent = '₹' + evt.price;
         }
+
+        // Handle "Read More" logic
+        const aboutWrapper = document.getElementById('about-wrapper');
+        const readMoreBtn = document.getElementById('read-more-btn');
+        const detailAbout = document.getElementById('detail-about');
+        
+        // Wait for next tick to ensure content is rendered
+        setTimeout(() => {
+          if (detailAbout.scrollHeight > 200) {
+            readMoreBtn.style.display = 'flex';
+            readMoreBtn.addEventListener('click', function() {
+              const isExpanded = aboutWrapper.classList.toggle('expanded');
+              this.textContent = isExpanded ? 'Read Less ↑' : 'Read More ↓';
+            });
+          }
+        }, 100);
 
         if (evt.organizer) {
           document.getElementById('organizer-name').textContent = (evt.organizer.firstName || '') + ' ' + (evt.organizer.lastName || '');
