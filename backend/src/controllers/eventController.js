@@ -306,6 +306,35 @@ const rsvpToEvent = async (req, res, next) => {
   }
 };
 
+/**
+ * @desc    Clear chat history of an event
+ * @route   DELETE /api/v1/events/:id/chat
+ * @access  Private (Organizer who owns the event or Admin)
+ */
+const clearEventChat = async (req, res, next) => {
+  try {
+    const event = await Event.findById(req.params.id);
+
+    if (!event) {
+      return next(ApiError.notFound('Event not found'));
+    }
+
+    // Check ownership
+    const isOwner = event.organizer.toString() === req.user._id.toString();
+    const isAdmin = req.user.role === 'admin';
+
+    if (!isOwner && !isAdmin) {
+      return next(ApiError.forbidden('Not authorized to clear chat for this event'));
+    }
+
+    await Event.findByIdAndUpdate(req.params.id, { $set: { chatHistory: [] } });
+
+    res.status(200).json({ success: true, message: 'Chat history cleared' });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getEvents,
   getEvent,
@@ -313,4 +342,5 @@ module.exports = {
   updateEvent,
   deleteEvent,
   rsvpToEvent,
+  clearEventChat,
 };

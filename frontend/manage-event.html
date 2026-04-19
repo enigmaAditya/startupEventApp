@@ -345,6 +345,18 @@
           </div>
         </div>
 
+        <!-- Clear Chat History -->
+        <div
+          style="padding: var(--space-6); background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-xl); margin-bottom: var(--space-6);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: var(--text-lg); margin-bottom: var(--space-1);">Clear Chat History</h3>
+              <p style="color: var(--text-secondary); font-size: var(--text-sm);">Remove all existing messages from the live chat permanently.</p>
+            </div>
+            <button class="btn btn--secondary" id="clear-chat-btn">🧹 Clear Messages</button>
+          </div>
+        </div>
+
         <!-- Delete Event -->
         <div
           style="padding: var(--space-6); border: 1px solid var(--color-error); border-radius: var(--radius-xl); background: rgba(255, 71, 87, 0.05);">
@@ -579,6 +591,34 @@
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+      });
+
+      /* ---------- Danger Zone: Clear Chat History ---------- */
+      document.getElementById('clear-chat-btn').addEventListener('click', async function () {
+        if (!confirm('Are you absolutely sure you want to clear the entire chat history? This action cannot be undone.')) return;
+
+        var btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Clearing...';
+
+        try {
+          var res = await fetch(window.API_BASE_URL + '/events/' + eventId + '/chat', {
+            method: 'DELETE',
+            headers: authHeaders,
+            credentials: 'include'
+          });
+          var data = await res.json();
+          if (res.ok && data.success) {
+            if (window.showToast) window.showToast({ type: 'success', title: 'Cleared!', message: 'Chat history has been wiped.' });
+          } else {
+            throw new Error(data.error?.message || 'Clear chat failed');
+          }
+        } catch (err) {
+          if (window.showToast) window.showToast({ type: 'error', title: 'Error', message: err.message });
+        } finally {
+          btn.disabled = false;
+          btn.textContent = '🧹 Clear Messages';
+        }
       });
 
       /* ---------- Danger Zone: Toggle Registrations ---------- */

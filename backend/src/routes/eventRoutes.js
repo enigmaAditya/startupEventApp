@@ -15,6 +15,7 @@ const {
   updateEvent,
   deleteEvent,
   rsvpToEvent,
+  clearEventChat,
 } = require('../controllers/eventController');
 
 // Middleware
@@ -64,5 +65,11 @@ router.post('/:id/rsvp', protect, rsvpToEvent);
 router.route('/:id/reviews')
   .get(getEventReviews)
   .post(protect, addReview);
+
+/**
+ * Chat history clearing
+ * DELETE /api/v1/events/:id/chat — Clear chat (organizer who owns it)
+ */
+router.delete('/:id/chat', protect, authorize('organizer', 'admin'), clearEventChat);
 
 module.exports = router;
