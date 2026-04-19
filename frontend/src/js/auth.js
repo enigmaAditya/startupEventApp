@@ -19,7 +19,7 @@
     dropdown.id = 'user-dropdown';
     const isOrganizer = user.role === 'organizer' || user.role === 'admin';
     const createLink = isOrganizer
-      ? '<a href="dashboard.html#create-event" class="dropdown__item">✏️ Create Event</a>'
+      ? '<a href="/dashboard#create-event" class="dropdown__item">✏️ Create Event</a>'
       : '';
 
     dropdown.innerHTML = `
@@ -28,7 +28,7 @@
         <span style="font-size:var(--text-sm);">${name}</span>
       </button>
       <div class="dropdown__menu" id="user-dropdown-menu">
-        <a href="dashboard.html" class="dropdown__item">📊 Dashboard</a>
+        <a href="/dashboard" class="dropdown__item">📊 Dashboard</a>
         ${createLink}
         <button class="dropdown__item" id="logout-btn" style="color:var(--color-error);">🚪 Logout</button>
       </div>
@@ -59,6 +59,6 @@
     localStorage.removeItem('accessToken');
     
     // Force redirect to root home
-    window.location.replace('/index.html');
+    window.location.replace('/');
   };
 })();

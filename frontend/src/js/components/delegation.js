@@ -107,7 +107,7 @@
       
       // For Attendee, navigate to event detail
       if (eventId) {
-        window.location.href = `event-detail.html?id=${eventId}`;
+        window.location.href = `/event-detail?id=${eventId}`;
       }
     } else if (button.textContent.includes('RSVP')) {
       // Show RSVP modal or navigate

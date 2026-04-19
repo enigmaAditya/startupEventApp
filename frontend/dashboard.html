@@ -246,7 +246,7 @@
 
       var user = JSON.parse(localStorage.getItem('user') || 'null');
       var token = localStorage.getItem('accessToken');
-      if (!user || !token) { window.location.href = 'login.html'; return; }
+      if (!user || !token) { window.location.href = '/login'; return; }
 
       var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
@@ -264,7 +264,7 @@
       
       // Redirect based on current synced role
       if (isOrganizer) {
-        window.location.href = 'organizer-dashboard.html';
+        window.location.href = '/organizer-dashboard';
         return;
       }
 

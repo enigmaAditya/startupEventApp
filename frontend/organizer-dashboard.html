@@ -473,7 +473,7 @@
 
       var user = JSON.parse(localStorage.getItem('user') || 'null');
       var token = localStorage.getItem('accessToken');
-      if (!user || !token) { window.location.href = 'login.html'; return; }
+      if (!user || !token) { window.location.href = '/login'; return; }
 
       var authHeaders = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
 
@@ -490,7 +490,7 @@
       var isOrganizer = user.role === 'organizer' || user.role === 'admin';
 
       if (!isOrganizer) {
-        window.location.href = 'dashboard.html';
+        window.location.href = '/dashboard';
         return;
       }
 
@@ -563,7 +563,7 @@
             if (res.ok) {
               const updated = Object.assign({}, user, { role: 'attendee', organizerStatus: 'none' });
               localStorage.setItem('user', JSON.stringify(updated));
-              window.location.href = 'dashboard.html';
+              window.location.href = '/dashboard';
             }
           } catch (e) { console.error(e); }
         });

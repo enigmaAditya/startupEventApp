@@ -8,16 +8,11 @@
   'use strict';
 
   // Global API Base URL (Environment Aware)
-  // We use a safe check because import.meta.env is only available during Vite builds
+  // In development (localhost), use relative URL so Vite proxy handles it.
+  // In production (Vercel), point directly to the Render backend.
   let apiUrl = '/api/v1';
-  try {
-    apiUrl = import.meta.env.VITE_API_URL || apiUrl;
-  } catch (e) {
-    // If we're on the live Render/Vercel site and Vite didn't inject the env,
-    // fallback to the production backend URL automatically.
-    if (window.location.hostname !== 'localhost') {
-      apiUrl = 'https://startup-event-app-backend.onrender.com/api/v1';
-    }
+  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+    apiUrl = 'https://startupeventapp.onrender.com/api/v1';
   }
   window.API_BASE_URL = apiUrl;
 

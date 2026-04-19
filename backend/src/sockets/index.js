@@ -21,8 +21,11 @@ const initializeSocketIO = (server) => {
   const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
   io = new Server(server, {
     cors: {
-      origin: process.env.NODE_ENV === 'production' ? false : corsOrigin,
+      origin: process.env.NODE_ENV === 'production'
+        ? ['https://startup-event-app.vercel.app']
+        : [corsOrigin, 'http://localhost:5173', 'http://localhost:3000'],
       methods: ['GET', 'POST'],
+      credentials: true,
     },
   });
 

@@ -203,20 +203,20 @@
       : 'TBD';
 
     let actionLabel = '🎫 RSVP Now';
-    let actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
+    let actionTarget = `/event-detail?id=${event._id || event.id || ''}`;
 
     if (isAdmin) {
       actionLabel = '⚡ Moderate (Admin)';
-      actionTarget = `manage-event.html?id=${event._id || event.id || ''}`;
+      actionTarget = `/manage-event?id=${event._id || event.id || ''}`;
     } else if (isOwner) {
       actionLabel = '🛠️ Manage Event';
-      actionTarget = `manage-event.html?id=${event._id || event.id || ''}`;
+      actionTarget = `/manage-event?id=${event._id || event.id || ''}`;
     } else if (isOtherOrganizer) {
       actionLabel = 'View Details →';
-      actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
+      actionTarget = `/event-detail?id=${event._id || event.id || ''}`;
     } else if (isAttending) {
       actionLabel = '🚀 Already In';
-      actionTarget = `event-detail.html?id=${event._id || event.id || ''}`;
+      actionTarget = `/event-detail?id=${event._id || event.id || ''}`;
     }
 
     return openModal({

@@ -376,14 +376,14 @@
       var eventId = params.get('id');
 
       if (!eventId) {
-        window.location.href = 'organizer-dashboard.html';
+        window.location.href = '/organizer-dashboard';
         return;
       }
 
-      document.getElementById('view-public-btn').href = 'event-detail.html?id=' + eventId;
+      document.getElementById('view-public-btn').href = '/event-detail?id=' + eventId;
 
       var token = localStorage.getItem('accessToken');
-      if (!token) { window.location.href = 'login.html'; return; }
+      if (!token) { window.location.href = '/login'; return; }
 
       var currentUser = JSON.parse(localStorage.getItem('user') || '{}');
       var isAdmin = currentUser.role === 'admin';
@@ -417,7 +417,7 @@
         try {
           var res = await fetch(window.API_BASE_URL + '/events/' + eventId);
           clearTimeout(timeout);
-          var json = await eventRes.json();
+          var json = await res.json();
           if (!json.success) throw new Error("Event not found");
           currentEventData = json.data;
         } catch (err) {

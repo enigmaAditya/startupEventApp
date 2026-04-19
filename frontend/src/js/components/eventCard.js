@@ -77,7 +77,7 @@
       </div>
       <div class="card__footer">
         <span class="card__location" style="font-size: 0.75rem;">📍 ${escapeHTML(truncate(event.location?.city || 'Online', 15))}</span>
-        <a href="event-detail.html?id=${event._id || event.id || ''}" class="btn btn--sm btn--secondary">
+        <a href="/event-detail?id=${event._id || event.id || ''}" class="btn btn--sm btn--secondary">
           View Details →
         </a>
       </div>

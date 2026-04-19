@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/dashboard", "destination": "/dashboard.html" },
     { "source": "/organizer-dashboard", "destination": "/organizer-dashboard.html" },
+    { "source": "/manage-event", "destination": "/manage-event.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/register", "destination": "/register.html" },
     { "source": "/events", "destination": "/events.html" },

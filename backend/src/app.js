@@ -38,7 +38,7 @@ app.use(helmet());
 // 2. CORS configuration
 const allowedOrigins = config.corsOrigin 
   ? config.corsOrigin.split(',').map(o => o.trim()) 
-  : ['http://localhost:3000', 'https://startup-event-app.vercel.app'];
+  : ['http://localhost:3000', 'http://localhost:5173', 'https://startup-event-app.vercel.app'];
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -120,7 +120,10 @@ if (config.nodeEnv === 'production') {
     const filePath = path.join(__dirname, '../../frontend/dist', req.path);
     res.sendFile(filePath, (err) => {
       if (err) {
-        res.sendFile(path.join(__dirname, '../../frontend/dist/pages/index.html'));
+        const indexFallback = path.join(__dirname, '../../frontend/dist/index.html');
+        res.sendFile(indexFallback, (err2) => {
+          if (err2) next(); // Let 404 handler deal with it
+        });
       }
     });
   });
