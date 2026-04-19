@@ -527,7 +527,12 @@
 
         const isAttending = evt.attendees.some(id => ((id._id || id).toString()) === (userId || '').toString());
         if (isAttending) {
-          authTerminal.innerHTML = '<div style="text-align:center; padding: 30px;"><div style="font-size:2rem; margin-bottom:10px;">✅</div><h3 style="font-weight:800; color:var(--neon-cyan);">RSVP SECURED</h3><p style="font-size:0.8rem; color:var(--text-tertiary);">You are on the guest list.</p></div>';
+          authTerminal.innerHTML = `
+            <div style="text-align:center; padding: 30px;">
+              <div style="font-size:2rem; margin-bottom:10px;">✅</div>
+              <h3 style="font-weight:800; color:var(--neon-cyan); letter-spacing:-0.02em; font-size:1.5rem; white-space:nowrap;">RSVP SECURED</h3>
+              <p style="font-size:0.8rem; color:var(--text-tertiary);">You are on the guest list.</p>
+            </div>`;
           document.getElementById('calendar-sync-container').style.display = 'block';
           if (floatingBtn) { floatingBtn.textContent = '✅ RSVP Secured'; floatingBtn.classList.add('floating-cta__btn--muted'); }
           return;
