@@ -96,30 +96,26 @@
       border: none !important;
     }
 
-    /* Sticky Section Navigation */
+    /* Section Navigation — Mobile only, fixed bottom */
     .section-nav {
-      display: flex;
+      display: none;
       gap: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 8px;
-      padding: 4px;
-      margin-bottom: var(--space-8);
-      position: sticky;
-      top: 70px;
-      z-index: 50;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
+      background: rgba(10, 10, 15, 0.95);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 6px 8px;
+      padding-bottom: calc(6px + env(safe-area-inset-bottom));
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
     }
-    .section-nav::-webkit-scrollbar { display: none; }
     .section-nav__link {
       flex: 1;
-      min-width: fit-content;
-      padding: 10px 16px;
+      padding: 8px 4px;
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 700;
       color: var(--text-tertiary);
       text-decoration: none;
@@ -132,12 +128,18 @@
     }
     .section-nav__link:hover,
     .section-nav__link--active {
-      color: #fff;
-      background: rgba(255, 255, 255, 0.08);
+      color: var(--neon-cyan);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     /* Mobile responsive layout */
     @media (max-width: 768px) {
+      .section-nav {
+        display: flex;
+      }
+      body {
+        padding-bottom: 70px; /* space for fixed bottom nav */
+      }
       .event-detail {
         grid-template-columns: 1fr !important;
         gap: var(--space-6) !important;
@@ -151,9 +153,6 @@
       }
       #detail-title {
         font-size: 2rem !important;
-      }
-      .section-nav {
-        top: 60px;
       }
       .main-card {
         padding: var(--space-5);
