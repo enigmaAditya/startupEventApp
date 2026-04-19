@@ -1,22 +1,28 @@
 const aiService = require('../services/aiService');
-const catchAsync = require('../utils/catchAsync');
-const AppError = require('../utils/appError');
+const { ApiError } = require('../middlewares/errorHandler');
 
 /**
- * Generate an event draft from a user prompt
- * POST /api/v1/ai/generate-draft
+ * @desc    Generate a full event draft from a simple prompt
+ * @route   POST /api/v1/ai/generate-draft
+ * @access  Private (Organizer)
+ * 
+ * Demonstrates: AI service integration, robust error handling consistent with codebase.
  */
-exports.generateDraft = catchAsync(async (req, res, next) => {
-  const { prompt } = req.body;
+exports.generateDraft = async (req, res, next) => {
+  try {
+    const { prompt } = req.body;
 
-  if (!prompt) {
-    return next(new AppError('Please provide an event description prompt', 400));
+    if (!prompt) {
+      return next(ApiError.badRequest('Please provide an event description prompt'));
+    }
+
+    const draft = await aiService.generateEventDraft(prompt);
+
+    res.status(200).json({
+      success: true,
+      data: draft
+    });
+  } catch (error) {
+    next(error);
   }
-
-  const draft = await aiService.generateEventDraft(prompt);
-
-  res.status(200).json({
-    success: true,
-    data: draft
-  });
-});
+};
