@@ -446,13 +446,42 @@
 
       function initRSVP(evt) {
         const form = document.getElementById('rsvp-form');
+        const authTerminal = document.getElementById('rsvp-auth-terminal');
         const user = JSON.parse(localStorage.getItem('user') || 'null');
         const userId = user?.id || user?._id;
+        const organizerId = evt.organizer?._id || evt.organizer?.id || evt.organizer;
 
-        const isAttending = evt.attendees.some(id => (id._id || id) === userId);
+        // Check if current user is the event organizer
+        const isOwner = userId && organizerId && userId.toString() === organizerId.toString();
+        const isAdmin = user?.role === 'admin';
+
+        if (isOwner) {
+          authTerminal.innerHTML = `
+            <div style="text-align:center; padding: 30px;">
+              <div style="font-size:2rem; margin-bottom:10px;">🛠️</div>
+              <h3 style="font-weight:800; color:var(--neon-cyan); margin-bottom: 8px;">Your Event</h3>
+              <p style="font-size:0.8rem; color:var(--text-tertiary); margin-bottom: 20px;">You are the organizer of this event.</p>
+              <a href="/manage-event?id=${evt._id}" class="btn btn--standard-rsvp" style="display:block; text-decoration:none; text-align:center;">Manage Event →</a>
+            </div>`;
+          return;
+        }
+
+        if (isAdmin) {
+          authTerminal.innerHTML = `
+            <div style="text-align:center; padding: 30px;">
+              <div style="font-size:2rem; margin-bottom:10px;">⚡</div>
+              <h3 style="font-weight:800; color:var(--neon-cyan); margin-bottom: 8px;">Admin Access</h3>
+              <p style="font-size:0.8rem; color:var(--text-tertiary); margin-bottom: 20px;">You can moderate this event.</p>
+              <a href="/manage-event?id=${evt._id}" class="btn btn--standard-rsvp" style="display:block; text-decoration:none; text-align:center;">Moderate Event →</a>
+            </div>`;
+          return;
+        }
+
+        const isAttending = evt.attendees.some(id => ((id._id || id).toString()) === (userId || '').toString());
         if (isAttending) {
-          document.getElementById('rsvp-auth-terminal').innerHTML = '<div style="text-align:center; padding: 30px;"><div style="font-size:2rem; margin-bottom:10px;">✅</div><h3 style="font-weight:800; color:var(--neon-cyan);">RSVP SECURED</h3><p style="font-size:0.8rem; color:var(--text-tertiary);">You are on the guest list.</p></div>';
+          authTerminal.innerHTML = '<div style="text-align:center; padding: 30px;"><div style="font-size:2rem; margin-bottom:10px;">✅</div><h3 style="font-weight:800; color:var(--neon-cyan);">RSVP SECURED</h3><p style="font-size:0.8rem; color:var(--text-tertiary);">You are on the guest list.</p></div>';
           document.getElementById('calendar-sync-container').style.display = 'block';
+          return;
         }
 
         form.addEventListener('submit', async (e) => {
