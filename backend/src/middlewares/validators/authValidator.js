@@ -59,7 +59,7 @@ const updatePasswordRules = [
 
   body('newPassword')
     .notEmpty().withMessage('New password is required')
-    .isLength({ min: 8 }).withMessage('New password must be at least 8 characters')
+    .isLength({ min: 8, max:64}).withMessage('New password must be at least 8 characters')
     .matches(/[A-Z]/).withMessage('New password must contain at least one uppercase letter')
     .matches(/[0-9]/).withMessage('New password must contain at least one number'),
 ];
