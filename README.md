@@ -11,7 +11,7 @@
 | **Database** | MongoDB + Mongoose |
 | **Real-time** | Socket.IO |
 | **Auth** | JWT + bcrypt |
-| **AI Integration**| Groq AI |
+| **AI Integration**| OpenAI API |
 
 ---
 
@@ -30,7 +30,7 @@ This layer acts as the impenetrable gateway for the application.
 This is the main engine of the platform handling data processing, database persistence, and external service orchestration.
 - **Event Operations:** Users can create, update, and RSVP to events. The MongoDB queries use dynamic filtering, pagination, and native text indexing for lightning-fast search capabilities.
 - **Relational Data:** We utilize Mongoose `ObjectId` references to seamlessly link Users, Events, and RSVPs. Cascading delete logic ensures that if an event is removed, all associated RSVPs are automatically wiped to prevent orphaned data.
-- **AI Integration:** We utilize the Groq AI service for automated recommendations and generative insights to improve the user experience.
+- **AI Integration:** We utilize the OpenAI API (GPT-3.5 & ADA Embeddings) for automated recommendations, semantic search, and generative insights to improve the user experience.
 
 ### 3. Real-Time Communication Engine (WebSockets)
 **Working:**
