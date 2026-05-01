@@ -90,5 +90,4 @@ npm run dev            # Starts Vite development server
 | `POST` | `/api/v1/auth/login` | Login user | Public |
 | `GET` | `/api/v1/users/me` | Get active profile | Auth |
 
-## 📄 License
-MIT
+
