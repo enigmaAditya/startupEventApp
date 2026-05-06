@@ -33,7 +33,7 @@ const { createEventRules, updateEventRules, eventQueryRules } = require('../midd
  */
 router
   .route('/')
-  .get(eventQueryRules, paginate, getEvents)
+  .get(protect.optional, eventQueryRules, paginate, getEvents)
   .post(protect, authorize('organizer', 'admin'), createEventRules, createEvent);
 
 /**
@@ -43,7 +43,7 @@ router
  */
 router
   .route('/:id')
-  .get(getEvent)
+  .get(protect.optional, getEvent)
   .put(protect, authorize('organizer', 'admin'), updateEventRules, updateEvent)
   .delete(protect, authorize('organizer', 'admin'), deleteEvent);
 

@@ -365,7 +365,7 @@
                 <select id="rsvp-role" class="form-input terminal-control" style="width: 100%; height: 45px;">
                   <option value="developer">Developer</option>
                   <option value="designer">Designer</option>
-                  <option value="product">Product Manager</option>
+                  <option value="product-manager">Product Manager</option>
                   <option value="entrepreneur">Entrepreneur</option>
                   <option value="student">Student</option>
                 </select>
@@ -434,7 +434,10 @@
 
       const CONFIG = {
         hackathon: { label: 'HACKATHON', emoji: '💻' },
+        'pitch-night': { label: 'PITCH NIGHT', emoji: '🎤' },
         workshop: { label: 'WORKSHOP', emoji: '🛠️' },
+        meetup: { label: 'MEETUP', emoji: '☕' },
+        conference: { label: 'CONFERENCE', emoji: '🎪' },
         seminar: { label: 'SEMINAR', emoji: '🎙️' },
         networking: { label: 'NETWORKING', emoji: '🤝' },
         social: { label: 'SOCIAL', emoji: '🎉' }
@@ -460,6 +463,14 @@
         document.getElementById('detail-title').textContent = evt.title;
         document.getElementById('detail-about').textContent = evt.description || 'No detailed description available.';
         document.getElementById('detail-category').textContent = cfg.label;
+        const statusLabels = {
+          ongoing: 'Live Now',
+          upcoming: 'Upcoming',
+          completed: 'Past Event',
+          cancelled: 'Cancelled',
+          'pending-approval': 'Pending Approval'
+        };
+        document.getElementById('detail-status').textContent = statusLabels[evt.status] || 'Upcoming';
 
         const dateObj = evt.date ? new Date(evt.date) : null;
         if (dateObj) {
@@ -677,6 +688,7 @@
 
       function initReviews(evt) {
         const list = document.getElementById('reviews-list');
+        const reviewContainer = document.getElementById('review-form-container');
         fetch(window.API_BASE_URL + `/events/${evt._id}/reviews`)
           .then(r => r.json())
           .then(d => {
@@ -715,13 +727,32 @@
             headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
             body: JSON.stringify({ rating: parseInt(ratVal.value), comment: document.getElementById('review-comment').value })
           });
-          if (res.ok) location.reload();
+          if (res.ok) {
+            location.reload();
+            return;
+          }
+          const data = await res.json().catch(() => ({}));
+          alert(data.error?.message || data.message || 'Could not submit review');
         };
 
-        const userId = JSON.parse(localStorage.getItem('user') || '{}').id;
-        const hasAttended = evt.attendees.some(id => (id._id || id) === userId);
-        const isPast = new Date(evt.date) < new Date();
-        if (hasAttended && isPast) document.getElementById('review-form-container').style.display = 'block';
+        const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+        const userId = storedUser.id || storedUser._id;
+        const attendeeIds = Array.isArray(evt.attendees) ? evt.attendees.map(id => (id._id || id)?.toString()) : [];
+        const hasAttended = attendeeIds.includes((userId || '').toString());
+        const isPast = evt.status === 'completed' || new Date(evt.date) < new Date();
+
+        if (hasAttended && isPast) {
+          reviewContainer.style.display = 'block';
+        } else if (storedUser && Object.keys(storedUser).length > 0) {
+          const helper = document.createElement('p');
+          helper.style.fontSize = '0.8rem';
+          helper.style.color = 'var(--text-tertiary)';
+          helper.style.marginTop = '12px';
+          helper.textContent = hasAttended
+            ? 'Reviews open after the event is completed.'
+            : 'Only attendees can leave a review after the event ends.';
+          document.getElementById('reviews-section').insertBefore(helper, list);
+        }
       }
 
       function initCalendar(evt) {

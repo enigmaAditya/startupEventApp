@@ -49,4 +49,38 @@ const protect = async (req, res, next) => {
   }
 };
 
+/**
+ * Optional auth middleware for public routes that can behave differently
+ * when a valid user token is present.
+ *
+ * If no token is provided or token verification fails, the request simply
+ * continues as an anonymous/public request.
+ */
+protect.optional = async (req, res, next) => {
+  try {
+    let token;
+
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.cookies?.accessToken) {
+      token = req.cookies.accessToken;
+    }
+
+    if (!token) {
+      return next();
+    }
+
+    const decoded = jwt.verify(token, config.jwt.secret);
+    const user = await User.findById(decoded.id);
+
+    if (user) {
+      req.user = user;
+    }
+
+    next();
+  } catch (error) {
+    next();
+  }
+};
+
 module.exports = protect;

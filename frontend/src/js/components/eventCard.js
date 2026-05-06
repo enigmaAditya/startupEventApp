@@ -22,6 +22,7 @@
     card.dataset.category = event.category || '';
     card.dataset.date = event.date || '';
     card.dataset.city = event.location?.city || '';
+    card.dataset.status = event.status || '';
     card.dataset.eventId = event._id || event.id || '';
     card.dataset.organizerId = event.organizer?._id || event.organizer || '';
 
@@ -47,6 +48,15 @@
       .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
       .join(' ');
 
+    const statusConfig = {
+      ongoing: { label: 'Live', color: 'var(--color-success)' },
+      upcoming: { label: 'Upcoming', color: 'var(--color-info)' },
+      completed: { label: 'Past', color: 'var(--text-tertiary)' },
+      cancelled: { label: 'Cancelled', color: 'var(--color-error)' },
+      'pending-approval': { label: 'Pending', color: 'var(--color-warning)' },
+    };
+    const status = statusConfig[event.status] || statusConfig.upcoming;
+
     // Role detection for UI enrichment
     const user = JSON.parse(localStorage.getItem('user') || 'null');
     const isAdmin = user && user.role === 'admin';
@@ -59,6 +69,7 @@
       <div class="card__body">
         <div class="card__meta">
           <span class="tag" style="background: ${config.color}20; color: ${config.color}; border: 1px solid ${config.color}40; border-radius:4px;">${categoryName}</span>
+          <span class="tag" style="background: ${status.color}18; color: ${status.color}; border: 1px solid ${status.color}30; border-radius:4px;">${status.label}</span>
           <span class="card__date">📅 ${dateStr}</span>
         </div>
         <h3 class="card__title">${escapeHTML(truncate(event.title || 'Untitled', 40))}</h3>

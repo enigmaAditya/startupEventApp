@@ -169,6 +169,59 @@ eventSchema.statics.search = function (searchText) {
   ).sort({ score: { $meta: 'textScore' } });
 };
 
+/**
+ * Synchronize lifecycle statuses across event documents based on current time.
+ * Keeps public listing filters meaningful without relying on manual admin edits.
+ */
+eventSchema.statics.syncLifecycleStatuses = async function () {
+  const now = new Date();
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+
+  const mutableStatuses = { $nin: ['cancelled', 'pending-approval'] };
+
+  await Promise.all([
+    this.updateMany(
+      {
+        status: mutableStatuses,
+        $or: [
+          { endDate: { $lt: now } },
+          {
+            endDate: { $exists: false },
+            date: { $lt: startOfToday },
+          },
+        ],
+      },
+      { $set: { status: 'completed' } }
+    ),
+    this.updateMany(
+      {
+        status: mutableStatuses,
+        $or: [
+          {
+            date: { $lte: now },
+            endDate: { $gte: now },
+          },
+          {
+            endDate: { $exists: false },
+            date: { $gte: startOfToday, $lte: now },
+          },
+        ],
+      },
+      { $set: { status: 'ongoing' } }
+    ),
+    this.updateMany(
+      {
+        status: mutableStatuses,
+        date: { $gt: now },
+      },
+      { $set: { status: 'upcoming' } }
+    ),
+  ]);
+};
+
 // ---- Instance Methods ----
 // Demonstrates: Mongoose instance methods (called on a document)
 
@@ -204,12 +257,35 @@ eventSchema.methods.removeAttendee = function (userId) {
  */
 eventSchema.methods.syncStatus = function () {
   const now = new Date();
-  const targetDate = this.endDate || this.date;
+  const startOfToday = new Date(now);
+  startOfToday.setHours(0, 0, 0, 0);
 
-  if (targetDate < now && this.status !== 'completed' && this.status !== 'cancelled') {
-    this.status = 'completed';
+  if (this.status === 'cancelled' || this.status === 'pending-approval') {
+    return Promise.resolve(this);
+  }
+
+  const targetDate = this.endDate || this.date;
+  let nextStatus = this.status;
+
+  if (targetDate < now) {
+    nextStatus = 'completed';
+  } else if (this.endDate) {
+    if (this.date <= now && this.endDate >= now) {
+      nextStatus = 'ongoing';
+    } else if (this.date > now) {
+      nextStatus = 'upcoming';
+    }
+  } else if (this.date >= startOfToday && this.date <= now) {
+    nextStatus = 'ongoing';
+  } else if (this.date > now) {
+    nextStatus = 'upcoming';
+  }
+
+  if (nextStatus !== this.status) {
+    this.status = nextStatus;
     return this.save();
   }
+
   return Promise.resolve(this);
 };
 

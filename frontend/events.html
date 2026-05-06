@@ -21,6 +21,15 @@
     .filter-bar { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.1); padding: var(--space-6); border-radius: 8px; margin-bottom: var(--space-10); display: flex; flex-wrap: wrap; gap: var(--space-4); align-items: center; }
     .filter-group { display: flex; gap: var(--space-3); flex: 1; min-width: 300px; }
     .search-input { flex: 2; background: #000 !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #fff; padding: 10px 15px; border-radius: 4px; }
+    .status-tabs { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-8); }
+    .status-tab { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); color: var(--text-secondary); padding: 10px 16px; border-radius: 999px; cursor: pointer; font-weight: 700; }
+    .status-tab.active { background: rgba(0, 255, 255, 0.12); color: var(--neon-cyan); border-color: rgba(0, 255, 255, 0.35); }
+    .summary-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--space-4); margin-bottom: var(--space-8); }
+    .summary-card { border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: var(--space-5); background: rgba(255,255,255,0.02); }
+    .summary-card__value { font-size: 1.6rem; font-weight: 800; font-family: 'Syne', sans-serif; }
+    .summary-card__label { color: var(--text-tertiary); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    .active-filters { display: flex; flex-wrap: wrap; gap: var(--space-3); margin-bottom: var(--space-6); }
+    .empty-panel { grid-column: 1/-1; text-align: center; padding: 80px 20px; color: var(--text-tertiary); border: 1px dashed rgba(255,255,255,0.08); border-radius: 8px; }
   </style>
 </head>
 <body class="modern-ui">
@@ -51,17 +60,51 @@
     <div class="filter-bar">
       <input type="text" class="search-input" id="search-input" placeholder="Search events...">
       <div class="filter-group">
-        <select class="form-input" style="background:#000; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; flex:1;">
+        <select id="filter-category" class="form-input" style="background:#000; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; flex:1;">
           <option value="">All Categories</option>
           <option value="hackathon">🏆 Hackathon</option>
+          <option value="pitch-night">🎤 Pitch Night</option>
           <option value="workshop">🛠️ Workshop</option>
+          <option value="meetup">☕ Meetup</option>
+          <option value="conference">🎪 Conference</option>
         </select>
-        <select class="form-input" style="background:#000; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; flex:1;">
+        <select id="filter-sort" class="form-input" style="background:#000; border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:4px; flex:1;">
           <option value="date-asc">Soonest First</option>
+          <option value="date-desc">Latest First</option>
+          <option value="name-asc">A-Z</option>
           <option value="popular">Most Popular</option>
         </select>
+        <button id="clear-filters-btn" class="btn btn--secondary btn--sm" type="button">Clear</button>
       </div>
     </div>
+
+    <div class="summary-strip" id="summary-strip">
+      <div class="summary-card">
+        <div class="summary-card__value" id="summary-all">0</div>
+        <div class="summary-card__label">Total Visible</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__value" id="summary-ongoing">0</div>
+        <div class="summary-card__label">Live Now</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__value" id="summary-upcoming">0</div>
+        <div class="summary-card__label">Upcoming</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-card__value" id="summary-completed">0</div>
+        <div class="summary-card__label">Past</div>
+      </div>
+    </div>
+
+    <div class="status-tabs" id="status-tabs">
+      <button class="status-tab active" data-status="all" type="button">All Events</button>
+      <button class="status-tab" data-status="ongoing" type="button">Live Now</button>
+      <button class="status-tab" data-status="upcoming" type="button">Upcoming</button>
+      <button class="status-tab" data-status="completed" type="button">Past Events</button>
+    </div>
+
+    <div class="active-filters" id="active-filters"></div>
 
     <section id="events-section">
       <div class="events-grid" id="events-grid">
@@ -79,11 +122,135 @@
   <script type="module" src="./src/js/components/eventCard.js"></script>
   <script type="module">
     (async function() {
+      let allEvents = [];
+      let activeStatus = 'all';
+
+      const elements = {
+        grid: document.getElementById('events-grid'),
+        search: document.getElementById('search-input'),
+        category: document.getElementById('filter-category'),
+        sort: document.getElementById('filter-sort'),
+        clear: document.getElementById('clear-filters-btn'),
+        tabs: Array.from(document.querySelectorAll('.status-tab')),
+        activeFilters: document.getElementById('active-filters'),
+      };
+
+      const updateSummary = (events) => {
+        const counts = events.reduce((acc, event) => {
+          const status = event.status || 'upcoming';
+          acc.all += 1;
+          if (acc[status] !== undefined) acc[status] += 1;
+          return acc;
+        }, { all: 0, ongoing: 0, upcoming: 0, completed: 0 });
+
+        document.getElementById('summary-all').textContent = counts.all;
+        document.getElementById('summary-ongoing').textContent = counts.ongoing;
+        document.getElementById('summary-upcoming').textContent = counts.upcoming;
+        document.getElementById('summary-completed').textContent = counts.completed;
+      };
+
+      const sortEvents = (events, sortBy) => {
+        const sorted = [...events];
+        switch (sortBy) {
+          case 'date-desc':
+            sorted.sort((a, b) => new Date(b.date) - new Date(a.date));
+            break;
+          case 'name-asc':
+            sorted.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+            break;
+          case 'popular':
+            sorted.sort((a, b) => (b.attendeeCount || b.attendees?.length || 0) - (a.attendeeCount || a.attendees?.length || 0));
+            break;
+          case 'date-asc':
+          default:
+            sorted.sort((a, b) => new Date(a.date) - new Date(b.date));
+            break;
+        }
+        return sorted;
+      };
+
+      const renderActiveFilters = (searchQuery, category, status) => {
+        const filters = [];
+        if (status !== 'all') filters.push(`Status: ${status}`);
+        if (category) filters.push(`Category: ${category}`);
+        if (searchQuery) filters.push(`Search: "${searchQuery}"`);
+
+        if (filters.length === 0) {
+          elements.activeFilters.innerHTML = '';
+          return;
+        }
+
+        elements.activeFilters.innerHTML = filters.map((filter) =>
+          `<span class="tag">${filter}</span>`
+        ).join('');
+      };
+
+      const applyFilters = () => {
+        const searchQuery = (elements.search.value || '').trim().toLowerCase();
+        const category = elements.category.value || '';
+        const sortBy = elements.sort.value || 'date-asc';
+
+        let filtered = [...allEvents];
+        if (activeStatus !== 'all') {
+          filtered = filtered.filter((event) => event.status === activeStatus);
+        }
+        if (category) {
+          filtered = filtered.filter((event) => event.category === category);
+        }
+        if (searchQuery) {
+          filtered = filtered.filter((event) => {
+            const haystack = [
+              event.title,
+              event.description,
+              event.location?.city,
+              ...(event.tags || []),
+            ]
+              .filter(Boolean)
+              .join(' ')
+              .toLowerCase();
+            return haystack.includes(searchQuery);
+          });
+        }
+
+        filtered = sortEvents(filtered, sortBy);
+        renderActiveFilters(searchQuery, category, activeStatus);
+
+        if (filtered.length === 0) {
+          elements.grid.innerHTML = '<div class="empty-panel">No events matched this search. Try changing the status tab or filters.</div>';
+          return;
+        }
+
+        window.__renderEventGrid(filtered, 'events-grid', false);
+      };
+
+      const activateTab = (status) => {
+        activeStatus = status;
+        elements.tabs.forEach((tab) => {
+          tab.classList.toggle('active', tab.dataset.status === status);
+        });
+        applyFilters();
+      };
+
+      elements.search.addEventListener('input', applyFilters);
+      elements.category.addEventListener('change', applyFilters);
+      elements.sort.addEventListener('change', applyFilters);
+      elements.clear.addEventListener('click', () => {
+        elements.search.value = '';
+        elements.category.value = '';
+        elements.sort.value = 'date-asc';
+        activateTab('all');
+      });
+      elements.tabs.forEach((tab) => {
+        tab.addEventListener('click', () => activateTab(tab.dataset.status));
+      });
+
       try {
-        const res = await fetch(window.API_BASE_URL + '/events?limit=12');
+        const res = await fetch(window.API_BASE_URL + '/events?limit=50');
         const data = await res.json();
         if (data.success && data.data.length > 0) {
-          window.__renderEventGrid(data.data, 'events-grid', false);
+          allEvents = data.data;
+          updateSummary(allEvents);
+          applyFilters();
         } else {
           document.getElementById('events-grid').innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:100px;">No events found in this sector.</div>';
         }

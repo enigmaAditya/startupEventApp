@@ -25,32 +25,51 @@ const getEvents = async (req, res, next) => {
   try {
     const { category, search, status, city, organizer } = req.query;
     const { page, limit, skip } = req.pagination;
+    const requestedOrganizer = organizer ? organizer.toString() : null;
 
-    // Build filter object dynamically
-    // Demonstrates: computed property names, optional chaining
-    const filter = {};
-    if (category) filter.category = category;
-    if (status) {
-      filter.status = status;
-    } else {
-      // Default: Public listing excludes pending-approval events
-      filter.status = { $ne: 'pending-approval' };
+    await Event.syncLifecycleStatuses();
+
+    // Build base filter dynamically from shared/public query params.
+    const baseFilter = {};
+    if (category) baseFilter.category = category;
+    if (organizer) baseFilter.organizer = organizer;
+    if (city) baseFilter['location.city'] = new RegExp(city, 'i');
+
+    const statusFilter = status ? { status } : {};
+
+    // Public visibility: only approved and non-hidden events.
+    const publicFilter = {
+      ...baseFilter,
+      ...statusFilter,
+      moderationStatus: { $ne: 'hidden' },
+    };
+    if (!status) {
+      publicFilter.status = { $ne: 'pending-approval' };
     }
-    if (organizer) filter.organizer = organizer;
-    if (city) filter['location.city'] = new RegExp(city, 'i');
 
-    // Moderation Filter: Hide 'hidden' events from public.
-    // Allow Admins to see all.
-    // Allow Organizers to see their own hidden events.
-    if (!req.user || req.user.role !== 'admin') {
-      if (req.user && req.user.role === 'organizer') {
-        filter.$or = [
-          { moderationStatus: { $ne: 'hidden' } },
-          { organizer: req.user._id }
-        ];
-      } else {
-        filter.moderationStatus = { $ne: 'hidden' };
-      }
+    // Organizer visibility: if organizers are looking at the public listing
+    // or their own dashboard feed, include their private/pending items too.
+    const canSeeOwnPrivateEvents = req.user &&
+      req.user.role === 'organizer' &&
+      (!requestedOrganizer || requestedOrganizer === req.user._id.toString());
+
+    let filter = publicFilter;
+    if (req.user?.role === 'admin') {
+      filter = {
+        ...baseFilter,
+        ...statusFilter,
+      };
+    } else if (canSeeOwnPrivateEvents) {
+      filter = {
+        $or: [
+          publicFilter,
+          {
+            ...baseFilter,
+            ...statusFilter,
+            organizer: req.user._id,
+          },
+        ],
+      };
     }
 
     let query;
@@ -97,11 +116,23 @@ const getEvents = async (req, res, next) => {
  */
 const getEvent = async (req, res, next) => {
   try {
+    await Event.syncLifecycleStatuses();
+
     const event = await Event.findById(req.params.id)
       .populate('organizer', 'firstName lastName email')
       .populate('attendees', 'firstName lastName');
 
     if (!event) {
+      return next(ApiError.notFound('Event not found'));
+    }
+
+    const isAdmin = req.user?.role === 'admin';
+    const isOwner = req.user && event.organizer && event.organizer._id
+      ? event.organizer._id.toString() === req.user._id.toString()
+      : req.user && event.organizer?.toString() === req.user._id.toString();
+    const isVisiblePublicly = event.status !== 'pending-approval' && event.moderationStatus !== 'hidden';
+
+    if (!isVisiblePublicly && !isAdmin && !isOwner) {
       return next(ApiError.notFound('Event not found'));
     }
 
@@ -186,7 +217,7 @@ const updateEvent = async (req, res, next) => {
 
     // POLICY: Admins can ONLY update moderation/featured fields, NOT core content
     let allowedUpdates = ['title', 'description', 'category', 'date', 'endDate',
-      'time', 'location', 'capacity', 'tags', 'status', 'isVirtual', 'isFeatured', 'prizePool', 'isFullyBooked'];
+      'time', 'location', 'capacity', 'tags', 'status', 'isFeatured', 'prizePool'];
     
     if (isAdmin && !isOwner) {
       // Stripping content fields for admins
