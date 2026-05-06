@@ -227,6 +227,13 @@ cd ../frontend
 npm run dev
 ```
 
+### Test Accounts 
+| Role | Email | Password |
+|---|---|---|
+| Admin | admin@startupevents.com | Admin@123 |
+| Organizer | ravi@techhub.in | Organizer@123 |
+| Attendee | amit@gmail.com | Attendee@123 |
+
 ---
 
 ## 💻 Comprehensive How to Use
@@ -349,3 +356,4 @@ StartupEvents is more than a project; it is a vision for the future of professio
   <p>Crafted with Excellence by the Enigma Development Team.</p>
   <p><i>Building the future of startup networking, one event at a time.</i></p>
 </div>
+
